@@ -10,6 +10,10 @@ out vec4 fragColor;
 uniform vec3 iResolution;
 uniform float iTime;
 
+uniform float colorFactor;
+uniform float xOffset;
+uniform float yOffset;
+
 vec3 JuliaFractal(vec2 c, vec2 c2, float animparam, float anim2 ) {	
 	vec2 z = c;
     
@@ -53,8 +57,8 @@ void main()
   
 	uv.x = tuv.x*cos(rot)-tuv.y*sin(rot);
 	uv.y =1.05* tuv.x*sin(rot)+tuv.y*cos(rot);
-	float juliax = tan(timeVal) * 0.011 + 0.02/(fragCoord.y*0.19531*(1.0-animFlap));
-	float juliay = cos(timeVal * 0.213) * (0.022+animFlap) + 5.66752-(juliax*1.5101);//+(fragCoord.y*0.0001);// or 5.7
+	float juliax = tan(timeVal) * 0.011 + 0.02/(fragCoord.y*0.19531*(1.0-animFlap)) + xOffset;
+	float juliay = cos(timeVal * 0.213) * (0.022+animFlap) + 5.66752-(juliax*1.5101) + yOffset;
     
  
     float tapU = (1.0/ float(iResolution.x))*25.5;//*cos(animFlap);
@@ -67,7 +71,7 @@ void main()
 //    fragColor += vec4( JuliaFractal(uv+vec2(tapU,-tapV), vec2(juliax, juliay), animWings, animFlap ) ,1.0);
 //    fragColor += vec4( JuliaFractal(uv+vec2(-tapU,tapV), vec2(juliax, juliay), animWings, animFlap ) ,1.0);
     fragColor += vec4( JuliaFractal(uv+vec2(-tapU,-tapV), vec2(juliax, juliay), animWings, animFlap ) ,1.0);  
-    fragColor *= 0.3333;
+    fragColor *= colorFactor;
     
     fragColor.xyz = fragColor.zyx;
 	fragColor.xyz = vec3(1)-fragColor.xyz;
