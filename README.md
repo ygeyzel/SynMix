@@ -1,5 +1,7 @@
 # SynMix
 
+SynMix is a real-time visual synthesis application that renders animated fractal graphics using OpenGL shaders. It's designed as an interactive visual instrument where parameters can be controlled in real-time through keyboard input, with plans for MIDI integration.
+
 ## Technology Stack
 - **Graphics**: ModernGL + ModernGL-Window for OpenGL rendering
 - **Language**: Python 3.12
