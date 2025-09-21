@@ -23,7 +23,7 @@ class KeplerPlanet(Scene):
             name="orbitSpeed",                 # Controls speed of planetary orbit animation
             button=Button.LEFT_WHEEL,          # Maps to Left/Right arrow keys
             controller=RangedController(       # Values clamped at min/max
-                step=0.01, min_value=0.0, max_value=0.5, initial_value=0.125)
+                step=0.002, min_value=0.0, max_value=0.5, initial_value=0.125)
         ))
         
         # Time scale control: Up/Down wheel (arrow keys), affects overall animation speed
@@ -31,7 +31,7 @@ class KeplerPlanet(Scene):
             name="timeScale",                  # Controls overall time scaling
             button=Button.RIGHT_WHEEL,         # Maps to Up/Down arrow keys
             controller=RangedController(       # Values clamped at min/max
-                step=0.005, min_value=0.0, max_value=0.3, initial_value=0.1)
+                step=0.001, min_value=0.0, max_value=0.3, initial_value=0.1)
         ))
         
         # Camera distance control: affects how close/far the camera is from the planet
@@ -39,7 +39,7 @@ class KeplerPlanet(Scene):
             name="cameraDistance",             # Controls camera distance from planet
             button=Button.RANGED_PLACEHOLDER,  # Maps to Q/A keys
             controller=RangedController(       # Values clamped at min/max
-                step=0.1, min_value=1.5, max_value=5.0, initial_value=2.5)
+                step=0.02, min_value=1.5, max_value=5.0, initial_value=2.5)
         ))
         
         # Atmosphere intensity control: affects visibility of atmospheric effects
@@ -47,7 +47,7 @@ class KeplerPlanet(Scene):
             name="atmosphereIntensity",        # Controls atmosphere visibility
             button=Button.BUTTON_1,            # Maps to 1/2 keys
             controller=RangedController(       # Values clamped at min/max
-                step=0.02, min_value=0.0, max_value=1.0, initial_value=0.45)
+                step=0.005, min_value=0.0, max_value=1.0, initial_value=0.45)
         ))
         
         # Cloud density control: affects cloud layer thickness
@@ -55,7 +55,7 @@ class KeplerPlanet(Scene):
             name="cloudDensity",               # Controls cloud density
             button=Button.BUTTON_2,            # Maps to 3/4 keys
             controller=RangedController(       # Values clamped at min/max
-                step=0.1, min_value=0.0, max_value=8.0, initial_value=3.0)
+                step=0.02, min_value=0.0, max_value=8.0, initial_value=3.0)
         ))
         
         # Land contrast control: affects visibility of land masses
@@ -63,7 +63,7 @@ class KeplerPlanet(Scene):
             name="landContrast",               # Controls land visibility contrast
             button=Button.BUTTON_3,            # Maps to 5/6 keys
             controller=RangedController(       # Values clamped at min/max
-                step=0.025, min_value=0.0, max_value=1.5, initial_value=0.75)
+                step=0.005, min_value=0.0, max_value=1.5, initial_value=0.75)
         ))
         
         # Star brightness control: affects star field visibility
@@ -71,7 +71,7 @@ class KeplerPlanet(Scene):
             name="starBrightness",             # Controls star field brightness
             button=Button.BUTTON_4,            # Maps to 7/8 keys
             controller=RangedController(       # Values clamped at min/max
-                step=0.05, min_value=0.0, max_value=3.0, initial_value=1.0)
+                step=0.01, min_value=0.0, max_value=3.0, initial_value=1.0)
         ))
         
         # Surface detail control: affects terrain detail level
@@ -79,7 +79,7 @@ class KeplerPlanet(Scene):
             name="surfaceDetail",              # Controls surface detail level
             button=Button.BUTTON_5,            # Maps to 9/0 keys
             controller=RangedController(       # Values clamped at min/max
-                step=0.05, min_value=0.1, max_value=2.0, initial_value=1.0)
+                step=0.01, min_value=0.1, max_value=2.0, initial_value=1.0)
         ))
         
         return params
