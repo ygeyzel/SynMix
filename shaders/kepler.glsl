@@ -14,6 +14,8 @@ uniform float cameraDistance = 2.5;    // Distance from planet
 uniform float atmosphereIntensity = 0.45;  // Atmosphere visibility
 uniform float cloudDensity = 3.0;      // Cloud density multiplier
 uniform float landContrast = 0.75;     // Land visibility contrast
+uniform float starBrightness = 1.0;    // Star field brightness
+uniform float surfaceDetail = 1.0;     // Surface detail level
 
 /*--------------------------------------------------------------------------------------
 License CC0 - http://creativecommons.org/publicdomain/zero/1.0/
@@ -72,47 +74,111 @@ float fbm(vec2 p, int octaves) {
     return value;
 }
 
-// Generate continent-like patterns
+// Multi-octave noise with ridged characteristics for mountains
+float ridgedNoise(vec2 p, int octaves) {
+    float value = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.0;
+    for (int i = 0; i < octaves; i++) {
+        float n = abs(noise(frequency * p) * 2.0 - 1.0);
+        n = 1.0 - n;
+        value += amplitude * n;
+        amplitude *= 0.5;
+        frequency *= 2.0;
+    }
+    return value;
+}
+
+// Generate continent-like patterns with more realism
 float continents(vec2 p) {
-    float base = fbm(p * 0.5, 4);
-    float detail = fbm(p * 2.0, 3) * 0.3;
-    return smoothstep(0.3, 0.7, base + detail);
+    // Large scale continent shapes
+    float base = fbm(p * 0.3, 3);
+    // Medium scale terrain features
+    float terrain = fbm(p * 1.2, 4) * 0.4;
+    // Small scale detail
+    float detail = fbm(p * 4.0, 2) * 0.2;
+    
+    float land = base + terrain + detail;
+    return smoothstep(0.4, 0.8, land);
 }
 
-// Generate cloud patterns
+// Generate realistic mountain ranges
+float mountains(vec2 p) {
+    return ridgedNoise(p * 2.0, 4) * 0.6;
+}
+
+// Generate forest/vegetation patterns
+float vegetation(vec2 p) {
+    float veg = fbm(p * 3.0, 3);
+    return smoothstep(0.3, 0.9, veg);
+}
+
+// Generate desert patterns
+float desert(vec2 p) {
+    float sand = fbm(p * 2.5 + vec2(100.0), 3);
+    return smoothstep(0.2, 0.7, sand);
+}
+
+// Generate cloud patterns with more variation
 float clouds(vec2 p, float time) {
-    vec2 cloudP = p + vec2(time * 0.1, sin(time * 0.05) * 0.1);
-    return fbm(cloudP * 3.0, 4);
+    vec2 cloudP1 = p + vec2(time * 0.05, sin(time * 0.03) * 0.1);
+    vec2 cloudP2 = p + vec2(time * 0.08, cos(time * 0.04) * 0.15);
+    
+    float cloud1 = fbm(cloudP1 * 2.5, 4);
+    float cloud2 = fbm(cloudP2 * 1.8, 3) * 0.7;
+    
+    return max(cloud1, cloud2);
 }
 
-// Generate star field
+// Generate star field with better distribution
 vec3 starField(vec3 dir, float time) {
     vec3 stars = vec3(0.0);
-    float starDensity = 8.0;
     
-    vec2 starCoord = dir.xy * starDensity;
-    vec2 starCell = floor(starCoord);
-    vec2 starLocal = fract(starCoord);
-    
-    float starRand = hash(starCell);
-    if (starRand > 0.95) {
-        vec2 starCenter = vec2(0.5) + (vec2(hash(starCell + vec2(1.0)), hash(starCell + vec2(2.0))) - 0.5) * 0.8;
-        float starDist = length(starLocal - starCenter);
-        float starBrightness = 1.0 - smoothstep(0.0, 0.05, starDist);
-        float twinkle = 0.5 + 0.5 * sin(time * 10.0 + starRand * 6.28);
-        stars = vec3(starBrightness * twinkle);
+    // Multiple layers of stars with different sizes
+    for (int layer = 0; layer < 3; layer++) {
+        float starDensity = 6.0 + float(layer) * 4.0;
+        vec2 starCoord = dir.xy * starDensity + vec2(float(layer) * 50.0);
+        vec2 starCell = floor(starCoord);
+        vec2 starLocal = fract(starCoord);
+        
+        float starRand = hash(starCell + vec2(float(layer) * 17.0));
+        float starThreshold = 0.98 - float(layer) * 0.01; // More stars in outer layers
+        
+        if (starRand > starThreshold) {
+            vec2 starCenter = vec2(0.5) + (vec2(
+                hash(starCell + vec2(1.0, float(layer))), 
+                hash(starCell + vec2(2.0, float(layer)))
+            ) - 0.5) * 0.7;
+            
+            float starDist = length(starLocal - starCenter);
+            float starSize = 0.02 + (1.0 - starRand) * 0.03;
+            float starBrightness = 1.0 - smoothstep(0.0, starSize, starDist);
+            
+            // Star color variation
+            float colorRand = hash(starCell + vec2(3.0, float(layer)));
+            vec3 starColor = mix(vec3(1.0, 0.8, 0.6), vec3(0.6, 0.8, 1.0), colorRand);
+            
+            // Twinkling effect
+            float twinkle = 0.7 + 0.3 * sin(time * (8.0 + starRand * 4.0) + starRand * 6.28);
+            stars += starColor * starBrightness * twinkle * (0.5 + float(layer) * 0.25);
+        }
     }
     
     return stars;
 }
 
-// Generate milky way background
+// Generate milky way background with more detail
 vec3 milkyWay(vec3 dir) {
-    float milkyMask = exp(-abs(dir.x) * 3.0);
-    vec2 milkyCoord = dir.yz * 2.0;
-    float milkyNoise = fbm(milkyCoord, 6);
-    vec3 milkyColor = vec3(0.4, 0.6, 1.0) * milkyNoise * milkyMask * 0.3;
-    return milkyColor;
+    float milkyMask = exp(-abs(dir.x - 0.1) * 2.5) * exp(-abs(dir.y) * 1.5);
+    
+    vec2 milkyCoord = dir.yz * 1.5 + vec2(0.3, 0.0);
+    float milkyNoise1 = fbm(milkyCoord, 6) * 0.8;
+    float milkyNoise2 = fbm(milkyCoord * 2.0 + vec2(50.0), 4) * 0.6;
+    
+    vec3 milkyColor1 = vec3(0.3, 0.5, 1.0) * milkyNoise1;
+    vec3 milkyColor2 = vec3(1.0, 0.7, 0.4) * milkyNoise2;
+    
+    return (milkyColor1 + milkyColor2) * milkyMask * 0.4;
 }
 
 vec3 GetSunColor(vec3 rayDir, vec3 sunDir)
@@ -123,11 +189,11 @@ vec3 GetSunColor(vec3 rayDir, vec3 sunDir)
     sunIntensity = min(sunIntensity, 40000.0);
     sunIntensity = max(0.0, sunIntensity - 3.0);
 
-    // Generate star field
-    vec3 stars = starField(localRay, iTime) * 12000.0;
+    // Generate enhanced star field
+    vec3 stars = starField(localRay, iTime) * 12000.0 * starBrightness;
     
-    // Generate milky way background
-    vec3 milkyway = milkyWay(localRay) * 10850.0;
+    // Generate enhanced milky way background
+    vec3 milkyway = milkyWay(localRay) * 10850.0 * starBrightness;
     
     vec3 finalColor = milkyway + stars;
     finalColor += environmentSphereColor + sunCol * sunIntensity;
@@ -211,25 +277,31 @@ void main()
     polar.x = (polar.x + 2.03);
     polar.xy = iA.xy;
 
-    // Generate proper planetary surface features
+    // Generate detailed planetary surface features
     vec2 surfaceCoord = polar.xy + vec2(t, 0);
     
-    // Generate multi-scale noise for realistic terrain
-    vec4 texNoise = vec4(fbm(surfaceCoord * 2.0, 4),
-                         fbm(surfaceCoord * 1.0, 3),
-                         fbm(surfaceCoord * 4.0, 5),
+    // Generate multi-scale noise for realistic terrain (scaled by surfaceDetail)
+    vec4 texNoise = vec4(fbm(surfaceCoord * 2.0 * surfaceDetail, 4),
+                         fbm(surfaceCoord * 1.0 * surfaceDetail, 3),
+                         fbm(surfaceCoord * 4.0 * surfaceDetail, 5),
                          1.0);
-    texBlurry = vec3(fbm(surfaceCoord * 0.8, 2));
+    texBlurry = vec3(fbm(surfaceCoord * 0.8 * surfaceDetail, 2));
 
+    // Generate detailed terrain types (scaled by surfaceDetail)
+    float continentMask = continents(surfaceCoord * surfaceDetail);
+    float mountainMask = mountains(surfaceCoord * surfaceDetail);
+    float vegetationMask = vegetation(surfaceCoord * surfaceDetail);
+    float desertMask = desert(surfaceCoord * surfaceDetail);
+    
     // Ocean/land texture with proper continent shapes
-    vec3 tex = vec3(continents(surfaceCoord));
+    vec3 tex = vec3(continentMask);
     tex *= tex;
     
     // Flipped version for variety
     vec3 texFlip = vec3(continents(1.0 - surfaceCoord * 0.5));
     texFlip *= texFlip;
 
-    // Cloud layers with movement
+    // Enhanced cloud layers with movement
     vec3 texS = vec3(clouds(Spiral(surfaceCoord), cloudT));
     texS *= texS;
     vec3 texFlipS = vec3(clouds(1.0 - Spiral(surfaceCoord), cloudT));
@@ -241,13 +313,15 @@ void main()
     vec3 finalAtmosphere = atmosphereColor * atmosphereDensity + cloudDensityCalc;
     vec3 finalColor = finalAtmosphere;
 
-    vec3 detailMap = vec3(fbm(surfaceCoord * 3.0, 3)) * 0.25 + 0.75;
+    vec3 detailMap = vec3(fbm(surfaceCoord * 3.0, 3)) * 0.5 + 0.5;
     
     // Generate realistic land masses with elevation
     float elevation = fbm(surfaceCoord * 0.5, 4);
     float land = pow(max(0.0, elevation - 0.3), 0.4) * landContrast;
     float land2 = land * texBlurry.x * 6.0;
-    land *= detailMap.x;
+    
+    // Apply terrain masks for realistic distribution
+    land *= continentMask * detailMap.x;
     land2 = max(0.0, land2);
     
     // Ocean areas reduce land visibility
@@ -255,24 +329,49 @@ void main()
     land = max(0.0, land);
     float iceFactor = abs(pow(normal.y, 2.0));
     
-    // More realistic land coloring
-    vec3 oceanColor = vec3(0.02, 0.1, 0.3);
-    vec3 landColor = vec3(0.2, 0.5, 0.1) * land;  // Green vegetation
-    vec3 mountainColor = vec3(0.4, 0.3, 0.2) * land2;  // Brown mountains
-    vec3 desertColor = vec3(0.6, 0.4, 0.2) * land * 0.5;  // Sandy areas
+    // Much more realistic and varied terrain coloring
+    vec3 deepOceanColor = vec3(0.0, 0.1, 0.3);
+    vec3 shallowOceanColor = vec3(0.0, 0.2, 0.5);
+    vec3 beachColor = vec3(0.8, 0.7, 0.5);
+    vec3 grassColor = vec3(0.1, 0.6, 0.2);
+    vec3 forestColor = vec3(0.05, 0.4, 0.1);
+    vec3 mountainColor = vec3(0.4, 0.3, 0.2);
+    vec3 desertColor = vec3(0.7, 0.5, 0.3);
+    vec3 snowColor = vec3(0.9, 0.95, 1.0);
     
-    // Mix terrain types based on elevation and latitude
-    vec3 terrainColor = mix(oceanColor, landColor, tex.x);
-    terrainColor = mix(terrainColor, mountainColor, land2 * 0.3);
-    terrainColor += desertColor * (1.0 - tex.x) * 0.5;
+    // Start with ocean
+    vec3 terrainColor = mix(deepOceanColor, shallowOceanColor, 
+                           smoothstep(0.0, 0.3, continentMask));
     
-    // Apply detail variations
-    terrainColor *= (detailMap + 1.0) * 0.5;
+    // Add beaches at coastlines
+    float coastline = smoothstep(0.2, 0.4, continentMask) - smoothstep(0.4, 0.6, continentMask);
+    terrainColor = mix(terrainColor, beachColor, coastline);
     
-    // Ice caps at poles
-    vec3 iceColor = vec3(0.8, 0.9, 1.0);
-    vec3 finalLand = mix(terrainColor, iceColor * land, iceFactor);
-    finalLand = mix(atmosphereColor * 0.05, finalLand, pow(min(1.0, max(0.0, -distFromSphere * 1.0)), 0.2));
+    // Add land areas
+    float landMask = smoothstep(0.4, 0.7, continentMask);
+    vec3 landColor = grassColor;
+    
+    // Forest areas (more vegetation in certain regions)
+    landColor = mix(landColor, forestColor, vegetationMask * landMask);
+    
+    // Desert areas (hot, dry regions)
+    landColor = mix(landColor, desertColor, desertMask * landMask * (1.0 - vegetationMask));
+    
+    // Mountain areas (high elevation)
+    landColor = mix(landColor, mountainColor, mountainMask * landMask);
+    
+    // Apply land to terrain
+    terrainColor = mix(terrainColor, landColor, landMask);
+    
+    // Apply detail variations for micro-features
+    terrainColor *= (detailMap * 0.4 + 0.8);
+    
+    // Ice caps at poles (snow-covered areas)
+    vec3 finalLand = mix(terrainColor, snowColor, iceFactor * 0.8);
+    
+    // Atmospheric perspective
+    finalLand = mix(atmosphereColor * 0.05, finalLand, 
+                   pow(min(1.0, max(0.0, -distFromSphere * 1.0)), 0.2));
     finalColor += finalLand;
     finalColor *= hit;
 
@@ -302,9 +401,9 @@ void main()
     vec3 refNorm = normalize(ref);
     float glance = saturate(dot(refNorm, sunDir) * saturate(sunDir.z - 0.65));
     float glance2 = saturate(dot(refNorm, sunDir2) * saturate(sunDir2.z - 0.65));
-    float landMask = finalLand.x + finalLand.y * 1.5;
-    vec3 sunRef = GetSunColorReflection(refNorm, sunDir) * 0.005 * hit * (1.0 - saturate(landMask * 3.5)) * (1.0 - texS.x) * refNoise;
-    vec3 sunRef2 = GetSunColorReflection(refNorm, sunDir2) * 0.005 * hit * (1.0 - saturate(landMask * 3.5)) * (1.0 - texS.x) * refNoise;
+    float reflectionMask = finalLand.x + finalLand.y * 1.5;
+    vec3 sunRef = GetSunColorReflection(refNorm, sunDir) * 0.005 * hit * (1.0 - saturate(reflectionMask * 3.5)) * (1.0 - texS.x) * refNoise;
+    vec3 sunRef2 = GetSunColorReflection(refNorm, sunDir2) * 0.005 * hit * (1.0 - saturate(reflectionMask * 3.5)) * (1.0 - texS.x) * refNoise;
     
     sunRef = mix(sunRef, vec3(3.75, 0.8, 0.02) * hit, glance);
     sunRef2 = mix(sunRef2, vec3(3.75, 0.8, 0.02) * hit, glance2);

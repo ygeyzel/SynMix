@@ -66,6 +66,22 @@ class KeplerPlanet(Scene):
                 step=0.025, min_value=0.0, max_value=1.5, initial_value=0.75)
         ))
         
+        # Star brightness control: affects star field visibility
+        params.append(Param(
+            name="starBrightness",             # Controls star field brightness
+            button=Button.BUTTON_4,            # Maps to 7/8 keys
+            controller=RangedController(       # Values clamped at min/max
+                step=0.05, min_value=0.0, max_value=3.0, initial_value=1.0)
+        ))
+        
+        # Surface detail control: affects terrain detail level
+        params.append(Param(
+            name="surfaceDetail",              # Controls surface detail level
+            button=Button.BUTTON_5,            # Maps to 9/0 keys
+            controller=RangedController(       # Values clamped at min/max
+                step=0.05, min_value=0.1, max_value=2.0, initial_value=1.0)
+        ))
+        
         return params
     
     def setup(self):
