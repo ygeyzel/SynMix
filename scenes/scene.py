@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Tuple
 import moderngl_window as mglw
+import os
 
 from params.params import Param
 
@@ -46,7 +47,6 @@ class Scene(ABC):
         vertex_shader, fragment_shader = self.get_shader_files()
         
         # Read shader files directly from the resource directory
-        import os
         vertex_path = os.path.join(self.resource_dir, vertex_shader)
         fragment_path = os.path.join(self.resource_dir, fragment_shader)
         
@@ -94,8 +94,27 @@ class Scene(ABC):
                 org_value = shader_param.value
                 shader_param.value = param.value
                 
-                # Debug output when parameter values change (with tolerance for float comparison)
-                if abs(org_value - param.value) > 1e-6:
+                # Debug output when parameter values change
+                # Handle different uniform types safely
+                values_changed = False
+                try:
+                    # For numeric types (float, int)
+                    if isinstance(org_value, (int, float)) and isinstance(param.value, (int, float)):
+                        values_changed = abs(org_value - param.value) > 1e-6
+                    # For sequences (vectors, tuples, lists)
+                    elif hasattr(org_value, '__len__') and hasattr(param.value, '__len__'):
+                        if len(org_value) == len(param.value):
+                            values_changed = any(abs(a - b) > 1e-6 for a, b in zip(org_value, param.value))
+                        else:
+                            values_changed = True
+                    # For other types, use direct comparison
+                    else:
+                        values_changed = org_value != param.value
+                except (TypeError, AttributeError):
+                    # Fallback to direct comparison if numeric operations fail
+                    values_changed = org_value != param.value
+                
+                if values_changed:
                     print(f"[{self.__class__.__name__}] Set {param.name} to {param.value}")
     
     @abstractmethod
