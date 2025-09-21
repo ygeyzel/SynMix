@@ -3,6 +3,7 @@ import moderngl_window as mglw
 
 from inputs.inputmanager import KeyboardManager
 from scenes.deadmau5_fractal import Deadmau5Fractal
+from scenes.kepler_planet import KeplerPlanet
 from scenes.scene import Scene
 
 
@@ -27,7 +28,9 @@ class Screen(mglw.WindowConfig):
         self.inputmanager = KeyboardManager()
         
         # Initialize the scene (can be easily swapped for different scenes)
-        self.scene: Scene = Deadmau5Fractal(self.ctx, self.resource_dir)
+        # self.scene: Scene = Deadmau5Fractal(self.ctx, self.resource_dir)
+        self.scene: Scene = KeplerPlanet(self.ctx, self.resource_dir)
+
         self.scene.setup()  # Load shaders, initialize parameters, create geometry
         
         # Bind scene parameters to input manager for keyboard handling
