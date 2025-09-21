@@ -50,10 +50,18 @@ class Scene(ABC):
         vertex_path = os.path.join(self.resource_dir, vertex_shader)
         fragment_path = os.path.join(self.resource_dir, fragment_shader)
         
-        with open(vertex_path, 'r') as f:
-            vertex_source = f.read()
-        with open(fragment_path, 'r') as f:
-            fragment_source = f.read()
+        try:
+            with open(vertex_path, 'r') as f:
+                vertex_source = f.read()
+            with open(fragment_path, 'r') as f:
+                fragment_source = f.read()
+        except OSError as e:
+            raise RuntimeError(
+                f"Failed to load shader files:\n"
+                f"  Vertex shader: {vertex_path}\n"
+                f"  Fragment shader: {fragment_path}\n"
+                f"Error: {e}"
+            ) from e
         
         self.prog = self.ctx.program(
             vertex_shader=vertex_source,
