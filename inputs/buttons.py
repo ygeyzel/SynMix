@@ -12,7 +12,7 @@ class MidiGetter:
 
 @dataclass
 class ButtonGetter:
-    keyboard_keys: Tuple[key]
+    keyboard_keys: Tuple[int, ...]
     midi: MidiGetter
 
 
@@ -20,4 +20,7 @@ class Button(Enum):
     LEFT_WHEEL = ButtonGetter((key.LEFT, key.RIGHT), MidiGetter())
     RIGHT_WHEEL = ButtonGetter((key.UP, key.DOWN), MidiGetter())
     RANGED_PLACEHOLDER = ButtonGetter((key.Q, key.A), MidiGetter())
+    BUTTON_1 = ButtonGetter((key._1, key._2), MidiGetter())
+    BUTTON_2 = ButtonGetter((key._3, key._4), MidiGetter())
+    BUTTON_3 = ButtonGetter((key._5, key._6), MidiGetter())
 
