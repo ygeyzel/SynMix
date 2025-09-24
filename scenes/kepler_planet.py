@@ -47,7 +47,7 @@ class KeplerPlanet(Scene):
             name="atmosphereIntensity",        # Controls atmosphere visibility
             button=Button.BUTTON_1,            # Maps to 1/2 keys
             controller=RangedController(       # Values clamped at min/max
-                step=0.005, min_value=0.0, max_value=1.0, initial_value=0.45)
+                step=0.005, min_value=0.0, max_value=1.0, initial_value=0.25)
         ))
         
         # Cloud density control: affects cloud layer thickness
@@ -55,7 +55,7 @@ class KeplerPlanet(Scene):
             name="cloudDensity",               # Controls cloud density
             button=Button.BUTTON_2,            # Maps to 3/4 keys
             controller=RangedController(       # Values clamped at min/max
-                step=0.02, min_value=0.0, max_value=8.0, initial_value=3.0)
+                step=0.02, min_value=0.0, max_value=8.0, initial_value=0.05)
         ))
         
         # Land contrast control: affects visibility of land masses
@@ -71,7 +71,7 @@ class KeplerPlanet(Scene):
             name="starBrightness",             # Controls star field brightness
             button=Button.BUTTON_4,            # Maps to 7/8 keys
             controller=RangedController(       # Values clamped at min/max
-                step=0.01, min_value=0.0, max_value=3.0, initial_value=1.0)
+                step=0.01, min_value=0.0, max_value=3.0, initial_value=0.33)
         ))
         
         # Surface detail control: affects terrain detail level
@@ -79,7 +79,7 @@ class KeplerPlanet(Scene):
             name="surfaceDetail",              # Controls surface detail level
             button=Button.BUTTON_5,            # Maps to 9/0 keys
             controller=RangedController(       # Values clamped at min/max
-                step=0.01, min_value=0.1, max_value=2.0, initial_value=1.0)
+                step=0.01, min_value=0.1, max_value=2.0, initial_value=2.0)
         ))
         
         return params
