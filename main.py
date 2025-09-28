@@ -13,6 +13,9 @@ from utils.fakemidi import FakeMidi
 MIDI_INPUT_SUBNAME = "Mixage"
 
 
+MIDI_INPUT_SUBNAME = "Mixage"
+
+
 class Screen(mglw.WindowConfig):
     """Main application window - handles core window management and delegates rendering to scenes"""
     
@@ -56,7 +59,6 @@ class Screen(mglw.WindowConfig):
         if self.fake_controller:
             self.fake_controller.handle_keys_input()
 
-        # Delegate rendering to the current scene
         resolution = (self.wnd.width, self.wnd.height, 1.0)
         self.scene.render(time, frame_time, resolution)
 

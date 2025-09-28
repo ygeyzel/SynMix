@@ -2,7 +2,15 @@ from abc import ABC, abstractmethod
 from inputs.midi import MIDI_MAX_VALUE, MIDI_MIN_VALUE, MIDI_INC_VALUE, MIDI_DEC_VALUE 
 
 
+MIDI_INC_VALUE = 65
+MIDI_DEC_VALUE = 63
+
+MIDI_MIN_VALUE = 0
+MIDI_MAX_VALUE = 127
+
+
 controllers_registry = {}
+
 
 def register_controller(name):
     def decorator(cls):
@@ -12,7 +20,7 @@ def register_controller(name):
     return decorator
 
 
-
+@register_controller('ValueController')
 class ValueController(ABC):
     def __init__(self, *args, **kwargs):
         super().__init__()
