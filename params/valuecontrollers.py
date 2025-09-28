@@ -1,5 +1,11 @@
 from abc import ABC, abstractmethod
-from typing import Tuple
+
+
+MIDI_INC_VALUE = 65
+MIDI_DEC_VALUE = 63
+
+MIDI_MIN_VALUE = 0
+MIDI_MAX_VALUE = 127
 
 
 controllers_registry = {}
@@ -12,7 +18,7 @@ def register_controller(name):
     return decorator
 
 
-
+@register_controller('ValueController')
 class ValueController(ABC):
     def __init__(self, *args, **kwargs):
         super().__init__()
@@ -25,15 +31,31 @@ class ValueController(ABC):
         self.value = value
 
     @abstractmethod
-    def expose_functions(self) -> Tuple[callable]:
+    def control_value(self, in_value: int):
         pass
 
-@register_controller('IncDecController')
-class IncDecController(ValueController):
-    def __init__(self, min_value: float, max_value: float, step: float, **kwargs):
+
+@register_controller('NormalizedController')
+class NormalizedController(ValueController):
+    def __init__(self, min_value, max_value, **kwargs):
         super().__init__(**kwargs)
         self.min_value = min_value
         self.max_value = max_value
+
+    def control_value(self, in_value: int):
+        normalized_value = self.min_value + (in_value - MIDI_MIN_VALUE) * (
+            self.max_value - self.min_value) / (MIDI_MAX_VALUE - MIDI_MIN_VALUE)
+        self.set_value(normalized_value)
+
+
+@register_controller('IncDecController')
+class IncDecController(ValueController):
+    def __init__(self, min_value: float, max_value: float, step: float, inc_value: int = MIDI_INC_VALUE, dec_value: int = MIDI_DEC_VALUE, **kwargs):
+        super().__init__(**kwargs)
+        self.min_value = min_value
+        self.max_value = max_value
+        self.inc_value = inc_value
+        self.dec_value = dec_value
         self.step = step
 
     @abstractmethod
@@ -44,8 +66,11 @@ class IncDecController(ValueController):
     def decrease(self):
         pass
 
-    def expose_functions(self) -> Tuple[callable]:
-        return (self.increase, self.decrease)
+    def control_value(self, in_value: int):
+        if in_value == self.inc_value:
+            self.increase()
+        elif in_value == self.dec_value:
+            self.decrease()
 
 
 @register_controller('RangedController')

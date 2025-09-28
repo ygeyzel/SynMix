@@ -39,6 +39,17 @@ wheels = [
 ]
 
 [[package]]
+name = "frozendict"
+version = "2.4.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/bb/59/19eb300ba28e7547538bdf603f1c6c34793240a90e1a7b61b65d8517e35e/frozendict-2.4.6.tar.gz", hash = "sha256:df7cd16470fbd26fc4969a208efadc46319334eb97def1ddf48919b351192b8e", size = 316416, upload-time = "2024-10-13T12:15:32.449Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/04/13/d9839089b900fa7b479cce495d62110cddc4bd5630a04d8469916c0e79c5/frozendict-2.4.6-py311-none-any.whl", hash = "sha256:d065db6a44db2e2375c23eac816f1a022feb2fa98cbb50df44a9e83700accbea", size = 16148, upload-time = "2024-10-13T12:15:26.839Z" },
+    { url = "https://files.pythonhosted.org/packages/ba/d0/d482c39cee2ab2978a892558cf130681d4574ea208e162da8958b31e9250/frozendict-2.4.6-py312-none-any.whl", hash = "sha256:49344abe90fb75f0f9fdefe6d4ef6d4894e640fadab71f11009d52ad97f370b9", size = 16146, upload-time = "2024-10-13T12:15:28.16Z" },
+    { url = "https://files.pythonhosted.org/packages/a5/8e/b6bf6a0de482d7d7d7a2aaac8fdc4a4d0bb24a809f5ddd422aa7060eb3d2/frozendict-2.4.6-py313-none-any.whl", hash = "sha256:7134a2bb95d4a16556bb5f2b9736dceb6ea848fa5b6f3f6c2d6dba93b44b4757", size = 16146, upload-time = "2024-10-13T12:15:29.495Z" },
+]
+
+[[package]]
 name = "glcontext"
 version = "3.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -130,6 +141,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/99/5b/a36a337438a14116b16480db471ad061c36c3694df7c2084a0da7ba538b7/matplotlib_inline-0.1.7.tar.gz", hash = "sha256:8423b23ec666be3d16e16b60bdd8ac4e86e840ebd1dd11a30b9f117f2fa0ab90", size = 8159, upload-time = "2024-04-15T13:44:44.803Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/8f/8e/9ad090d3553c280a8060fbf6e24dc1c0c29704ee7d1c372f0c174aa59285/matplotlib_inline-0.1.7-py3-none-any.whl", hash = "sha256:df192d39a4ff8f21b1895d72e6a13f5fcc5099f00fa84384e0ea28c2cc0653ca", size = 9899, upload-time = "2024-04-15T13:44:43.265Z" },
+]
+
+[[package]]
+name = "mido"
+version = "1.3.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/23/14/cfda3fe61ce4c0f50a9f707ae02b46cb53211732b2cd4522bf06272848f4/mido-1.3.3.tar.gz", hash = "sha256:1aecb30b7f282404f17e43768cbf74a6a31bf22b3b783bdd117a1ce9d22cb74c", size = 124288, upload-time = "2024-10-25T15:05:21.847Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fd/28/45deb15c11859d2f10702b32e71de9328a9fa494f989626916db39a9617f/mido-1.3.3-py3-none-any.whl", hash = "sha256:01033c9b10b049e4436fca2762194ca839b09a4334091dd3c34e7f4ae674fd8a", size = 54614, upload-time = "2024-10-25T15:05:20.349Z" },
 ]
 
 [[package]]
@@ -236,6 +259,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/14/ba/5b5c9978c4bb161034148ade2de9db44ec316fab89ce8c400db0e0c81f86/numpy-2.3.2-cp314-cp314t-win32.whl", hash = "sha256:6f1ae3dcb840edccc45af496f312528c15b1f79ac318169d094e85e4bb35fdf1", size = 6514777, upload-time = "2025-07-24T20:55:57.66Z" },
     { url = "https://files.pythonhosted.org/packages/eb/46/3dbaf0ae7c17cdc46b9f662c56da2054887b8d9e737c1476f335c83d33db/numpy-2.3.2-cp314-cp314t-win_amd64.whl", hash = "sha256:087ffc25890d89a43536f75c5fe8770922008758e8eeeef61733957041ed2f9b", size = 13111856, upload-time = "2025-07-24T20:56:17.318Z" },
     { url = "https://files.pythonhosted.org/packages/c1/9e/1652778bce745a67b5fe05adde60ed362d38eb17d919a540e813d30f6874/numpy-2.3.2-cp314-cp314t-win_arm64.whl", hash = "sha256:092aeb3449833ea9c0bf0089d70c29ae480685dd2377ec9cdbbb620257f84631", size = 10544226, upload-time = "2025-07-24T20:56:34.509Z" },
+]
+
+[[package]]
+name = "packaging"
+version = "25.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a1/d4/1fc4078c65507b51b96ca8f8c3ba19e6a61c8253c72794544580a7b6c24d/packaging-25.0.tar.gz", hash = "sha256:d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f", size = 165727, upload-time = "2025-04-19T11:48:59.673Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/20/12/38679034af332785aac8774540895e234f4d07f7545804097de4b666afd8/packaging-25.0-py3-none-any.whl", hash = "sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484", size = 66469, upload-time = "2025-04-19T11:48:57.875Z" },
 ]
 
 [[package]]
@@ -408,6 +440,19 @@ wheels = [
 ]
 
 [[package]]
+name = "python-rtmidi"
+version = "1.5.8"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/dd/ee/0f91965dcc471714c69df21e5ca3d94dc81411b7dee2d31ff1184bea07c9/python_rtmidi-1.5.8.tar.gz", hash = "sha256:7f9ade68b068ae09000ecb562ae9521da3a234361ad5449e83fc734544d004fa", size = 368130, upload-time = "2023-11-20T21:55:02.192Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/51/27/887b0378e0a907489a07bdeb808fa5ed349675245c6ee14d9f6d00304f96/python_rtmidi-1.5.8-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:5443634597eb340cdec0734f76267a827c2d366f00a6f9195141c78828016ac2", size = 158861, upload-time = "2023-11-20T21:54:39.549Z" },
+    { url = "https://files.pythonhosted.org/packages/4d/ec/57cecde253daab896ce53778520cd41eb062641862ebdb0ee6f97511b1d9/python_rtmidi-1.5.8-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:29d9c9d9f82ce679fecad7bb4cb79f3a24574ea84600e377194b4cc1baacec0e", size = 153416, upload-time = "2023-11-20T21:54:40.835Z" },
+    { url = "https://files.pythonhosted.org/packages/6f/5b/dc19c53d9d512b74dc2cca3725591cc612b9465645695a0696352a8c8b54/python_rtmidi-1.5.8-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:25f5a5db7be98911c41ca5bebb262fcf9a7c89600b88fd3c207ceafd3101e721", size = 305696, upload-time = "2023-11-20T21:54:42.037Z" },
+    { url = "https://files.pythonhosted.org/packages/f6/92/5a60f56dfb2740e644e932233928947423cd2101895319b331f84527eb31/python_rtmidi-1.5.8-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:cec30924e305f55284594ccf35a71dee7216fd308dfa2dec1b3ed03e6f243803", size = 315579, upload-time = "2023-11-20T21:54:43.339Z" },
+    { url = "https://files.pythonhosted.org/packages/93/46/6af077d262f521ea2bf1ab60b8aad72f34fe6dd55af739176605369d449c/python_rtmidi-1.5.8-cp312-cp312-win_amd64.whl", hash = "sha256:052c89933cae4fca354012d8ca7248f4f9e1e3f062471409d48415a7f7d7e59e", size = 129755, upload-time = "2023-11-20T21:54:44.935Z" },
+]
+
+[[package]]
 name = "stack-data"
 version = "0.6.3"
 source = { registry = "https://pypi.org/simple" }
@@ -426,18 +471,24 @@ name = "synmix"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "frozendict" },
     { name = "ipdb" },
+    { name = "mido" },
     { name = "moderngl" },
     { name = "moderngl-window" },
     { name = "numpy" },
+    { name = "python-rtmidi" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "frozendict", specifier = ">=2.4.6" },
     { name = "ipdb", specifier = ">=0.13.13" },
+    { name = "mido", specifier = ">=1.3.3" },
     { name = "moderngl", specifier = ">=5.12.0" },
     { name = "moderngl-window", specifier = ">=3.1.1" },
     { name = "numpy", specifier = ">=2.3.2" },
+    { name = "python-rtmidi", specifier = ">=1.5.8" },
 ]
 
 [[package]]
