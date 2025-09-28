@@ -39,7 +39,7 @@ class KeplerPlanet(Scene):
             name="cameraDistance",             # Controls camera distance from planet
             button=Button.LEFT_HIGH,  # Maps to Q/A keys
             controller=NormalizedController(       # Values clamped at min/max
-                min_value=1.5, max_value=5.0, initial_value=2.5)
+                min_value=1.5, max_value=50.0, initial_value=2.5)
         ))
         
         # Atmosphere intensity control: affects visibility of atmospheric effects

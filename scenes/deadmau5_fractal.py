@@ -23,7 +23,7 @@ class Deadmau5Fractal(Scene):
             name="xOffset",                    # Corresponds to uniform in fragment shader
             button=Button.LEFT_WHEEL,          # Maps to Left/Right arrow keys
             controller=CyclicController(       # Values wrap around at min/max
-                step=-0.001, min_value=-3.0, max_value=3.0)
+                step=0.001, min_value=-3.0, max_value=3.0)
         ))
         
         # Y-axis offset control: Up/Down arrow keys, wraps around at boundaries
