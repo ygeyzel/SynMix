@@ -2,10 +2,24 @@ from abc import ABC, abstractmethod
 from inputs.midi import MIDI_MAX_VALUE, MIDI_MIN_VALUE, MIDI_INC_VALUE, MIDI_DEC_VALUE 
 
 
+controllers_registry = {}
+
+def register_controller(name):
+    def decorator(cls):
+        controllers_registry[name] = cls
+        return cls
+
+    return decorator
+
+
+
 class ValueController(ABC):
     def __init__(self, *args, **kwargs):
         super().__init__()
         self.value = kwargs.get('initial_value', 0.0)
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.__dict__})'
 
     def set_value(self, value: float):
         self.value = value
@@ -15,6 +29,7 @@ class ValueController(ABC):
         pass
 
 
+@register_controller('NormalizedController')
 class NormalizedController(ValueController):
     def __init__(self, min_value, max_value, **kwargs):
         super().__init__(**kwargs)
@@ -51,6 +66,7 @@ class IncDecController(ValueController):
             self.decrease()
 
 
+@register_controller('RangedController')
 class RangedController(IncDecController):
     def increase(self):
         self.value = min(self.value + self.step, self.max_value)
@@ -59,6 +75,7 @@ class RangedController(IncDecController):
         self.value = max(self.value - self.step, self.min_value)
 
 
+@register_controller('CyclicController')
 class CyclicController(IncDecController):
     def increase(self):
         self.value += self.step

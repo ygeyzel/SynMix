@@ -8,6 +8,9 @@ class Param:
         self.button = button
         self.controller = controller
 
+    def __repr__(self):
+        return f'Param({self.name}, {self.button}, {self.controller})'
+
     @property
     def value(self) -> float:
         return self.controller.value
