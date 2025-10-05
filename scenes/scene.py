@@ -1,99 +1,77 @@
 from abc import ABC, abstractmethod
 from typing import List, Tuple
 import moderngl_window as mglw
+from pathlib import Path
 import os
 
 from params.params import Param
 
+SHADERS_DIR = 'shaders'
 
-class Scene(ABC):
-    """Abstract base class for visual scenes that can be rendered with shaders"""
-    
-    def __init__(self, ctx, resource_dir: str = 'shaders'):
-        """
-        Initialize the scene with OpenGL context and resource directory
-        
-        Args:
-            ctx: ModernGL context for OpenGL operations
-            resource_dir: Directory containing shader files
-        """
-        self.ctx = ctx
-        self.resource_dir = resource_dir
-        self.prog = None  # OpenGL shader program
-        self.params: List[Param] = []  # Controllable parameters
-        
-    @abstractmethod
-    def get_shader_files(self) -> Tuple[str, str]:
-        """
-        Return the vertex and fragment shader filenames for this scene
-        
-        Returns:
-            Tuple of (vertex_shader_filename, fragment_shader_filename)
-        """
-        pass
-    
-    @abstractmethod
-    def init_params(self) -> List[Param]:
-        """
-        Initialize and return the list of controllable parameters for this scene
-        
-        Returns:
-            List of Param objects that can be controlled via input
-        """
-        pass
-    
-    def load_shaders(self):
-        """Load and compile the shader program for this scene"""
-        vertex_shader, fragment_shader = self.get_shader_files()
-        
-        # Read shader files directly from the resource directory
-        vertex_path = os.path.join(self.resource_dir, vertex_shader)
-        fragment_path = os.path.join(self.resource_dir, fragment_shader)
-        
+class Scene:
+    """A class for common shader based visual scene functionality"""
+
+    def __init__(self, name: str, params: List[Param], fragment_shader_filename: str, vertex_shader_filename: str = 'vertex.glsl'):
+        self.name = name
+        self.params = params
+        self.fragment_shader_filename = fragment_shader_filename
+        self.vertex_shader_filename = vertex_shader_filename
+
+        self.prog = None
+
+    def __repr__(self):
+        return f'Scene({self.name}: shaders=[{self.fragment_shader_filename},{self.vertex_shader_filename}], params:{[p for p in self.params]})'
+
+    def __str__(self):
+        return self.__repr__()
+
+    def _load_shaders_code_from_files(self, screen_ctx):
+        vertex_path = Path(SHADERS_DIR) / self.vertex_shader_filename
+        fragment_path = Path(SHADERS_DIR) / self.fragment_shader_filename
         try:
-            with open(vertex_path, 'r') as f:
-                vertex_source = f.read()
-            with open(fragment_path, 'r') as f:
-                fragment_source = f.read()
+            with open(vertex_path, 'r') as vf, open(fragment_path, 'r') as ff:
+                vertex_source = vf.read()
+                fragment_source = ff.read()
+
         except OSError as e:
-            raise RuntimeError(
-                f"Failed to load shader files:\n"
-                f"  Vertex shader: {vertex_path}\n"
-                f"  Fragment shader: {fragment_path}\n"
-                f"Error: {e}"
-            ) from e
-        
-        self.prog = self.ctx.program(
-            vertex_shader=vertex_source,
-            fragment_shader=fragment_source
-        )
-    
-    def setup(self):
-        """Complete scene setup - load shaders and initialize parameters"""
-        self.load_shaders()
-        self.params = self.init_params()
-    
-    def update_uniforms(self, time: float, resolution: Tuple[float, float, float]):
+            raise RuntimeError(f'Failed to load shader files:\n'
+                               f"  Vertex shader: {vertex_path}\n"
+                               f"  Fragment shader: {fragment_path}\n"
+                               f"Error: {e}") from e
+
+        self.prog = screen_ctx.program(vertex_shader=vertex_source,
+                                       fragment_shader=fragment_source)
+
+
+    def setup(self, screen_ctx):
+        """Load and compile the shader program for this scene"""
+        self._load_shaders_code_from_files(screen_ctx)
+        self.quad = mglw.geometry.quad_fs()
+
+    def update_params(self, time: float, frame_time: float, resolution: Tuple[float, float, float]):
         """
-        Update standard shader uniforms that most scenes will need
-        
+        Update shader uniforms with current parameter values
+
         Args:
             time: Current time for animations
+            frame_time: Time since last frame
             resolution: Screen resolution as (width, height, aspect_ratio)
         """
+
         if 'iTime' in self.prog:
             self.prog['iTime'].value = time
+
         if 'iResolution' in self.prog:
             self.prog['iResolution'].value = resolution
-    
-    def update_params(self):
-        """Update shader uniforms with current parameter values"""
+
+        _ = frame_time # for future use
+
         for param in self.params:
             if param.name in self.prog:
                 shader_param = self.prog[param.name]
                 org_value = shader_param.value
                 shader_param.value = param.value
-                
+
                 # Debug output when parameter values change
                 # Handle different uniform types safely
                 values_changed = False
@@ -101,30 +79,35 @@ class Scene(ABC):
                     # For numeric types (float, int)
                     if isinstance(org_value, (int, float)) and isinstance(param.value, (int, float)):
                         values_changed = abs(org_value - param.value) > 1e-6
+
                     # For sequences (vectors, tuples, lists)
                     elif hasattr(org_value, '__len__') and hasattr(param.value, '__len__'):
                         if len(org_value) == len(param.value):
                             values_changed = any(abs(a - b) > 1e-6 for a, b in zip(org_value, param.value))
+
                         else:
                             values_changed = True
+
                     # For other types, use direct comparison
                     else:
-                        values_changed = org_value != param.value
+                        values_changed = (org_value != param.value)
+
                 except (TypeError, AttributeError):
                     # Fallback to direct comparison if numeric operations fail
                     values_changed = org_value != param.value
-                
+
                 if values_changed:
                     print(f"[{self.__class__.__name__}] Set {param.name} to {param.value}")
-    
-    @abstractmethod
-    def render(self, time: float, frame_time: float, resolution: Tuple[float, float, float]):
+
+    def render(self, screen_ctx, time: float, frame_time: float, resolution: Tuple[float, float, float]):
         """
         Render the scene
-        
+
         Args:
             time: Current time for animations
             frame_time: Time since last frame
             resolution: Screen resolution as (width, height, aspect_ratio)
-        """
-        pass
+        """ 
+        self.update_params(time, frame_time, resolution)
+        screen_ctx.clear()
+        self.quad.render(self.prog)  # Executes vertex + fragment shaders
