@@ -1,28 +1,14 @@
-from dataclasses import dataclass
 from enum import Enum
-from typing import Tuple
-
-from pyglet.window import key
-
-
-# currently a placeholder for MIDI input handling
-class MidiGetter:
-    pass
-
-
-@dataclass
-class ButtonGetter:
-    keyboard_keys: Tuple[int, ...]
-    midi: MidiGetter
+from inputs.midi import MidiEventType, MidiGetter
 
 
 class Button(Enum):
-    LEFT_WHEEL = ButtonGetter((key.LEFT, key.RIGHT), MidiGetter())
-    RIGHT_WHEEL = ButtonGetter((key.UP, key.DOWN), MidiGetter())
-    RANGED_PLACEHOLDER = ButtonGetter((key.Q, key.A), MidiGetter())
-    BUTTON_1 = ButtonGetter((key._1, key._2), MidiGetter())
-    BUTTON_2 = ButtonGetter((key._3, key._4), MidiGetter())
-    BUTTON_3 = ButtonGetter((key._5, key._6), MidiGetter())
-    BUTTON_4 = ButtonGetter((key._7, key._8), MidiGetter())
-    BUTTON_5 = ButtonGetter((key._9, key._0), MidiGetter())
+    LEFT_WHEEL = MidiGetter(MidiEventType.CONTROL_CHANGE, 36)
+    RIGHT_WHEEL = MidiGetter(MidiEventType.CONTROL_CHANGE, 37)
+    LEFT_HIGH = MidiGetter(MidiEventType.CONTROL_CHANGE, 53)
+    LEFT_MID = MidiGetter(MidiEventType.CONTROL_CHANGE, 54)
+    LEFT_LOW = MidiGetter(MidiEventType.CONTROL_CHANGE, 55)
+    RIGHT_HIGH = MidiGetter(MidiEventType.CONTROL_CHANGE, 59)
+    RIGHT_MID = MidiGetter(MidiEventType.CONTROL_CHANGE, 60)
+    RIGHT_LOW = MidiGetter(MidiEventType.CONTROL_CHANGE, 61)
 

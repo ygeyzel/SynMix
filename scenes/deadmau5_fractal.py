@@ -3,7 +3,7 @@ import moderngl_window as mglw
 
 from inputs.buttons import Button
 from params.params import Param
-from params.valuecontrollers import CyclicController, RangedController
+from params.valuecontrollers import CyclicController, NormalizedController
 from scenes.scene import Scene
 
 
@@ -23,7 +23,7 @@ class Deadmau5Fractal(Scene):
             name="xOffset",                    # Corresponds to uniform in fragment shader
             button=Button.LEFT_WHEEL,          # Maps to Left/Right arrow keys
             controller=CyclicController(       # Values wrap around at min/max
-                step=-0.001, min_value=-10.0, max_value=10.0)
+                step=0.001, min_value=-3.0, max_value=3.0)
         ))
         
         # Y-axis offset control: Up/Down arrow keys, wraps around at boundaries
@@ -31,15 +31,15 @@ class Deadmau5Fractal(Scene):
             name="yOffset",                    # Corresponds to uniform in fragment shader
             button=Button.RIGHT_WHEEL,         # Maps to Up/Down arrow keys
             controller=CyclicController(       # Values wrap around at min/max
-                step=0.001, min_value=-10.0, max_value=10.0)
+                step=0.001, min_value=-3.0, max_value=3.0)
         ))
         
         # Color intensity control: Q/A keys, clamped at boundaries
         params.append(Param(
             name="colorFactor",                # Corresponds to uniform in fragment shader
-            button=Button.RANGED_PLACEHOLDER,  # Maps to Q/A keys
-            controller=RangedController(       # Values clamped at min/max
-                step=0.01, min_value=0.0, max_value=1.0, initial_value=0.3)
+            button=Button.LEFT_HIGH,  # Maps to Q/A keys
+            controller=NormalizedController(       # Values clamped at min/max
+                min_value=0.0, max_value=1.0, initial_value=0.3)
         ))
         
         return params

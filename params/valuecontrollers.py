@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Tuple
+from inputs.midi import MIDI_MAX_VALUE, MIDI_MIN_VALUE, MIDI_INC_VALUE, MIDI_DEC_VALUE 
 
 
 class ValueController(ABC):
@@ -11,15 +11,29 @@ class ValueController(ABC):
         self.value = value
 
     @abstractmethod
-    def expose_functions(self) -> Tuple[callable]:
+    def control_value(self, in_value: int):
         pass
 
 
-class IncDecController(ValueController):
-    def __init__(self, min_value: float, max_value: float, step: float, **kwargs):
+class NormalizedController(ValueController):
+    def __init__(self, min_value, max_value, **kwargs):
         super().__init__(**kwargs)
         self.min_value = min_value
         self.max_value = max_value
+
+    def control_value(self, in_value: int):
+        normalized_value = self.min_value + (in_value - MIDI_MIN_VALUE) * (
+            self.max_value - self.min_value) / (MIDI_MAX_VALUE - MIDI_MIN_VALUE)
+        self.set_value(normalized_value)
+
+
+class IncDecController(ValueController):
+    def __init__(self, min_value: float, max_value: float, step: float, inc_value: int = MIDI_INC_VALUE, dec_value: int = MIDI_DEC_VALUE, **kwargs):
+        super().__init__(**kwargs)
+        self.min_value = min_value
+        self.max_value = max_value
+        self.inc_value = inc_value
+        self.dec_value = dec_value
         self.step = step
 
     @abstractmethod
@@ -30,8 +44,11 @@ class IncDecController(ValueController):
     def decrease(self):
         pass
 
-    def expose_functions(self) -> Tuple[callable]:
-        return (self.increase, self.decrease)
+    def control_value(self, in_value: int):
+        if in_value == self.inc_value:
+            self.increase()
+        elif in_value == self.dec_value:
+            self.decrease()
 
 
 class RangedController(IncDecController):
@@ -47,7 +64,7 @@ class CyclicController(IncDecController):
         self.value += self.step
         if self.value > self.max_value:
             self.value = self.min_value + (self.value - self.max_value)
-    
+
     def decrease(self):
         self.value -= self.step
         if self.value < self.min_value:

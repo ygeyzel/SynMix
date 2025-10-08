@@ -9,5 +9,8 @@ class Param:
         self.controller = controller
 
     @property
-    def value(self):
+    def value(self) -> float:
         return self.controller.value
+
+    def control_param(self, value: int | float):
+        self.controller.control_value(value)
