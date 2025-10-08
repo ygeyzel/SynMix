@@ -1,0 +1,58 @@
+{
+  "LEFT_WHEEL": {
+    "interface_type": "SCROLLER",
+    "keys": [
+      "UP",
+      "DOWN"
+    ]
+  },
+  "RIGHT_WHEEL": {
+    "interface_type": "SCROLLER",
+    "keys": [
+      "LEFT",
+      "RIGHT"
+    ]
+  },
+  "LEFT_HIGH": {
+    "interface_type": "STEPPER",
+    "keys": [
+      "Q",
+      "A"
+    ]
+  },
+  "LEFT_MID": {
+    "interface_type": "STEPPER",
+    "keys": [
+      "W",
+      "S"
+    ]
+  },
+  "LEFT_LOW": {
+    "interface_type": "STEPPER",
+    "keys": [
+      "E",
+      "D"
+    ]
+  },
+  "RIGHT_HIGH": {
+    "interface_type": "STEPPER",
+    "keys": [
+      "I",
+      "K"
+    ]
+  },
+  "RIGHT_MID": {
+    "interface_type": "STEPPER",
+    "keys": [
+      "O",
+      "L"
+    ]
+  },
+  "RIGHT_LOW": {
+    "interface_type": "STEPPER",
+    "keys": [
+      "P",
+      ";"
+    ]
+  }
+}
