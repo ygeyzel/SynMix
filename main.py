@@ -13,9 +13,6 @@ from utils.fakemidi import FakeMidi
 MIDI_INPUT_SUBNAME = "Mixage"
 
 
-MIDI_INPUT_SUBNAME = "Mixage"
-
-
 class Screen(mglw.WindowConfig):
     """Main application window - handles core window management and delegates rendering to scenes"""
     
