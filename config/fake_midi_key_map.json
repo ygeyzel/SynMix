@@ -52,7 +52,7 @@
     "interface_type": "STEPPER",
     "keys": [
       "P",
-      ";"
+      "SEMICOLON"
     ]
   }
 }

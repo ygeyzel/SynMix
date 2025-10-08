@@ -5,7 +5,7 @@ from inputs.inputmanager import MidiInputManager
 from scenes.deadmau5_fractal import Deadmau5Fractal
 from scenes.kepler_planet import KeplerPlanet
 from scenes.scene import Scene
-from utils.fakecontroller import FakeController
+from utils.fakemidi import FakeMidi
 
 
 MIDI_INPUT_SUBNAME = "Mixage"
@@ -26,7 +26,7 @@ class Screen(mglw.WindowConfig):
         super().__init__(**kwargs)
         
         # Initialize input handling system
-        self.fake_controller = FakeController()
+        self.fake_controller = FakeMidi()
         self.inputmanager: MidiInputManager
         self.init_input_manager()
         

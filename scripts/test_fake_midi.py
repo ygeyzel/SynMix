@@ -12,7 +12,7 @@ script_dir = Path(__file__).resolve().parent
 project_root = script_dir.parent
 sys.path.insert(0, str(project_root))
 
-from utils.fakecontroller import FakeController
+from utils.fakemidi import FakeMidi
 
 
 class MidiMonitor(threading.Thread):
@@ -67,7 +67,7 @@ class TestWindow(mglw.WindowConfig):
         
         # Create fake controller
         print("Initializing Fake MIDI Controller...")
-        self.fake_controller = FakeController()
+        self.fake_controller = FakeMidi()
         print(f"Created virtual MIDI output: '{self.fake_controller.output_name}'")
         
         # Start MIDI monitor in background thread
