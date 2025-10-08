@@ -146,10 +146,7 @@ def interface_factory(button: Button, interface_type: InterfaceType) -> ButtonIn
 
 
 def get_key_code(key_name: str) -> int:
-    try:
-        return getattr(pyglet_key, key_name)
-    except AttributeError:
-        raise ValueError(f"Key name '{key_name}' is not valid in pyglet.window.key")
+    return getattr(pyglet_key, key_name)
 
 
 def load_key_map(file_path: str) -> Dict[int, Callable]:
@@ -178,41 +175,21 @@ def load_key_map(file_path: str) -> Dict[int, Callable]:
         config = json.load(f)
     key_map = {}
     for button_name, mapping in config.items():
-        try:
-            button = Button[button_name]
-        except KeyError:
-            print(f"Warning: Button '{button_name}' not found in Button enum. Skipping.")
-            continue
-
-        try:
-            interface_type = InterfaceType[mapping['interface_type']]
-        except KeyError:
-            print(f"Warning: Interface type '{mapping['interface_type']}' not recognized. Skipping button '{button_name}'.")
-            continue
-
-        try:
-            interface = interface_factory(button, interface_type)
-        except ValueError as e:
-            print(f"Warning: {e}. Skipping button '{button_name}'.")
-            continue
-
+        button = Button[button_name]
+        interface_type = InterfaceType[mapping['interface_type']]
+        interface = interface_factory(button, interface_type)
         keys_messages_methods = interface.keys_messages_methods()
         if len(mapping['keys']) != len(keys_messages_methods):
-            print(f"Warning: Number of keys does not match number of message methods for button '{button_name}'. Skipping.")
-            continue
+            raise ValueError(f"Number of keys does not match number of message methods for button '{button_name}'")
 
         for key, methods in zip(mapping['keys'], keys_messages_methods):
-            try:
-                key_code = get_key_code(key)
-                key_map[key_code] = methods
-            except ValueError as e:
-                print(f"Warning: {e}. Skipping key '{key}' for button '{button_name}'.")
-                continue
+            key_code = get_key_code(key)
+            key_map[key_code] = methods
 
     return key_map
 
 
-class FakeController:
+class FakeMidi:
     def __init__(self, output_name='Fake MIDI Controller', key_map_file='config/fake_midi_key_map.json'):
         self.output_name = output_name
         self.output = mido.open_output(self.output_name, virtual=True)
