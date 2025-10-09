@@ -28,13 +28,19 @@ uv run main.py --fakemidi
 
 ### Fake MIDI Controller
 
-The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard inputs to MIDI messages. This is useful for:
+The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard inputs to MIDI messages
 
-Key mappings are configured in `config/fake_midi_key_map.json`. This JSON file maps:
-- Button names (from `inputs/buttons.py`) to interface types (`STEPPER`, `SCROLLER`, `TOGGLE`)
-- Each button to specific keyboard keys
+- Key mappings are configured in `config/fake_midi_key_map.json`. This JSON file maps:
+  - Button names (from `inputs/buttons.py`) to interface types (`STEPPER`, `SCROLLER`, `TOGGLE`)
+  - Each button to specific keyboard keys
 - The fake MIDI controller creates a virtual MIDI port and translates keyboard events into the corresponding MIDI messages based on this configuration
 - Modifiers (Shift, Ctrl, Alt) can be used in combination with mapped keys to accelerate changes (not relevant for `TOGGLE` interface)
+
+A standalone test script is available at `scripts/test_fake_controller.py` for testing the fake MIDI controller and viewing MIDI output in real-time.
+Run the script wirh:
+```
+uv run scripts/test_fake_controller.py
+```
 
 
 ## Project Structure
@@ -55,4 +61,6 @@ Key mappings are configured in `config/fake_midi_key_map.json`. This JSON file m
 ├── utils/               # Utility modules
 │   └── fakemidi.py      # Virtual MIDI controller
 └── resources/           # Additional resources
+```
+
 ```
