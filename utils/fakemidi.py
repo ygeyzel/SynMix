@@ -17,6 +17,7 @@ MIN_PITCH = -8192
 PITCH_STEP_FACTOR = 64
 
 
+
 class KeyMessageParams(NamedTuple):
     pressed_params: dict
     released_params: dict | None
@@ -190,13 +191,29 @@ def load_key_map(file_path: str) -> Dict[int, Callable]:
 
 
 class FakeMidi:
+    _instance = None
+     
+    @classmethod
+    def get_fake_midi_if_exist(cls):
+        return cls._instance 
+
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+
     def __init__(self, output_name='Fake MIDI Controller', key_map_file='config/fake_midi_key_map.json'):
-        self.output_name = output_name
-        self.output = mido.open_output(self.output_name, virtual=True)
-        self.held_keys = set()
-        self.relesed_keys = set()
-        self.modifiers = {}
-        self.key_map = load_key_map(key_map_file)
+        # Only initialize if it's the first time
+        if not hasattr(self, '_initialized'):
+            self.output_name = output_name
+            self.output = mido.open_output(self.output_name, virtual=True)
+            self.held_keys = set()
+            self.relesed_keys = set()
+            self.modifiers = {}
+            self.key_map = load_key_map(key_map_file)
+            self._initialized = True
 
     def handle_keys_input(self):
         amp = reduce(lambda s, m: s * (2 if m else 1),
