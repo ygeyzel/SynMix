@@ -46,6 +46,7 @@ class Scene:
     def setup(self, screen_ctx):
         """Load and compile the shader program for this scene"""
         self._load_shaders_code_from_files(screen_ctx)
+        self.screen_ctx = screen_ctx
         self.quad = mglw.geometry.quad_fs()
 
     def update_params(self, time: float, frame_time: float, resolution: Tuple[float, float, float]):
@@ -99,7 +100,7 @@ class Scene:
                 if values_changed:
                     print(f"[{self.__class__.__name__}] Set {param.name} to {param.value}")
 
-    def render(self, screen_ctx, time: float, frame_time: float, resolution: Tuple[float, float, float]):
+    def render(self, time: float, frame_time: float, resolution: Tuple[float, float, float]):
         """
         Render the scene
 
@@ -109,5 +110,5 @@ class Scene:
             resolution: Screen resolution as (width, height, aspect_ratio)
         """ 
         self.update_params(time, frame_time, resolution)
-        screen_ctx.clear()
+        self.screen_ctx.clear()
         self.quad.render(self.prog)  # Executes vertex + fragment shaders
