@@ -1,6 +1,7 @@
 import tomllib
 from typing import List, Tuple
 import os
+import random
 from pprint import pprint
 
 from inputs.input_manager import MidiInputManager
@@ -16,11 +17,15 @@ class ScenesManager:
         self.input_manager = MidiInputManager() 
         self.screen_ctx = screen_ctx
         self._load_scens_from_toml_files()
-        assert len(self.scenes) > 0, "Error! No scenes are loaded."
-        self.current_scene = self.scenes[0]
+        assert len(self.scenes) > 0, "No scenes are loaded."
+        self.current_scene_index = 1
         self.change_to_scene(self.current_scene)
 
         pprint(self.scenes)
+
+    @property
+    def current_scene(self):
+        return self.scenes[self.current_scene_index]
 
     @staticmethod
     def _generat_param_from_file_data(data):
@@ -41,11 +46,32 @@ class ScenesManager:
     def render(self, time, frame_time, resolution):
         self.current_scene.render(time, frame_time, resolution)
 
+    def change_to_next_scene(self):
+        self.current_scene_index = (self.current_scene_index + 1) % len(self.scenes)
+        self.change_to_scene(self.current_scene)
+
+    def change_to_previous_scene(self):
+        self.current_scene_index = (self.current_scene_index - 1) % len(self.scenes)
+        self.change_to_scene(self.current_scene)
+
+    def change_to_random_scene(self):
+        self.change_to_scene(random.choice(self.scenes))
+
+    def change_to_scene_by_name(self, name: str):
+        __import__('ipdb').set_trace()
+        for scene in self.scenes:
+            if name == scene.name:
+                self.change_to_scene(scene)
+                break
+
+        else:
+            raise ValueError(f'no scene named:\'{name}\' in {[s.name for s in self.scenes]}')
 
     def change_to_scene(self, new_csene: Scene):
         new_csene.setup(self.screen_ctx)
         for param in new_csene.params:
             self.input_manager.bind_param(param) 
+
 
 if __name__ == '__main__':
     sm = ScensManager()

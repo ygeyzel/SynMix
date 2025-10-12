@@ -1,0 +1,57 @@
+name = "KeplerPlanet"
+fragment_shader_filename = "kepler.glsl"
+
+[[params]]
+name = "orbitSpeed"
+button = "LEFT_WHEEL"
+controller.type = "RangedController"
+controller.args = {step = 0.002, min_value = 0.0, max_value = 0.5, initial_value = 0.125}
+
+[[params]]
+name = "timeScale"
+button = "RIGHT_WHEEL"
+controller.type  = "RangedController"
+controller.args = {step = 0.001, min_value = 0.0, max_value = 0.3, initial_value = 0.1}
+
+
+[[params]]
+name = "cameraDistance"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 1.5, max_value = 50.0, initial_value = 2.5}
+
+
+[[params]]
+name = "atmosphereIntensity"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.45}
+
+
+[[params]]
+name = "cloudDensity"
+button = "LEFT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 8.0, initial_value = 3.0}
+
+
+[[params]]
+name = "landContrast"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.5, initial_value = 0.75}
+
+
+[[params]]
+name = "starBrightness"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 3.0, initial_value = 1.0}
+
+
+[[params]]
+name = "surfaceDetail"
+button = "RIGHT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 1.0}
+
