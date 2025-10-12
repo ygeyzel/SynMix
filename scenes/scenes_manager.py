@@ -58,7 +58,6 @@ class ScenesManager:
         self.change_to_scene(random.choice(self.scenes))
 
     def change_to_scene_by_name(self, name: str):
-        __import__('ipdb').set_trace()
         for scene in self.scenes:
             if name == scene.name:
                 self.change_to_scene(scene)
