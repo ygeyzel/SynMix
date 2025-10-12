@@ -16,14 +16,12 @@ class Screen(mglw.WindowConfig):
     resizable = True
     resource_dir = 'shaders'  # Directory containing GLSL shader files
 
-    # Class variable to control whether to use FakeMidi
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         self.fake_midi = FakeMidi.get_fake_midi_if_exist()
         self.sm = ScenesManager(self.ctx)
-
 
     def on_render(self, time: float, frame_time: float):
         """Main render loop - called every frame by moderngl-window"""

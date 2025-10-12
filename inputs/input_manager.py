@@ -16,6 +16,7 @@ class MidiInputManager:
 
     def __init__(self, input_subname: str=''):
         if not hasattr(self, '_initialized'):
+            self.scenes_change_funcs = None
             self.bindings: dict[MidiGetter, Param] = {}
             try:
                 midi_input_name = next(
@@ -32,6 +33,10 @@ class MidiInputManager:
 
     def bind_param(self, param: Param):
         self.bindings[param.button.value] = param
+
+    def bind_scenes_change_funcs(self):
+        pass
+
 
     def _handle_midi_input(self, event_msg: mido.Message):
         try:
