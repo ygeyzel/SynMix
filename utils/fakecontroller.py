@@ -17,7 +17,6 @@ MIN_PITCH = -8192
 PITCH_STEP_FACTOR = 64
 
 
-
 class KeyMessageParams(NamedTuple):
     pressed_params: dict
     released_params: dict | None
@@ -147,7 +146,10 @@ def interface_factory(button: Button, interface_type: InterfaceType) -> ButtonIn
 
 
 def get_key_code(key_name: str) -> int:
-    return getattr(pyglet_key, key_name)
+    try:
+        return getattr(pyglet_key, key_name)
+    except AttributeError:
+        raise ValueError(f"Key name '{key_name}' is not valid in pyglet.window.key")
 
 
 def load_key_map(file_path: str) -> Dict[int, Callable]:
@@ -176,44 +178,48 @@ def load_key_map(file_path: str) -> Dict[int, Callable]:
         config = json.load(f)
     key_map = {}
     for button_name, mapping in config.items():
-        button = Button[button_name]
-        interface_type = InterfaceType[mapping['interface_type']]
-        interface = interface_factory(button, interface_type)
+        try:
+            button = Button[button_name]
+        except KeyError:
+            print(f"Warning: Button '{button_name}' not found in Button enum. Skipping.")
+            continue
+
+        try:
+            interface_type = InterfaceType[mapping['interface_type']]
+        except KeyError:
+            print(f"Warning: Interface type '{mapping['interface_type']}' not recognized. Skipping button '{button_name}'.")
+            continue
+
+        try:
+            interface = interface_factory(button, interface_type)
+        except ValueError as e:
+            print(f"Warning: {e}. Skipping button '{button_name}'.")
+            continue
+
         keys_messages_methods = interface.keys_messages_methods()
         if len(mapping['keys']) != len(keys_messages_methods):
-            raise ValueError(f"Number of keys does not match number of message methods for button '{button_name}'")
+            print(f"Warning: Number of keys does not match number of message methods for button '{button_name}'. Skipping.")
+            continue
 
         for key, methods in zip(mapping['keys'], keys_messages_methods):
-            key_code = get_key_code(key)
-            key_map[key_code] = methods
+            try:
+                key_code = get_key_code(key)
+                key_map[key_code] = methods
+            except ValueError as e:
+                print(f"Warning: {e}. Skipping key '{key}' for button '{button_name}'.")
+                continue
 
     return key_map
 
 
-class FakeMidi:
-    _instance = None
-     
-    @classmethod
-    def get_fake_midi_if_exist(cls):
-        return cls._instance 
-
-
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-
-
+class FakeController:
     def __init__(self, output_name='Fake MIDI Controller', key_map_file='config/fake_midi_key_map.json'):
-        # Only initialize if it's the first time
-        if not hasattr(self, '_initialized'):
-            self.output_name = output_name
-            self.output = mido.open_output(self.output_name, virtual=True)
-            self.held_keys = set()
-            self.relesed_keys = set()
-            self.modifiers = {}
-            self.key_map = load_key_map(key_map_file)
-            self._initialized = True
+        self.output_name = output_name
+        self.output = mido.open_output(self.output_name, virtual=True)
+        self.held_keys = set()
+        self.relesed_keys = set()
+        self.modifiers = {}
+        self.key_map = load_key_map(key_map_file)
 
     def handle_keys_input(self):
         amp = reduce(lambda s, m: s * (2 if m else 1),
