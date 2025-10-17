@@ -26,8 +26,7 @@ class MidiInputManager:
                     midi_input_name, callback=self._handle_midi_input)
 
             except StopIteration:
-                raise ValueError(
-                    f"No MIDI input found with subname: {midi_input_subname}")
+                raise ValueError(f"No MIDI input found with subname: {input_subname=} in {mido.get_input_names()}. You may want to use --fakemidi")
 
             self._initialized = True
 
