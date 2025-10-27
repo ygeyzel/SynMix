@@ -16,6 +16,8 @@ uniform float hueShift;
 uniform float hueRange;
 uniform float saturation;
 uniform float brightness;
+uniform float wingsFactor;
+uniform float flap;
 
 // HSV to RGB conversion
 vec3 hsv2rgb(vec3 c) {
@@ -61,8 +63,9 @@ vec3 JuliaFractal(vec2 c, vec2 c2, float animparam, float anim2 ) {
 
 void main()
 {
-    float animWings = 0.004 * cos(iTime*0.5);
-    float animFlap = 0.011 * sin(iTime*1.0);    
+    float animWings = 0.004 * cos(iTime * wingsFactor);
+    // float animFlap = 0.011 * sin(iTime*1.0);    
+    float animFlap = flap * sin(iTime*1.0);    
     float timeVal = 56.48-20.1601;
 	vec2 uv = fragCoord.xy - iResolution.xy*.5;
 	uv /= iResolution.x*1.5113*abs(sin(timeVal));
@@ -83,8 +86,8 @@ void main()
 	fragColor = vec4( JuliaFractal(uv+vec2(0.0,0.0), vec2(juliax, juliay), animWings, animFlap ) ,1.0);
     
     fragColor += vec4( JuliaFractal(uv+vec2(tapU,tapV), vec2(juliax, juliay), animWings, animFlap ) ,1.0);
-//    fragColor += vec4( JuliaFractal(uv+vec2(tapU,-tapV), vec2(juliax, juliay), animWings, animFlap ) ,1.0);
-//    fragColor += vec4( JuliaFractal(uv+vec2(-tapU,tapV), vec2(juliax, juliay), animWings, animFlap ) ,1.0);
+    fragColor += vec4( JuliaFractal(uv+vec2(tapU,-tapV), vec2(juliax, juliay), animWings, animFlap ) ,1.0);
+    fragColor += vec4( JuliaFractal(uv+vec2(-tapU,tapV), vec2(juliax, juliay), animWings, animFlap ) ,1.0);
     fragColor += vec4( JuliaFractal(uv+vec2(-tapU,-tapV), vec2(juliax, juliay), animWings, animFlap ) ,1.0);  
     
     fragColor.xyz = fragColor.zyx;
