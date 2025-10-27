@@ -18,6 +18,8 @@ uniform float saturation;
 uniform float brightness;
 uniform float wingsFactor;
 uniform float flap;
+uniform float rot0;
+uniform float rot1;
 
 // HSV to RGB conversion
 vec3 hsv2rgb(vec3 c) {
@@ -64,14 +66,13 @@ vec3 JuliaFractal(vec2 c, vec2 c2, float animparam, float anim2 ) {
 void main()
 {
     float animWings = 0.004 * cos(iTime * wingsFactor);
-    // float animFlap = 0.011 * sin(iTime*1.0);    
     float animFlap = flap * sin(iTime*1.0);    
     float timeVal = 56.48-20.1601;
 	vec2 uv = fragCoord.xy - iResolution.xy*.5;
 	uv /= iResolution.x*1.5113*abs(sin(timeVal));
     uv.y -= animWings*5.0; 
 	vec2 tuv = uv*125.0;
-	float rot=3.141592654*0.5;
+	float rot = 3.141592654 * 0.5 + mix(rot0, rot1, (sin(iTime*0.5)*0.5+0.5)) * 3.141592654;
   
 	uv.x = tuv.x*cos(rot)-tuv.y*sin(rot);
 	uv.y =1.05* tuv.x*sin(rot)+tuv.y*cos(rot);
