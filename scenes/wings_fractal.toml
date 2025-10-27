@@ -54,3 +54,15 @@ name = "flap"
 button = "RIGHT_LOW"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.5 }
+
+[[params]]
+name = "rot0"
+button = "LEFT_PITCH"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 6.28, initial_value = 0.0, is_pitch = true }
+
+[[params]]
+name = "rot1"
+button = "RIGHT_PITCH"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 6.28, initial_value = 0.0, is_pitch = true }
