@@ -16,7 +16,6 @@ class Screen(mglw.WindowConfig):
     resizable = True
     resource_dir = 'shaders'  # Directory containing GLSL shader files
 
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
