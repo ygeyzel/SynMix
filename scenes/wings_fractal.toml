@@ -1,0 +1,44 @@
+name = "WingsFractal"
+fragment_shader_filename = "wings.glsl"
+
+[[params]]
+name = "xOffset"
+button = "LEFT_WHEEL"
+controller.type = 'CyclicController'
+controller.args = { step = -0.001, min_value = -10.0, max_value = 10.0 }
+
+[[params]]
+name = "yOffset"
+button = "RIGHT_WHEEL"
+controller.type = "CyclicController"
+controller.args = { step = 0.001, min_value = -10.0, max_value = 10.0 }
+
+[[params]]
+name = "colorFactor"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.3 }
+
+[[params]]
+name = "hueShift"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.0 }
+
+[[params]]
+name = "brightness"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 0.3 }
+
+[[params]]
+name = "saturation"
+button = "LEFT_LOW"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 1.0 }
+
+[[params]]
+name = "hueRange"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 0.5 }
