@@ -42,3 +42,15 @@ name = "hueRange"
 button = "RIGHT_HIGH"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 0.5 }
+
+[[params]]
+name = "wingsFactor"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 0.6, initial_value = 0.03 }
+
+[[params]]
+name = "flap"
+button = "RIGHT_LOW"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.5 }
