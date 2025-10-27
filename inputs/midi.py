@@ -10,6 +10,9 @@ MIDI_DEC_VALUE = 63
 MIDI_MIN_VALUE = 0
 MIDI_MAX_VALUE = 127
 
+MAX_PITCH = 8191
+MIN_PITCH = -8192
+
 
 class MidiEventType(Enum):
     NOTE_ON = "note_on"

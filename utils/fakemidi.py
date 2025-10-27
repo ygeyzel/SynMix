@@ -8,11 +8,8 @@ import mido
 from pyglet.window import key as pyglet_key
 
 from inputs.buttons import Button
-from inputs.midi import get_midi_event_descriptor, MIDI_DEC_VALUE, MidiEventType, MIDI_INC_VALUE, MIDI_MAX_VALUE, MIDI_MIN_VALUE
+from inputs.midi import get_midi_event_descriptor, MIDI_DEC_VALUE, MidiEventType, MIDI_INC_VALUE, MIDI_MAX_VALUE, MIDI_MIN_VALUE, MAX_PITCH, MIN_PITCH
 
-
-MAX_PITCH = 8191
-MIN_PITCH = -8192
 
 PITCH_STEP_FACTOR = 64
 
