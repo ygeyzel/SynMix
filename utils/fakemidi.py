@@ -17,7 +17,6 @@ MIN_PITCH = -8192
 PITCH_STEP_FACTOR = 64
 
 
-
 class KeyMessageParams(NamedTuple):
     pressed_params: dict
     released_params: dict | None
@@ -65,7 +64,8 @@ class StepperInterface(ButtonInterface):
 
     def _step_value(self, step: int):
         new_value = self.current_value + step
-        self.current_value = max(self.min_value, min(self.max_value, new_value))
+        self.current_value = max(
+            self.min_value, min(self.max_value, new_value))
 
     def generate_messages(self, step: int, is_inc_dir: bool, **kwargs) -> List[mido.Message]:
         message_dict = self._generate_base_message_dict()
@@ -79,8 +79,10 @@ class StepperInterface(ButtonInterface):
     @property
     def key_messages_params(self) -> List[KeyMessageParams]:
         return [
-                KeyMessageParams(pressed_params={'is_inc_dir': True}, released_params=None),
-                KeyMessageParams(pressed_params={'is_inc_dir': False}, released_params=None),
+            KeyMessageParams(
+                pressed_params={'is_inc_dir': True}, released_params=None),
+            KeyMessageParams(
+                pressed_params={'is_inc_dir': False}, released_params=None),
         ]
 
 
@@ -93,8 +95,10 @@ class ScrollerInterface(ButtonInterface):
     @property
     def key_messages_params(self) -> List[KeyMessageParams]:
         return [
-            KeyMessageParams(pressed_params={'is_inc_dir': True}, released_params=None),
-            KeyMessageParams(pressed_params={'is_inc_dir': False}, released_params=None),
+            KeyMessageParams(
+                pressed_params={'is_inc_dir': True}, released_params=None),
+            KeyMessageParams(
+                pressed_params={'is_inc_dir': False}, released_params=None),
         ]
 
 
@@ -105,18 +109,19 @@ class ToggleInterface(ButtonInterface):
 
     def generate_messages(self, is_on, **kwargs) -> mido.Message | None:
         if is_on == self.is_on:
-            return None
+            return []
 
         message_dict = self._generate_base_message_dict()
         message_dict[self.value_field] = MIDI_MAX_VALUE if is_on else MIDI_MIN_VALUE
         self.is_on = is_on
 
-        return mido.Message(**message_dict)
+        return [mido.Message(**message_dict)]
 
     @property
     def key_messages_params(self) -> List[KeyMessageParams]:
         return [
-            KeyMessageParams(pressed_params={'is_on': True}, released_params={'is_on': False}),
+            KeyMessageParams(pressed_params={'is_on': True}, released_params={
+                             'is_on': False}),
         ]
 
 
@@ -181,7 +186,8 @@ def load_key_map(file_path: str) -> Dict[int, Callable]:
         interface = interface_factory(button, interface_type)
         keys_messages_methods = interface.keys_messages_methods()
         if len(mapping['keys']) != len(keys_messages_methods):
-            raise ValueError(f"Number of keys does not match number of message methods for button '{button_name}'")
+            raise ValueError(
+                f"Number of keys does not match number of message methods for button '{button_name}'")
 
         for key, methods in zip(mapping['keys'], keys_messages_methods):
             key_code = get_key_code(key)
@@ -192,17 +198,15 @@ def load_key_map(file_path: str) -> Dict[int, Callable]:
 
 class FakeMidi:
     _instance = None
-     
+
     @classmethod
     def get_fake_midi_if_exist(cls):
-        return cls._instance 
-
+        return cls._instance
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
-
 
     def __init__(self, output_name='Fake MIDI Controller', key_map_file='config/fake_midi_key_map.json'):
         # Only initialize if it's the first time
@@ -217,15 +221,20 @@ class FakeMidi:
 
     def handle_keys_input(self):
         amp = reduce(lambda s, m: s * (2 if m else 1),
-                      self.modifiers.values(), 1)
+                     self.modifiers.values(), 1)
 
         kwargs = {'step': amp, 'is_on': True, 'repeats': amp}
-        pressed_keys_methods = [self.key_map[key][0] for key in self.held_keys if key in self.key_map]
-        relesed_keys_methods = [self.key_map[key][1] for key in self.relesed_keys if key in self.key_map and self.key_map[key][1]]
-        
+        pressed_keys_methods = [self.key_map[key][0]
+                                for key in self.held_keys if key in self.key_map]
+        relesed_keys_methods = [self.key_map[key][1]
+                                for key in self.relesed_keys if key in self.key_map and self.key_map[key][1]]
+
         messages = []
-        for method in pressed_keys_methods + relesed_keys_methods:
-            messages += method(**kwargs)
+        for methods in (pressed_keys_methods, relesed_keys_methods):
+            for method in methods:
+                message = method(**kwargs)
+                messages += message
+            kwargs['is_on'] = False # For released keys, set is_on to False
 
         for message in messages:
             self.output.send(message)
