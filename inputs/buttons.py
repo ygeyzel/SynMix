@@ -22,12 +22,12 @@ class Button(Enum):
     LEFT_PITCH = MidiGetter(MidiEventType.PITCH, 0)
     RIGHT_PITCH = MidiGetter(MidiEventType.PITCH, 1)
 
-    LEFT_LENGHT = MidiGetter(MidiEventType.CONTROL_CHANGE, 32)
+    LEFT_LENGTH = MidiGetter(MidiEventType.CONTROL_CHANGE, 32)
     LEFT_DRY_WET = MidiGetter(MidiEventType.CONTROL_CHANGE, 33)
     LEFT_GAIN = MidiGetter(MidiEventType.CONTROL_CHANGE, 51)
     LEFT_AMOUNT = MidiGetter(MidiEventType.CONTROL_CHANGE, 52)
 
-    RIGHT_LENGHT = MidiGetter(MidiEventType.CONTROL_CHANGE, 57)
+    RIGHT_LENGTH = MidiGetter(MidiEventType.CONTROL_CHANGE, 57)
     RIGHT_DRY_WET = MidiGetter(MidiEventType.CONTROL_CHANGE, 58)
     RIGHT_GAIN = MidiGetter(MidiEventType.CONTROL_CHANGE, 34)
     RIGHT_AMOUNT = MidiGetter(MidiEventType.CONTROL_CHANGE, 35)

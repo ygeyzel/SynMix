@@ -47,7 +47,7 @@ The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard input
 | **RIGHT_WHEEL** | Scroller | → RIGHT | ← LEFT |
 | **LEFT_PITCH** | Stepper | \` (Backtick) | TAB |
 | **RIGHT_PITCH** | Stepper | BACKSPACE | \ (Backslash) |
-| **LEFT_LENGHT** | Scroller | Q | W |
+| **LEFT_LENGTH** | Scroller | Q | W |
 | **LEFT_DRY_WET** | Scroller | A | S |
 | **LEFT_GAIN** | Stepper | E | R |
 | **LEFT_AMOUNT** | Stepper | D | F |
@@ -57,7 +57,7 @@ The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard input
 | **RIGHT_HIGH** | Stepper | U | I |
 | **RIGHT_MID** | Stepper | J | K |
 | **RIGHT_LOW** | Stepper | N | M |
-| **RIGHT_LENGHT** | Scroller | O | P |
+| **RIGHT_LENGTH** | Scroller | O | P |
 | **RIGHT_DRY_WET** | Scroller | L | ; (Semicolon) |
 | **RIGHT_GAIN** | Stepper | [ | ] |
 | **RIGHT_AMOUNT** | Stepper | . | / |
@@ -103,9 +103,9 @@ Example configuration:
 ```json
 {
   "scene_order": [
+    "QuaternionFractal",
     "KeplerPlanet",
-    "Deadmau5Fractal",
-    ...
+    "Deadmau5Fractal"
   ]
 }
 ```

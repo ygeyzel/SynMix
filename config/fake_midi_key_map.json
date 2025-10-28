@@ -27,7 +27,7 @@
       "BACKSLASH"
     ]
   },
-  "LEFT_LENGHT": {
+  "LEFT_LENGTH": {
     "interface_type": "SCROLLER",
     "keys": [
       "Q",
@@ -97,7 +97,7 @@
       "M"
     ]
   },
-  "RIGHT_LENGHT": {
+  "RIGHT_LENGTH": {
     "interface_type": "SCROLLER",
     "keys": [
       "O",
