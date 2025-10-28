@@ -41,16 +41,50 @@ The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard input
 
 #### Keyboard Mapping Table
 
-| Button | Parameter Control | Increase/On | Decrease/Off |
-|--------|------------------|-------------|--------------|
-| **LEFT_WHEEL** | Scrolling | ↑ (UP) | ↓ (DOWN) |
-| **RIGHT_WHEEL** | Scrolling | → (RIGHT) | ← (LEFT) |
-| **LEFT_HIGH** | Stepping | Q | A |
-| **LEFT_MID** | Stepping | W | S |
-| **LEFT_LOW** | Stepping | E | D |
-| **RIGHT_HIGH** | Stepping | I | K |
-| **RIGHT_MID** | Stepping | O | L |
-| **RIGHT_LOW** | Stepping | P | ; (semicolon) |
+| Button | Control Type | Key 1 | Key 2 |
+|--------|-------------|-------|-------|
+| **LEFT_WHEEL** | Scroller | ↑ UP | ↓ DOWN |
+| **RIGHT_WHEEL** | Scroller | → RIGHT | ← LEFT |
+| **LEFT_PITCH** | Stepper | \` (Backtick) | TAB |
+| **RIGHT_PITCH** | Stepper | BACKSPACE | \ (Backslash) |
+| **LEFT_LENGTH** | Scroller | Q | W |
+| **LEFT_DRY_WET** | Scroller | A | S |
+| **LEFT_GAIN** | Stepper | E | R |
+| **LEFT_AMOUNT** | Stepper | D | F |
+| **LEFT_HIGH** | Stepper | T | Y |
+| **LEFT_MID** | Stepper | G | H |
+| **LEFT_LOW** | Stepper | V | B |
+| **RIGHT_HIGH** | Stepper | U | I |
+| **RIGHT_MID** | Stepper | J | K |
+| **RIGHT_LOW** | Stepper | N | M |
+| **RIGHT_LENGTH** | Scroller | O | P |
+| **RIGHT_DRY_WET** | Scroller | L | ; (Semicolon) |
+| **RIGHT_GAIN** | Stepper | [ | ] |
+| **RIGHT_AMOUNT** | Stepper | . | / |
+| **LEFT_VOLUME** | Stepper | 9 | 0 |
+| **RIGHT_VOLUME** | Stepper | - (Minus) | + (Plus) |
+| **CUEMIX** | Stepper | Z | X |
+| **LEFT_CUE_1** | Toggle | 1 | — |
+| **LEFT_CUE_2** | Toggle | 2 | — |
+| **LEFT_CUE_3** | Toggle | 3 | — |
+| **LEFT_CUE_4** | Toggle | 4 | — |
+| **RIGHT_CUE_1** | Toggle | 5 | — |
+| **RIGHT_CUE_2** | Toggle | 6 | — |
+| **RIGHT_CUE_3** | Toggle | 7 | — |
+| **RIGHT_CUE_4** | Toggle | 8 | — |
+| **LEFT_SYNC** | Toggle | F6 | — |
+| **LEFT_RECORD** | Toggle | F7 | — |
+| **RIGHT_SYNC** | Toggle | F8 | — |
+| **RIGHT_RECORD** | Toggle | F9 | — |
+| **LEFT_LOAD** | Toggle | F2 | — |
+| **RIGHT_LOAD** | Toggle | F1 | — |
+| **SCROLL** | Scroller | F3 | F4 |
+| **SCROLL_CLICK** | Toggle | F5 | — |
+
+**Control Types:**
+- **Stepper**: Press first key to increase, second key to decrease (hold with Shift/Ctrl/Alt for faster changes)
+- **Scroller**: Press first key to scroll up/right, second key to scroll down/left (hold with Shift/Ctrl/Alt for faster scrolling)
+- **Toggle**: Press the key to toggle on/off
 
 A standalone test script is available at `scripts/test_fake_controller.py` for testing the fake MIDI controller and viewing MIDI output in real-time.
 Run the script with:
@@ -69,6 +103,7 @@ Example configuration:
 ```json
 {
   "scene_order": [
+    "QuaternionFractal",
     "KeplerPlanet",
     "Deadmau5Fractal"
   ]
