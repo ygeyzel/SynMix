@@ -21,6 +21,11 @@ uniform float flap;
 uniform float rot0;
 uniform float rot1;
 
+uniform float scaleX;
+uniform float scaleY;
+uniform float scaleXY;
+
+
 // HSV to RGB conversion
 vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -74,14 +79,18 @@ void main()
 	vec2 tuv = uv*125.0;
 	float rot = 3.141592654 * 0.5 + mix(rot0, rot1, (sin(iTime*0.5)*0.5+0.5)) * 3.141592654;
   
+    tuv.x *= scaleX;
+    tuv.y *= scaleY;
+    tuv *= scaleXY;
+
 	uv.x = tuv.x*cos(rot)-tuv.y*sin(rot);
 	uv.y =1.05* tuv.x*sin(rot)+tuv.y*cos(rot);
 	float juliax = tan(timeVal) * 0.011 + 0.02/(fragCoord.y*0.19531*(1.0-animFlap)) + xOffset;
 	float juliay = cos(timeVal * 0.213) * (0.022+animFlap) + 5.66752-(juliax*1.5101) + yOffset;
     
  
-    float tapU = (1.0/ float(iResolution.x))*25.5;//*cos(animFlap);
-    float tapV = (1.0/ float(iResolution.y))*25.5;//*cos(animFlap);
+    float tapU = (1.0/ float(iResolution.x))*25.5*cos(animFlap);
+    float tapV = (1.0/ float(iResolution.y))*25.5*cos(animFlap);
     
   
 	fragColor = vec4( JuliaFractal(uv+vec2(0.0,0.0), vec2(juliax, juliay), animWings, animFlap ) ,1.0);
