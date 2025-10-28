@@ -1,5 +1,6 @@
 {
   "scene_order": [
+    "QuaternionFractal",
     "KeplerPlanet",
     "Deadmau5Fractal"
   ]

@@ -1,0 +1,50 @@
+name = "QuaternionFractal"
+fragment_shader_filename = "quaternion_fractal.glsl"
+
+[[params]]
+name = "animationSpeed"
+button = "LEFT_WHEEL"
+controller.type = "RangedController"
+controller.args = {step = 0.01, min_value = 0.0, max_value = 2.0, initial_value = 1.0}
+
+[[params]]
+name = "shellIntensity"
+button = "RIGHT_WHEEL"
+controller.type = "RangedController"
+controller.args = {step = 0.01, min_value = 0.0, max_value = 3.0, initial_value = 1.0}
+
+[[params]]
+name = "rotationFactor"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 2.0, initial_value = 1.0}
+
+[[params]]
+name = "colorVariation"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.1, max_value = 3.0, initial_value = 1.0}
+
+[[params]]
+name = "raycastSteps"
+button = "LEFT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 20.0, max_value = 100.0, initial_value = 60.0}
+
+[[params]]
+name = "cameraZoom"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.5, max_value = 3.0, initial_value = 1.0}
+
+[[params]]
+name = "detailLevel"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.1, max_value = 1.0, initial_value = 0.5}
+
+[[params]]
+name = "colorIntensity"
+button = "RIGHT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.2, max_value = 2.0, initial_value = 1.0}
