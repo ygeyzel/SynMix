@@ -14,10 +14,7 @@ from scenes.scene import Scene
 
 
 class ScenesManager:
-    # Static dictionary mapping scene names to their indices
-    SCENE_INDEX_MAP = {}
-
-    def __init__(self, screen_ctx):
+    def __init__(self, screen_ctx, starting_scene_name: str = None):
         self.scenes = []
         self.input_manager = MidiInputManager()
         self.screen_ctx = screen_ctx
@@ -26,9 +23,8 @@ class ScenesManager:
         self._load_scens_from_toml_files()
         assert len(self.scenes) > 0, "No scenes are loaded."
 
-        self._build_scene_index_map()
         self.init_general_funcs_bindings()
-        self.current_scene_index = 0
+        self.current_scene_index = 0 if starting_scene_name is None else self.scenes.index(next(scene for scene in self.scenes if scene.name == starting_scene_name))
         self._new_scene_index = self.current_scene_index
         self.load_new_scene()
         self.start_time = None
@@ -45,10 +41,6 @@ class ScenesManager:
     @property
     def current_scene(self):
         return self.scenes[self.current_scene_index]
-
-    def _build_scene_index_map(self):
-        """Build a mapping from scene names to their indices"""
-        ScenesManager.SCENE_INDEX_MAP = {scene.name: idx for idx, scene in enumerate(self.scenes)}
 
     @staticmethod
     def _generat_param_from_file_data(data):

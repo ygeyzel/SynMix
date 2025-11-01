@@ -3,6 +3,7 @@ import sys
 
 import moderngl_window as mglw
 
+from global_context import GlobalCtx
 from inputs.input_manager import MidiInputManager
 from screen import Screen
 from utils.fakemidi import FakeMidi 
@@ -16,9 +17,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='SynMix - Audio visualizer with MIDI control', add_help=False)
     parser.add_argument('--fakemidi', action='store_true', 
                         help='Use fake MIDI controller with keyboard input instead of real MIDI device')
+    parser.add_argument('--start-scene', type=str, default=None,
+                        help='Name of the starting scene')
     args, remaining = parser.parse_known_args()
-    # Set class attribute based on argument
-    fake_midi = FakeMidi() if args.fakemidi else None
+    
+    # Initialize global context
+    global_ctx = GlobalCtx()
+    if args.fakemidi:
+        global_ctx.fake_midi = FakeMidi()
+    if args.start_scene:
+        global_ctx.starting_scene_name = args.start_scene
+    
+    # Setup input manager
+    fake_midi = global_ctx.fake_midi
     input_subname = fake_midi.output_name if fake_midi else MIDI_INPUT_SUBNAME
     input_manager = MidiInputManager(input_subname)
 

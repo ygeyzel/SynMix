@@ -1,7 +1,8 @@
+from typing import Optional
 
 import moderngl_window as mglw
+from global_context import GlobalCtx
 from scenes.scenes_manager import ScenesManager
-from utils.fakemidi import FakeMidi
 
 
 class Screen(mglw.WindowConfig):
@@ -18,8 +19,9 @@ class Screen(mglw.WindowConfig):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.fake_midi = FakeMidi.get_fake_midi_if_exist()
-        self.sm = ScenesManager(self.ctx)
+        global_ctx = GlobalCtx()
+        self.fake_midi = global_ctx.fake_midi
+        self.sm = ScenesManager(self.ctx, starting_scene_name=global_ctx.starting_scene_name)
 
     def on_render(self, time: float, frame_time: float):
         """Main render loop - called every frame by moderngl-window"""
