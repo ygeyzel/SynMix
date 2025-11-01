@@ -1,6 +1,8 @@
+from typing import Callable
+
 import mido
 
-from inputs.midi import MidiEventType, MidiGetter, get_midi_event_descriptor
+from inputs.midi import MidiEventType, MidiGetter, get_midi_event_descriptor, MIDI_BUTTEN_CLICK
 from params.params import Param
 
 
@@ -17,7 +19,8 @@ class MidiInputManager:
     def __init__(self, input_subname: str=''):
         if not hasattr(self, '_initialized'):
             self.scenes_change_funcs = None
-            self.bindings: dict[MidiGetter, Param] = {}
+            self.param_bindings: dict[MidiGetter, Param] = {}
+            self.general_funcs_bindings: dict[MidiGetter, Callable[[], None]] = {}
             try:
                 midi_input_name = next(
                     name for name in mido.get_input_names() if input_subname in name
@@ -31,11 +34,10 @@ class MidiInputManager:
             self._initialized = True
 
     def bind_param(self, param: Param):
-        self.bindings[param.button.value] = param
+        self.param_bindings[param.button.value] = param
 
-    def bind_scenes_change_funcs(self):
-        pass
-
+    def bind_general_funcs(self, event_selector: MidiGetter, afunc: Callable[[], None]):
+        self.general_funcs_bindings[event_selector] = afunc
 
     def _handle_midi_input(self, event_msg: mido.Message):
         try:
@@ -44,15 +46,21 @@ class MidiInputManager:
 
             event_dict = event_msg.dict()
             selector_value = event_dict[descriptor.SELECTOR_FIELD]
-            binded_param = self.bindings.get(
-                MidiGetter(event_type, selector_value))
+            event_selector = MidiGetter(event_type, selector_value)
 
-            if not binded_param:
+            binded_param = self.param_bindings.get(event_selector)
+            binded_func = self.general_funcs_bindings.get(event_selector)
+
+            if not binded_param and not binded_func:
                 print(f"No binding found for event: {event_dict}")
                 return
 
             value = event_dict[descriptor.VALUE_FIELD]
-            binded_param.control_param(value)
+            if binded_param:
+                binded_param.control_param(value)
+            else:
+                if value == MIDI_BUTTEN_CLICK:
+                    binded_func()
 
         except KeyError:
             print(f"Invalid MIDI event: {event_msg}")

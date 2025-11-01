@@ -10,6 +10,9 @@ MIDI_DEC_VALUE = 63
 MIDI_MIN_VALUE = 0
 MIDI_MAX_VALUE = 127
 
+MIDI_BUTTEN_CLICK = 127
+MIDI_BUTTEN_RELEASE = 0
+
 
 class MidiEventType(Enum):
     NOTE_ON = "note_on"
