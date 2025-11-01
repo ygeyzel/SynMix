@@ -199,10 +199,6 @@ def load_key_map(file_path: str) -> Dict[int, Callable]:
 class FakeMidi:
     _instance = None
 
-    @classmethod
-    def get_fake_midi_if_exist(cls):
-        return cls._instance
-
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super().__new__(cls)

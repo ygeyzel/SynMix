@@ -1,8 +1,8 @@
+from typing import Optional
 
 import moderngl_window as mglw
+from global_context import GlobalCtx
 from scenes.scenes_manager import ScenesManager
-from inputs.input_manager import MidiInputManager
-from utils.fakemidi import FakeMidi 
 
 
 class Screen(mglw.WindowConfig):
@@ -16,12 +16,12 @@ class Screen(mglw.WindowConfig):
     resizable = True
     resource_dir = 'shaders'  # Directory containing GLSL shader files
 
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.fake_midi = FakeMidi.get_fake_midi_if_exist()
-        self.sm = ScenesManager(self.ctx)
+        global_ctx = GlobalCtx()
+        self.fake_midi = global_ctx.fake_midi
+        self.sm = ScenesManager(self.ctx, starting_scene_name=global_ctx.starting_scene_name)
 
     def on_render(self, time: float, frame_time: float):
         """Main render loop - called every frame by moderngl-window"""
@@ -41,6 +41,4 @@ class Screen(mglw.WindowConfig):
 
             elif action == self.wnd.keys.ACTION_RELEASE:
                 self.fake_midi.on_key_release(key)
-
-
 
