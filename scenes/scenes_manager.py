@@ -58,6 +58,44 @@ class ScenesManager:
                 ascene = Scene(**data)
                 self.scenes.append(ascene)
                 print(f'Scene {ascene.name} loaded')
+        
+        # Reorder scenes according to scenes_order.json
+        self._reorder_scenes()
+
+    def _reorder_scenes(self):
+        """Reorder scenes according to the order specified in scenes_order.json"""
+        try:
+            with open('config/scenes_order.json', 'r') as f:
+                config = json.load(f)
+            
+            scene_order = config.get('scene_order', [])
+            if not scene_order:
+                return
+            
+            # Create a mapping of scene names to their indices in the desired order
+            order_map = {name: idx for idx, name in enumerate(scene_order)}
+            
+            # Create a mapping of current scene names to Scene objects
+            scenes_by_name = {scene.name: scene for scene in self.scenes}
+            
+            # Find scenes that are in the order list and sort them by order
+            ordered_scenes = []
+            for name in scene_order:
+                if name in scenes_by_name:
+                    ordered_scenes.append(scenes_by_name[name])
+            
+            # Add any scenes that weren't in the order list at the end
+            for scene in self.scenes:
+                if scene not in ordered_scenes:
+                    ordered_scenes.append(scene)
+            
+            self.scenes = ordered_scenes
+            print(f'Scenes reordered according to scenes_order.json')
+            
+        except FileNotFoundError:
+            print('Warning: config/scenes_order.json not found. Using default order.')
+        except (json.JSONDecodeError, KeyError) as e:
+            print(f'Warning: Error parsing scenes_order.json: {e}. Using default order.')
 
     def render(self, time, frame_time, resolution):
         """
