@@ -1,7 +1,6 @@
 
 import moderngl_window as mglw
 from scenes.scenes_manager import ScenesManager
-from inputs.input_manager import MidiInputManager
 from utils.fakemidi import FakeMidi
 
 
@@ -15,7 +14,6 @@ class Screen(mglw.WindowConfig):
     aspect_ratio = None
     resizable = True
     resource_dir = 'shaders'  # Directory containing GLSL shader files
-
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -41,6 +39,4 @@ class Screen(mglw.WindowConfig):
 
             elif action == self.wnd.keys.ACTION_RELEASE:
                 self.fake_midi.on_key_release(key)
-
-
 

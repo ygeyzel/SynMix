@@ -25,10 +25,12 @@ class ScenesManager:
         self.quad = None
         self._load_scens_from_toml_files()
         assert len(self.scenes) > 0, "No scenes are loaded."
+
         self._build_scene_index_map()
         self.init_general_funcs_bindings()
         self.current_scene_index = 0
-        self.load_scene()
+        self._new_scene_index = self.current_scene_index
+        self.load_new_scene()
         self.start_time = None
         pprint(self.scenes)
 
@@ -74,6 +76,10 @@ class ScenesManager:
             frame_time: Time since last frame
             resolution: Screen resolution as (width, height, aspect_ratio)
         """
+        if self._new_scene_index is not None:
+            self.load_new_scene()
+            self._new_scene_index = None
+
         self._update_params(time, frame_time, resolution)
         self.screen_ctx.clear()
         self.quad.render(self.current_prog)  # Executes vertex + fragment shaders
@@ -132,37 +138,32 @@ class ScenesManager:
                     print(f"[{self.__class__.__name__}] Set {param.name} to {param.value}")
 
     def change_to_next_scene(self):
-        self.current_scene_index = (self.current_scene_index + 1) % len(self.scenes)
-        self.load_scene()
+        self._new_scene_index = (self.current_scene_index + 1) % len(self.scenes)
 
     def change_to_previous_scene(self):
-        self.current_scene_index = (self.current_scene_index - 1) % len(self.scenes)
-        self.load_scene()
+        self._new_scene_index = (self.current_scene_index - 1) % len(self.scenes)
 
     def change_to_random_scene(self):
-        self.current_scene_index = self.scenes.index(random.choice(self.scenes))
-        self.load_scene()
+        self._new_scene_index = self.scenes.index(random.choice(self.scenes))
 
-    def change_to_scene_by_name(self, name: str):
-        for idx, scene in enumerate(self.scenes):
-            if name == scene.name:
-                self.current_scene_index = idx
-                self.load_scene()
-                break
-
-        else:
-            raise ValueError(f'no scene named:\'{name}\' in {[s.name for s in self.scenes]}')
-
-    def load_scene(self):
+    def load_new_scene(self):
+        self.current_scene_index = self._new_scene_index
         new_csene = self.current_scene
         print(f'Change to scene {new_csene.name}')
+        
+        # Release old program if it exists
+        if self.current_prog is not None:
+            self.current_prog.release()
+        
         # Load shader source code from the scene
         vertex_source, fragment_source = new_csene.get_shaders()
+        
         # Create shader program
         self.current_prog = self.screen_ctx.program(vertex_shader=vertex_source,
                                                     fragment_shader=fragment_source)
         self.quad = mglw.geometry.quad_fs()
-        # Bind parameters
+        
+        # Bind parameters and track them for future cleanup
+        self.input_manager.unbind_params()
         for param in new_csene.params:
             self.input_manager.bind_param(param)
-

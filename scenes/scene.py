@@ -30,9 +30,7 @@ class Scene:
         """
         vertex_path = Path(SHADERS_DIR) / self.vertex_shader_filename
         fragment_path = Path(SHADERS_DIR) / self.fragment_shader_filename
-        print(f'Loading shaders for scene "{self.name}":\n'
-              f'  Vertex shader: {vertex_path}\n'
-              f'  Fragment shader: {fragment_path}')
+
         try:
             with open(vertex_path, 'r') as vf, open(fragment_path, 'r') as ff:
                 vertex_source = vf.read()

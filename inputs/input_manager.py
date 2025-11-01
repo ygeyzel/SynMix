@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, List
 
 import mido
 
@@ -35,6 +35,9 @@ class MidiInputManager:
 
     def bind_param(self, param: Param):
         self.param_bindings[param.button.value] = param
+
+    def unbind_params(self):
+        self.param_bindings = {}
 
     def bind_general_funcs(self, event_selector: MidiGetter, afunc: Callable[[], None]):
         self.general_funcs_bindings[event_selector.value] = afunc
