@@ -16,7 +16,7 @@ class Scene:
         self.params = params
         self.fragment_shader_filename = fragment_shader_filename
         self.vertex_shader_filename = vertex_shader_filename
-
+        self.screen_ctx = None
         self.prog = None
 
     def __repr__(self):
@@ -58,6 +58,9 @@ class Scene:
             frame_time: Time since last frame
             resolution: Screen resolution as (width, height, aspect_ratio)
         """
+        if self.prog is None:
+            print('get self.prog is  None')
+            return
 
         if 'iTime' in self.prog:
             self.prog['iTime'].value = time
@@ -110,5 +113,8 @@ class Scene:
             resolution: Screen resolution as (width, height, aspect_ratio)
         """ 
         self.update_params(time, frame_time, resolution)
+        if self.screen_ctx is None:
+            print('got self.screen_ctx is None')
+            return
         self.screen_ctx.clear()
         self.quad.render(self.prog)  # Executes vertex + fragment shaders

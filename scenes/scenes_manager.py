@@ -26,7 +26,7 @@ class ScenesManager:
         self.init_general_funcs_bindings()
         self.current_scene_index = 0
         self.change_to_scene(self.current_scene)
-
+        self.start_time = None
         pprint(self.scenes)
 
 
@@ -57,6 +57,7 @@ class ScenesManager:
                 data['params'] = [self._generat_param_from_file_data(p) for p in data['params']]
                 ascene = Scene(**data)
                 self.scenes.append(ascene)
+                print(f'Scene {ascene.name} loaded')
 
     def _build_scene_index_map(self):
         """Build a mapping of scene names to their indices from config file"""
@@ -93,6 +94,13 @@ class ScenesManager:
             ScenesManager.SCENE_INDEX_MAP = {scene.name: idx for idx, scene in enumerate(self.scenes)}
 
     def render(self, time, frame_time, resolution):
+        if self.start_time is None:
+            self.start_time = time
+
+        if time - self.start_time > 3:
+            self.change_to_next_scene()
+            self.start_time = time
+
         self.current_scene.render(time, frame_time, resolution)
 
     def change_to_next_scene(self):
@@ -116,9 +124,10 @@ class ScenesManager:
             raise ValueError(f'no scene named:\'{name}\' in {[s.name for s in self.scenes]}')
 
     def change_to_scene(self, new_csene: Scene):
+        print(f'Change to scene {new_csene.name}')
         new_csene.setup(self.screen_ctx)
         for param in new_csene.params:
-            self.input_manager.bind_param(param) 
+            self.input_manager.bind_param(param)
 
 
 if __name__ == '__main__':

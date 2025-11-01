@@ -2,7 +2,7 @@
 import moderngl_window as mglw
 from scenes.scenes_manager import ScenesManager
 from inputs.input_manager import MidiInputManager
-from utils.fakemidi import FakeMidi 
+from utils.fakemidi import FakeMidi
 
 
 class Screen(mglw.WindowConfig):

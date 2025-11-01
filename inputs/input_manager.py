@@ -37,7 +37,7 @@ class MidiInputManager:
         self.param_bindings[param.button.value] = param
 
     def bind_general_funcs(self, event_selector: MidiGetter, afunc: Callable[[], None]):
-        self.general_funcs_bindings[event_selector] = afunc
+        self.general_funcs_bindings[event_selector.value] = afunc
 
     def _handle_midi_input(self, event_msg: mido.Message):
         try:
