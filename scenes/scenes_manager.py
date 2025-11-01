@@ -4,6 +4,7 @@ from typing import List, Tuple
 import os
 import random
 from pprint import pprint
+import moderngl_window as mglw
 
 from inputs.input_manager import MidiInputManager
 from inputs.buttons import Button
@@ -20,15 +21,16 @@ class ScenesManager:
         self.scenes = []
         self.input_manager = MidiInputManager()
         self.screen_ctx = screen_ctx
+        self.current_prog = None
+        self.quad = None
         self._load_scens_from_toml_files()
         assert len(self.scenes) > 0, "No scenes are loaded."
         self._build_scene_index_map()
         self.init_general_funcs_bindings()
         self.current_scene_index = 0
-        self.change_to_scene(self.current_scene)
+        self.load_scene()
         self.start_time = None
         pprint(self.scenes)
-
 
     def init_general_funcs_bindings(self):
         binds = ((Button.RIGHT_LOAD, self.change_to_next_scene),
@@ -41,6 +43,10 @@ class ScenesManager:
     @property
     def current_scene(self):
         return self.scenes[self.current_scene_index]
+
+    def _build_scene_index_map(self):
+        """Build a mapping from scene names to their indices"""
+        ScenesManager.SCENE_INDEX_MAP = {scene.name: idx for idx, scene in enumerate(self.scenes)}
 
     @staticmethod
     def _generat_param_from_file_data(data):
@@ -59,76 +65,104 @@ class ScenesManager:
                 self.scenes.append(ascene)
                 print(f'Scene {ascene.name} loaded')
 
-    def _build_scene_index_map(self):
-        """Build a mapping of scene names to their indices from config file"""
-        try:
-            with open('config/scenes_order.json', 'r') as f:
-                config = json.load(f)
-                scene_order = config.get('scene_order', [])
-
-            # Create map based on config order
-            ScenesManager.SCENE_INDEX_MAP = {name: idx for idx, name in enumerate(scene_order)}
-
-            # Verify all loaded scenes are in the config
-            loaded_scene_names = {scene.name for scene in self.scenes}
-            configured_scene_names = set(scene_order)
-
-            if loaded_scene_names != configured_scene_names:
-                missing = loaded_scene_names - configured_scene_names
-                extra = configured_scene_names - loaded_scene_names
-                if missing:
-                    print(f"WARNING: The following scenes found in TOML files but NOT listed in config/scenes_order.json:")
-                    for scene in sorted(missing):
-                        print(f"    - {scene}")
-                if extra:
-                    print(f"WARNING: The following scenes listed in config/scenes_order.json but their TOML files were not found:")
-                    for scene in sorted(extra):
-                        print(f"    - {scene}")
-
-            # Reorder self.scenes list to match config order
-            scenes_by_name = {scene.name: scene for scene in self.scenes}
-            self.scenes = [scenes_by_name[name] for name in scene_order if name in scenes_by_name]
-
-        except FileNotFoundError:
-            print("Warning: config/scenes_order.json not found. Using default order.")
-            ScenesManager.SCENE_INDEX_MAP = {scene.name: idx for idx, scene in enumerate(self.scenes)}
-
     def render(self, time, frame_time, resolution):
-        if self.start_time is None:
-            self.start_time = time
+        """
+        Render the current scene
 
-        if time - self.start_time > 3:
-            self.change_to_next_scene()
-            self.start_time = time
+        Args:
+            time: Current time for animations
+            frame_time: Time since last frame
+            resolution: Screen resolution as (width, height, aspect_ratio)
+        """
+        self._update_params(time, frame_time, resolution)
+        self.screen_ctx.clear()
+        self.quad.render(self.current_prog)  # Executes vertex + fragment shaders
 
-        self.current_scene.render(time, frame_time, resolution)
+    def _update_params(self, time: float, frame_time: float, resolution: Tuple[float, float, float]):
+        """
+        Update shader uniforms with current parameter values
+
+        Args:
+            time: Current time for animations
+            frame_time: Time since last frame
+            resolution: Screen resolution as (width, height, aspect_ratio)
+        """
+        if self.current_prog is None:
+            return
+
+        if 'iTime' in self.current_prog:
+            self.current_prog['iTime'].value = time
+
+        if 'iResolution' in self.current_prog:
+            self.current_prog['iResolution'].value = resolution
+
+        _ = frame_time # for future use
+
+        for param in self.current_scene.params:
+            if param.name in self.current_prog:
+                shader_param = self.current_prog[param.name]
+                org_value = shader_param.value
+                shader_param.value = param.value
+
+                # Debug output when parameter values change
+                # Handle different uniform types safely
+                values_changed = False
+                try:
+                    # For numeric types (float, int)
+                    if isinstance(org_value, (int, float)) and isinstance(param.value, (int, float)):
+                        values_changed = abs(org_value - param.value) > 1e-6
+
+                    # For sequences (vectors, tuples, lists)
+                    elif hasattr(org_value, '__len__') and hasattr(param.value, '__len__'):
+                        if len(org_value) == len(param.value):
+                            values_changed = any(abs(a - b) > 1e-6 for a, b in zip(org_value, param.value))
+
+                        else:
+                            values_changed = True
+
+                    # For other types, use direct comparison
+                    else:
+                        values_changed = (org_value != param.value)
+
+                except (TypeError, AttributeError):
+                    # Fallback to direct comparison if numeric operations fail
+                    values_changed = org_value != param.value
+
+                if values_changed:
+                    print(f"[{self.__class__.__name__}] Set {param.name} to {param.value}")
 
     def change_to_next_scene(self):
         self.current_scene_index = (self.current_scene_index + 1) % len(self.scenes)
-        self.change_to_scene(self.current_scene)
+        self.load_scene()
 
     def change_to_previous_scene(self):
         self.current_scene_index = (self.current_scene_index - 1) % len(self.scenes)
-        self.change_to_scene(self.current_scene)
+        self.load_scene()
 
     def change_to_random_scene(self):
-        self.change_to_scene(random.choice(self.scenes))
+        self.current_scene_index = self.scenes.index(random.choice(self.scenes))
+        self.load_scene()
 
     def change_to_scene_by_name(self, name: str):
-        for scene in self.scenes:
+        for idx, scene in enumerate(self.scenes):
             if name == scene.name:
-                self.change_to_scene(scene)
+                self.current_scene_index = idx
+                self.load_scene()
                 break
 
         else:
             raise ValueError(f'no scene named:\'{name}\' in {[s.name for s in self.scenes]}')
 
-    def change_to_scene(self, new_csene: Scene):
+    def load_scene(self):
+        new_csene = self.current_scene
         print(f'Change to scene {new_csene.name}')
-        new_csene.setup(self.screen_ctx)
+        # Load shader source code from the scene
+        vertex_source, fragment_source = new_csene.get_shaders()
+        # Create shader program
+        self.current_prog = self.screen_ctx.program(vertex_shader=vertex_source,
+                                                    fragment_shader=fragment_source)
+        self.quad = mglw.geometry.quad_fs()
+        # Bind parameters
         for param in new_csene.params:
             self.input_manager.bind_param(param)
 
-
-if __name__ == '__main__':
-    sm = ScensManager()
