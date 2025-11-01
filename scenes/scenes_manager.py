@@ -104,38 +104,8 @@ class ScenesManager:
 
         _ = frame_time # for future use
 
-        for param in self.current_scene.params:
-            if param.name in self.current_prog:
-                shader_param = self.current_prog[param.name]
-                org_value = shader_param.value
-                shader_param.value = param.value
-
-                # Debug output when parameter values change
-                # Handle different uniform types safely
-                values_changed = False
-                try:
-                    # For numeric types (float, int)
-                    if isinstance(org_value, (int, float)) and isinstance(param.value, (int, float)):
-                        values_changed = abs(org_value - param.value) > 1e-6
-
-                    # For sequences (vectors, tuples, lists)
-                    elif hasattr(org_value, '__len__') and hasattr(param.value, '__len__'):
-                        if len(org_value) == len(param.value):
-                            values_changed = any(abs(a - b) > 1e-6 for a, b in zip(org_value, param.value))
-
-                        else:
-                            values_changed = True
-
-                    # For other types, use direct comparison
-                    else:
-                        values_changed = (org_value != param.value)
-
-                except (TypeError, AttributeError):
-                    # Fallback to direct comparison if numeric operations fail
-                    values_changed = org_value != param.value
-
-                if values_changed:
-                    print(f"[{self.__class__.__name__}] Set {param.name} to {param.value}")
+        # Update shader parameters using the scene's method
+        self.current_scene.update_shader_params(self.current_prog)
 
     def change_to_next_scene(self):
         self._new_scene_index = (self.current_scene_index + 1) % len(self.scenes)

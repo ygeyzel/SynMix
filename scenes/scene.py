@@ -3,6 +3,41 @@ from pathlib import Path
 
 from params.params import Param
 
+
+def _values_changed(org_value, new_value):
+    """
+    Check if two values are significantly different
+    
+    Args:
+        org_value: Original value
+        new_value: New value
+        
+    Returns:
+        True if values have changed, False otherwise
+    """
+    values_changed = False
+    try:
+        # For numeric types (float, int)
+        if isinstance(org_value, (int, float)) and isinstance(new_value, (int, float)):
+            values_changed = abs(org_value - new_value) > 1e-6
+
+        # For sequences (vectors, tuples, lists)
+        elif hasattr(org_value, '__len__') and hasattr(new_value, '__len__'):
+            if len(org_value) == len(new_value):
+                values_changed = any(abs(a - b) > 1e-6 for a, b in zip(org_value, new_value))
+            else:
+                values_changed = True
+
+        # For other types, use direct comparison
+        else:
+            values_changed = (org_value != new_value)
+
+    except (TypeError, AttributeError):
+        # Fallback to direct comparison if numeric operations fail
+        values_changed = org_value != new_value
+    
+    return values_changed
+
 SHADERS_DIR = 'shaders'
 
 
@@ -42,3 +77,23 @@ class Scene:
                                f"  Vertex shader: {vertex_path}\n"
                                f"  Fragment shader: {fragment_path}\n"
                                f"Error: {e}") from e
+
+    def update_shader_params(self, shader_program):
+        """
+        Update shader uniforms with current parameter values
+        
+        Args:
+            shader_program: The shader program to update
+        """
+        if shader_program is None:
+            return
+        
+        for param in self.params:
+            if param.name in shader_program:
+                shader_param = shader_program[param.name]
+                org_value = shader_param.value
+                shader_param.value = param.value
+
+                # Debug output when parameter values change
+                if _values_changed(org_value, param.value):
+                    print(f"Set {param.name} to {param.value}")
