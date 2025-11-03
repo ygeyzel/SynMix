@@ -1,10 +1,9 @@
-from typing import Callable, List
+from typing import Callable
 
 import mido
 
 from inputs.midi import MidiEventType, MidiGetter, get_midi_event_descriptor, MIDI_BUTTEN_CLICK
 from params.params import Param
-
 
 
 class MidiInputManager:
