@@ -13,6 +13,9 @@ MIDI_MAX_VALUE = 127
 MIDI_BUTTEN_CLICK = 127
 MIDI_BUTTEN_RELEASE = 0
 
+MAX_PITCH = 8191
+MIN_PITCH = -8192
+
 
 class MidiEventType(Enum):
     NOTE_ON = "note_on"
