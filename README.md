@@ -103,6 +103,7 @@ Example configuration:
 ```json
 {
   "scene_order": [
+    "CBSGalaxy",
     "QuaternionFractal",
     "KeplerPlanet",
     "Deadmau5Fractal"
