@@ -26,6 +26,10 @@ uv run main.py
 uv run main.py --fakemidi
 ```
 
+**Start with a specific scene:**
+```bash
+uv run main.py --start-scene "KeplerPlanet"
+```
 
 ## Configuration
 
@@ -116,7 +120,7 @@ To change the scene order:
 2. Reorder the scene names in your desired sequence
 3. Restart the application
 
-The first scene in the list will be loaded at startup. When you add new scenes, make sure to add their names to this configuration file.
+The first scene in the list will be loaded at startup by default. You can override this by using the `--start-scene` command-line argument to specify a different starting scene. When you add new scenes, make sure to add their names to this configuration file.
 
 ## Project Structure
 

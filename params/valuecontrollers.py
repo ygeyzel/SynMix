@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from inputs.midi import MIDI_MAX_VALUE, MIDI_MIN_VALUE, MIDI_INC_VALUE, MIDI_DEC_VALUE 
+from inputs.midi import MIDI_MAX_VALUE, MIDI_MIN_VALUE, MIDI_INC_VALUE, MIDI_DEC_VALUE, MAX_PITCH, MIN_PITCH
 
 
 controllers_registry = {}
@@ -37,9 +37,13 @@ class NormalizedController(ValueController):
         self.min_value = min_value
         self.max_value = max_value
 
+        is_pitch = kwargs.get('is_pitch', False)
+        self.max_input_value = MAX_PITCH if is_pitch else MIDI_MAX_VALUE
+        self.min_input_value = MIN_PITCH if is_pitch else MIDI_MIN_VALUE
+
     def control_value(self, in_value: int):
-        normalized_value = self.min_value + (in_value - MIDI_MIN_VALUE) * (
-            self.max_value - self.min_value) / (MIDI_MAX_VALUE - MIDI_MIN_VALUE)
+        normalized_value = self.min_value + (in_value - self.min_input_value) * (
+            self.max_value - self.min_value) / (self.max_input_value - self.min_input_value)
         self.set_value(normalized_value)
 
 

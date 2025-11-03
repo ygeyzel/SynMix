@@ -1,0 +1,86 @@
+name = "WingsFractal"
+fragment_shader_filename = "wings.glsl"
+
+[[params]]
+name = "xOffset"
+button = "LEFT_WHEEL"
+controller.type = 'CyclicController'
+controller.args = { step = -0.001, min_value = -10.0, max_value = 10.0 }
+
+[[params]]
+name = "yOffset"
+button = "RIGHT_WHEEL"
+controller.type = "CyclicController"
+controller.args = { step = 0.001, min_value = -10.0, max_value = 10.0 }
+
+[[params]]
+name = "colorFactor"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.3 }
+
+[[params]]
+name = "hueShift"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.0 }
+
+[[params]]
+name = "brightness"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 0.3 }
+
+[[params]]
+name = "saturation"
+button = "LEFT_LOW"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 1.0 }
+
+[[params]]
+name = "hueRange"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 0.5 }
+
+[[params]]
+name = "wingsFactor"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 0.6, initial_value = 0.03 }
+
+[[params]]
+name = "flap"
+button = "RIGHT_LOW"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.5 }
+
+[[params]]
+name = "rot0"
+button = "LEFT_PITCH"
+controller.type = "NormalizedController"
+controller.args = { min_value = -6.28, max_value = 6.28, initial_value = 0.0, is_pitch = true }
+
+[[params]]
+name = "rot1"
+button = "RIGHT_PITCH"
+controller.type = "NormalizedController"
+controller.args = { min_value = -6.28, max_value = 6.28, initial_value = 0.0, is_pitch = true }
+
+[[params]]
+name = "scaleX"
+button = "LEFT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
+
+[[params]]
+name = "scaleY"
+button = "RIGHT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
+
+[[params]]
+name = "scaleXY"
+button = "CROSSFADER"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
