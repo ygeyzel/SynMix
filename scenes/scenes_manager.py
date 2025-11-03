@@ -144,7 +144,9 @@ class ScenesManager:
         self._new_scene_index = (self.current_scene_index - 1) % len(self.scenes)
 
     def change_to_random_scene(self):
-        self._new_scene_index = self.scenes.index(random.choice(self.scenes))
+        available_scenes = [scene for scene in self.scenes if scene != self.current_scene]
+        if available_scenes:
+            self._new_scene_index = self.scenes.index(random.choice(available_scenes))
 
     def load_new_scene(self):
         self.current_scene_index = self._new_scene_index
