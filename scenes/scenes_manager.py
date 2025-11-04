@@ -10,7 +10,7 @@ from pathlib import Path
 from inputs.input_manager import MidiInputManager
 from inputs.buttons import Button
 from params.params import Param
-from params.valuecontrollers import controllers_registry, ToggleController
+from params.valuecontrollers import controllers_registry, ToggleController, IsPressedController
 from scenes.scene import Scene, update_shader_params_from_list
 
 
@@ -67,6 +67,21 @@ class ScenesManager:
             controller=ToggleController()
         )
         self.post_params.append(invert_param)
+        
+        # Wave effect parameter
+        waves_x_param = Param(
+            name='uWavesX',
+            button=Button.LEFT_MINUS,
+            controller=IsPressedController()
+        )
+        self.post_params.append(waves_x_param)
+
+        wave_y_param = Param(
+            name='uWavesY',
+            button=Button.LEFT_PLUS,
+            controller=IsPressedController()
+        )
+        self.post_params.append(wave_y_param)
         
         # Bind post-processing parameters to secondary bindings
         for param in self.post_params:
@@ -206,6 +221,9 @@ class ScenesManager:
 
         if 'iResolution' in self.post_prog:
             self.post_prog['iResolution'].value = resolution
+
+        if 'iTime' in self.post_prog:
+            self.post_prog['iTime'].value = time
 
         # Update post-processing shader parameters
         update_shader_params_from_list(self.post_prog, self.post_params)
