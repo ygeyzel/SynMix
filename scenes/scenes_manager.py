@@ -10,8 +10,9 @@ from pathlib import Path
 from inputs.input_manager import MidiInputManager
 from inputs.buttons import Button
 from params.params import Param
-from params.valuecontrollers import controllers_registry, ToggleController, IsPressedController
+from params.valuecontrollers import controllers_registry
 from scenes.scene import Scene, update_shader_params_from_list
+from scenes.post_processing_params import get_post_processing_params
 
 
 class ScenesManager:
@@ -58,30 +59,8 @@ class ScenesManager:
         self.post_prog = self.screen_ctx.program(vertex_shader=vertex_source,
                                                  fragment_shader=fragment_source)
         
-        # Initialize post-processing parameters
-        self.post_params = []
-        # Color inversion parameter
-        invert_param = Param(
-            name='uInvertColors',
-            button=Button.LEFT_CUE_1,
-            controller=ToggleController()
-        )
-        self.post_params.append(invert_param)
-        
-        # Wave effect parameter
-        waves_x_param = Param(
-            name='uWavesX',
-            button=Button.LEFT_MINUS,
-            controller=IsPressedController()
-        )
-        self.post_params.append(waves_x_param)
-
-        wave_y_param = Param(
-            name='uWavesY',
-            button=Button.LEFT_PLUS,
-            controller=IsPressedController()
-        )
-        self.post_params.append(wave_y_param)
+        # Load post-processing parameters from dedicated file
+        self.post_params = get_post_processing_params()
         
         # Bind post-processing parameters to secondary bindings
         for param in self.post_params:
