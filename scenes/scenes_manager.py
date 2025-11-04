@@ -248,6 +248,10 @@ class ScenesManager:
         new_csene = self.current_scene
         print(f'Change to scene {new_csene.name}')
 
+        # Reset all post-processing parameters to initial values
+        for param in self.post_params:
+            param.controller.reset()
+
         # Release old program if it exists
         if self.current_prog is not None:
             self.current_prog.release()
@@ -263,4 +267,6 @@ class ScenesManager:
         # Bind parameters and track them for future cleanup
         self.input_manager.unbind_params()
         for param in new_csene.params:
+            # Reset scene parameters to initial values
+            param.controller.reset()
             self.input_manager.bind_param(param)
