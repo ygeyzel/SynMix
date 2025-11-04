@@ -11,7 +11,7 @@ from inputs.input_manager import MidiInputManager
 from inputs.buttons import Button
 from params.params import Param
 from params.valuecontrollers import controllers_registry, ToggleController
-from scenes.scene import Scene
+from scenes.scene import Scene, update_shader_params_from_list
 
 
 class ScenesManager:
@@ -208,16 +208,7 @@ class ScenesManager:
             self.post_prog['iResolution'].value = resolution
 
         # Update post-processing shader parameters
-        for param in self.post_params:
-            if param.name in self.post_prog:
-                shader_param = self.post_prog[param.name]
-                org_value = shader_param.value
-                shader_param.value = param.value
-
-                # Debug output when parameter values change
-                from scenes.scene import _values_changed
-                if _values_changed(org_value, param.value):
-                    print(f"Set {param.name} to {param.value}")
+        update_shader_params_from_list(self.post_prog, self.post_params)
 
     def change_to_next_scene(self):
         self._new_scene_index = (
