@@ -15,11 +15,14 @@ class MidiInputManager:
 
         return cls._instance
 
-    def __init__(self, input_subname: str=''):
+    def __init__(self, input_subname: str = ''):
         if not hasattr(self, '_initialized'):
             self.scenes_change_funcs = None
             self.param_bindings: dict[MidiGetter, Param] = {}
-            self.general_funcs_bindings: dict[MidiGetter, Callable[[], None]] = {}
+            self.secondary_param_bindings: dict[MidiGetter, Param] = {}
+            self.general_funcs_bindings: dict[MidiGetter, Callable[[], None]] = {
+            }
+
             try:
                 midi_input_name = next(
                     name for name in mido.get_input_names() if input_subname in name
@@ -28,12 +31,16 @@ class MidiInputManager:
                     midi_input_name, callback=self._handle_midi_input)
 
             except StopIteration:
-                raise ValueError(f"No MIDI input found with subname: {input_subname=} in {mido.get_input_names()}. You may want to use --fakemidi")
+                raise ValueError(
+                    f"No MIDI input found with subname: {input_subname=} in {mido.get_input_names()}. You may want to use --fakemidi")
 
             self._initialized = True
 
     def bind_param(self, param: Param):
         self.param_bindings[param.button.value] = param
+
+    def bind_secondary_param(self, param: Param):
+        self.secondary_param_bindings[param.button.value] = param
 
     def unbind_params(self):
         self.param_bindings = {}
@@ -50,7 +57,8 @@ class MidiInputManager:
             selector_value = event_dict[descriptor.SELECTOR_FIELD]
             event_selector = MidiGetter(event_type, selector_value)
 
-            binded_param = self.param_bindings.get(event_selector)
+            binded_param = self.param_bindings.get(
+                event_selector) or self.secondary_param_bindings.get(event_selector)
             binded_func = self.general_funcs_bindings.get(event_selector)
 
             if not binded_param and not binded_func:

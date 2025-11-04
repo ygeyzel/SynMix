@@ -4,12 +4,13 @@ from typing import Tuple
 import os
 import random
 from pprint import pprint
-import moderngl_window as mglw
 
+import moderngl_window as mglw
+from pathlib import Path
 from inputs.input_manager import MidiInputManager
 from inputs.buttons import Button
 from params.params import Param
-from params.valuecontrollers import controllers_registry
+from params.valuecontrollers import controllers_registry, ToggleController
 from scenes.scene import Scene
 
 
@@ -19,11 +20,15 @@ class ScenesManager:
         self.input_manager = MidiInputManager()
         self.screen_ctx = screen_ctx
         self.current_prog = None
+        self.post_prog = None
         self.quad = None
+        self.fbo = None
+        self.fbo_texture = None
         self._load_scens_from_toml_files()
         assert len(self.scenes) > 0, "No scenes are loaded."
 
         self.init_general_funcs_bindings()
+        self.init_post_processing()
         self.current_scene_index = 0 if starting_scene_name is None else self.scenes.index(
             next(scene for scene in self.scenes if scene.name == starting_scene_name))
         self._new_scene_index = self.current_scene_index
@@ -38,6 +43,34 @@ class ScenesManager:
 
         for control_selector, afunc in binds:
             self.input_manager.bind_general_funcs(control_selector, afunc)
+
+    def init_post_processing(self):
+        """Initialize post-processing shader and FBO"""
+        # Load post-processing shader
+        vertex_path = Path('shaders') / 'vertex.glsl'
+        fragment_path = Path('shaders') / 'post_processing.glsl'
+        
+        with open(vertex_path, 'r') as vf, open(fragment_path, 'r') as ff:
+            vertex_source = vf.read()
+            fragment_source = ff.read()
+        
+        # Create post-processing shader program
+        self.post_prog = self.screen_ctx.program(vertex_shader=vertex_source,
+                                                 fragment_shader=fragment_source)
+        
+        # Initialize post-processing parameters
+        self.post_params = []
+        # Color inversion parameter
+        invert_param = Param(
+            name='uInvertColors',
+            button=Button.LEFT_CUE_1,
+            controller=ToggleController()
+        )
+        self.post_params.append(invert_param)
+        
+        # Bind post-processing parameters to secondary bindings
+        for param in self.post_params:
+            self.input_manager.bind_secondary_param(param)
 
     @property
     def current_scene(self):
@@ -100,7 +133,7 @@ class ScenesManager:
 
     def render(self, time, frame_time, resolution):
         """
-        Render the current scene
+        Render the current scene with 2-pass rendering
 
         Args:
             time: Current time for animations
@@ -111,14 +144,34 @@ class ScenesManager:
             self.load_new_scene()
             self._new_scene_index = None
 
+        width, height = int(resolution[0]), int(resolution[1])
+        
+        # Resize FBO if needed
+        if self.fbo is None or self.fbo_texture.width != width or self.fbo_texture.height != height:
+            if self.fbo is not None:
+                self.fbo.release()
+            self.fbo_texture = self.screen_ctx.texture((width, height), 4)
+            self.fbo_texture.filter = (self.screen_ctx.LINEAR, self.screen_ctx.LINEAR)
+            self.fbo = self.screen_ctx.framebuffer([self.fbo_texture])
+        
+        # Update parameters for both passes
         self._update_params(time, frame_time, resolution)
-        self.screen_ctx.clear()
-        # Executes vertex + fragment shaders
+        self._update_post_params(time, frame_time, resolution)
+        
+        # FIRST PASS: Render scene to FBO
+        self.fbo.use()
+        self.fbo.clear()
         self.quad.render(self.current_prog)
+        
+        # SECOND PASS: Render FBO texture to screen with post-processing
+        self.screen_ctx.screen.use()
+        self.screen_ctx.clear()
+        self.fbo_texture.use(0)
+        self.quad.render(self.post_prog)
 
     def _update_params(self, time: float, frame_time: float, resolution: Tuple[float, float, float]):
         """
-        Update shader uniforms with current parameter values
+        Update shader uniforms with current parameter values for first pass
 
         Args:
             time: Current time for animations
@@ -138,6 +191,33 @@ class ScenesManager:
 
         # Update shader parameters using the scene's method
         self.current_scene.update_shader_params(self.current_prog)
+
+    def _update_post_params(self, time: float, frame_time: float, resolution: Tuple[float, float, float]):
+        """
+        Update shader uniforms with current parameter values for second pass
+
+        Args:
+            time: Current time for animations
+            frame_time: Time since last frame
+            resolution: Screen resolution as (width, height, aspect_ratio)
+        """
+        if self.post_prog is None:
+            return
+
+        if 'iResolution' in self.post_prog:
+            self.post_prog['iResolution'].value = resolution
+
+        # Update post-processing shader parameters
+        for param in self.post_params:
+            if param.name in self.post_prog:
+                shader_param = self.post_prog[param.name]
+                org_value = shader_param.value
+                shader_param.value = param.value
+
+                # Debug output when parameter values change
+                from scenes.scene import _values_changed
+                if _values_changed(org_value, param.value):
+                    print(f"Set {param.name} to {param.value}")
 
     def change_to_next_scene(self):
         self._new_scene_index = (
