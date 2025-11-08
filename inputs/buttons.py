@@ -27,10 +27,10 @@ class Button(Enum):
     LEFT_GAIN = MidiGetter(MidiEventType.CONTROL_CHANGE, 51)
     LEFT_AMOUNT = MidiGetter(MidiEventType.CONTROL_CHANGE, 52)
 
-    RIGHT_LENGTH = MidiGetter(MidiEventType.CONTROL_CHANGE, 57)
-    RIGHT_DRY_WET = MidiGetter(MidiEventType.CONTROL_CHANGE, 58)
-    RIGHT_GAIN = MidiGetter(MidiEventType.CONTROL_CHANGE, 34)
-    RIGHT_AMOUNT = MidiGetter(MidiEventType.CONTROL_CHANGE, 35)
+    RIGHT_LENGTH = MidiGetter(MidiEventType.CONTROL_CHANGE, 34)
+    RIGHT_DRY_WET = MidiGetter(MidiEventType.CONTROL_CHANGE, 35)
+    RIGHT_GAIN = MidiGetter(MidiEventType.CONTROL_CHANGE, 57)
+    RIGHT_AMOUNT = MidiGetter(MidiEventType.CONTROL_CHANGE, 58)
 
     LEFT_VOLUME = MidiGetter(MidiEventType.CONTROL_CHANGE, 56)
     RIGHT_VOLUME = MidiGetter(MidiEventType.CONTROL_CHANGE, 62)
