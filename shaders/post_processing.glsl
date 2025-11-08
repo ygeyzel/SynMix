@@ -11,15 +11,16 @@ uniform vec3 iResolution;
 uniform float iTime;
 
 // Post-processing effect parameters
-uniform bool uInvertColors = false;
-uniform bool uInvertRed = false;
-uniform bool uInvertGreen = false;
-uniform bool uInvertBlue = false;
-uniform bool uInvertHue = false;
-uniform bool uInvertSaturation = false;
-uniform bool uInvertValue = false;
-uniform bool uWavesX = false;
-uniform bool uWavesY = false;
+uniform bool uInvertColors;
+uniform bool uInvertRed;
+uniform bool uInvertGreen;
+uniform bool uInvertBlue;
+uniform bool uInvertHue;
+uniform bool uInvertSaturation;
+uniform bool uInvertValue;
+
+uniform float uWavesX;
+uniform float uWavesY;
 
 // RGB to HSV conversion
 vec3 rgb2hsv(vec3 c) {
@@ -39,22 +40,24 @@ vec3 hsv2rgb(vec3 c) {
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-void main() {
-    vec2 uv = fragCoord.xy / iResolution.xy;
-
-    float waveAmplitude = 0.01;
-    float waveFrequency = 100.0;
+vec2 applyWaveDistortion(vec2 uv, float time) {
+    float waveAmplitude = 0.03;
     float waveSpeed = 2.0;
-    float waveX = sin(uv.y * waveFrequency + iTime * waveSpeed) * waveAmplitude;
-    float waveY = cos(uv.x * waveFrequency * 0.7 + iTime * waveSpeed * 1.3) * waveAmplitude;
-    
-    if (uWavesX) {
+    float waveY = sin(uv.x * uWavesY + time * waveSpeed) * waveAmplitude;
+    float waveX = cos(uv.y * uWavesX + 0.7 + time * waveSpeed * 1.3) * waveAmplitude;
+
+    if (abs(uWavesX) > 0.01) {
         uv.x += waveX;
     }
-    if (uWavesY) {
+    if (abs(uWavesY) > 0.01) {
         uv.y += waveY;
     }
-    
+    return uv;
+}
+
+
+void main() {
+    vec2 uv = fragCoord.xy / iResolution.xy;
     vec4 color = texture(uTexture, uv);
     
     // Color inversion effect (full RGB inversion)
@@ -89,6 +92,8 @@ void main() {
         
         color.rgb = hsv2rgb(hsv);
     }
+
+    uv = applyWaveDistortion(uv, iTime);
     
     fragColor = color;
 }
