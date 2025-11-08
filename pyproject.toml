@@ -13,3 +13,7 @@ dependencies = [
     "numpy>=2.3.2",
     "python-rtmidi>=1.5.8",
 ]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
