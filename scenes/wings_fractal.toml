@@ -57,25 +57,25 @@ controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.5 }
 
 [[params]]
 name = "rot0"
-button = "LEFT_PITCH"
+button = "LEFT_VOLUME"
 controller.type = "NormalizedController"
-controller.args = { min_value = -6.28, max_value = 6.28, initial_value = 0.0, is_pitch = true }
+controller.args = { min_value = -6.28, max_value = 6.28, initial_value = 0.0}
 
 [[params]]
 name = "rot1"
-button = "RIGHT_PITCH"
+button = "RIGHT_VOLUME"
 controller.type = "NormalizedController"
-controller.args = { min_value = -6.28, max_value = 6.28, initial_value = 0.0, is_pitch = true }
+controller.args = { min_value = -6.28, max_value = 6.28, initial_value = 0.0}
 
 [[params]]
 name = "scaleX"
-button = "LEFT_VOLUME"
+button = "LEFT_GAIN"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
 
 [[params]]
 name = "scaleY"
-button = "RIGHT_VOLUME"
+button = "RIGHT_GAIN"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
 

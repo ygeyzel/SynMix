@@ -1,6 +1,6 @@
 from inputs.buttons import Button
 from params.params import Param
-from params.valuecontrollers import ToggleController, IsPressedController
+from params.valuecontrollers import ToggleController, IsPressedController, NormalizedController
 
 
 def get_post_processing_params():
@@ -67,15 +67,15 @@ def get_post_processing_params():
     # Wave effect parameter
     waves_x_param = Param(
         name='uWavesX',
-        button=Button.LEFT_MINUS,
-        controller=IsPressedController()
+        button=Button.LEFT_PITCH,
+        controller=NormalizedController(min_value =-50.0, max_value=50.0, is_pitch=True)
     )
     post_params.append(waves_x_param)
 
     wave_y_param = Param(
         name='uWavesY',
-        button=Button.LEFT_PLUS,
-        controller=IsPressedController()
+        button=Button.RIGHT_PITCH,
+        controller=NormalizedController(min_value =-50.0, max_value=50.0, is_pitch=True)
     )
     post_params.append(wave_y_param)
     
