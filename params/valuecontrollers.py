@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from inputs.midi import MIDI_MAX_VALUE, MIDI_MIN_VALUE, MIDI_INC_VALUE, MIDI_DEC_VALUE, MAX_PITCH, MIN_PITCH
+from typing import Any
 
 
 controllers_registry = {}
@@ -13,17 +14,21 @@ def register_controller(name):
     return decorator
 
 
-@register_controller('ValueController')
 class ValueController(ABC):
     def __init__(self, *args, **kwargs):
         super().__init__()
-        self.value = kwargs.get('initial_value', 0.0)
+        self.initial_value = kwargs.get('initial_value', 0.0)
+        self.value = self.initial_value
 
     def __repr__(self):
         return f'{self.__class__.__name__}({self.__dict__})'
 
-    def set_value(self, value: float):
+    def set_value(self, value: Any):
         self.value = value
+
+    def reset(self):
+        """Reset the controller to its initial value"""
+        self.value = self.initial_value
 
     @abstractmethod
     def control_value(self, in_value: int):
@@ -91,3 +96,34 @@ class CyclicController(IncDecController):
         self.value -= self.step
         if self.value < self.min_value:
             self.value = self.max_value - (self.min_value - self.value)
+
+
+@register_controller('ToggleController')
+class ToggleController(ValueController):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.initial_value = False
+        self.value = False
+
+    def reset(self):
+        """Reset the controller to its initial value"""
+        self.value = False
+
+    def control_value(self, in_value: int):
+        if in_value == MIDI_MAX_VALUE:
+            self.set_value(not self.value)
+
+
+@register_controller('IsPressedController')
+class IsPressedController(ValueController):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.initial_value = False
+        self.value = False
+
+    def reset(self):
+        """Reset the controller to its initial value"""
+        self.value = False
+
+    def control_value(self, in_value: int):
+        self.set_value(in_value == MIDI_MAX_VALUE)

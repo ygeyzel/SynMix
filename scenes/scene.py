@@ -38,6 +38,28 @@ def _values_changed(org_value, new_value):
     
     return values_changed
 
+
+def update_shader_params_from_list(shader_program, params):
+    """
+    Update shader uniforms with current parameter values from a list of params
+    
+    Args:
+        shader_program: The shader program to update
+        params: List of Param objects to update
+    """
+    if shader_program is None:
+        return
+    
+    for param in params:
+        if param.name in shader_program:
+            shader_param = shader_program[param.name]
+            org_value = shader_param.value
+            shader_param.value = param.value
+
+            # Debug output when parameter values change
+            if _values_changed(org_value, param.value):
+                print(f"Set {param.name} to {param.value}")
+
 SHADERS_DIR = 'shaders'
 
 
@@ -85,15 +107,4 @@ class Scene:
         Args:
             shader_program: The shader program to update
         """
-        if shader_program is None:
-            return
-        
-        for param in self.params:
-            if param.name in shader_program:
-                shader_param = shader_program[param.name]
-                org_value = shader_param.value
-                shader_param.value = param.value
-
-                # Debug output when parameter values change
-                if _values_changed(org_value, param.value):
-                    print(f"Set {param.name} to {param.value}")
+        update_shader_params_from_list(shader_program, self.params)
