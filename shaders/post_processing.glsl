@@ -40,21 +40,24 @@ vec3 hsv2rgb(vec3 c) {
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-void main() {
-    vec2 uv = fragCoord.xy / iResolution.xy;
-
+vec2 applyWaveDistortion(vec2 uv, float time) {
     float waveAmplitude = 0.03;
     float waveSpeed = 2.0;
-    float waveY = sin(uv.x * uWavesY + iTime * waveSpeed) * waveAmplitude;
-    float waveX = cos(uv.y * uWavesX + 0.7 + iTime * waveSpeed * 1.3) * waveAmplitude;
-    
+    float waveY = sin(uv.x * uWavesY + time * waveSpeed) * waveAmplitude;
+    float waveX = cos(uv.y * uWavesX + 0.7 + time * waveSpeed * 1.3) * waveAmplitude;
+
     if (abs(uWavesX) > 0.01) {
         uv.x += waveX;
     }
     if (abs(uWavesY) > 0.01) {
         uv.y += waveY;
     }
-    
+    return uv;
+}
+
+
+void main() {
+    vec2 uv = fragCoord.xy / iResolution.xy;
     vec4 color = texture(uTexture, uv);
     
     // Color inversion effect (full RGB inversion)
@@ -89,6 +92,8 @@ void main() {
         
         color.rgb = hsv2rgb(hsv);
     }
+
+    uv = applyWaveDistortion(uv, iTime);
     
     fragColor = color;
 }
