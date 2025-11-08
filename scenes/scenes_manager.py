@@ -12,7 +12,10 @@ from inputs.buttons import Button
 from params.params import Param
 from params.valuecontrollers import controllers_registry
 from scenes.scene import Scene, update_shader_params_from_list
-from scenes.post_processing_params import get_post_processing_params
+
+
+SCENES_DIR = Path('scenes')
+POST_PROCESSING_PARAMS_FILE = SCENES_DIR / 'post_processing_params.toml'
 
 
 class ScenesManager:
@@ -60,7 +63,7 @@ class ScenesManager:
                                                  fragment_shader=fragment_source)
         
         # Load post-processing parameters from dedicated file
-        self.post_params = get_post_processing_params()
+        self.post_params = self._load_post_processing_params()
         
         # Bind post-processing parameters to secondary bindings
         for param in self.post_params:
@@ -71,19 +74,21 @@ class ScenesManager:
         return self.scenes[self.current_scene_index]
 
     @staticmethod
-    def _generat_param_from_file_data(data):
+    def _generate_param_from_file_data(data):
         abuttom = Button.__members__[data['button']]
         acontroller = controllers_registry[data['controller']['type']](
             **data['controller']['args'])
         return Param(name=data['name'], button=abuttom, controller=acontroller)
 
     def _load_scens_from_toml_files(self):
-        for afile in os.listdir('scenes'):
+        for afile in os.listdir(SCENES_DIR):
+            if afile == POST_PROCESSING_PARAMS_FILE.name:
+                continue
             if afile.endswith('.toml'):
-                with open(f'scenes/{afile}', 'rb') as f:
+                with open(SCENES_DIR / afile, 'rb') as f:
                     data = tomllib.load(f)
 
-                data['params'] = [self._generat_param_from_file_data(
+                data['params'] = [self._generate_param_from_file_data(
                     p) for p in data['params']]
                 ascene = Scene(**data)
                 self.scenes.append(ascene)
@@ -91,6 +96,13 @@ class ScenesManager:
 
         # Reorder scenes according to scenes_order.json
         self._reorder_scenes()
+
+    def _load_post_processing_params(self):
+        with open(POST_PROCESSING_PARAMS_FILE, 'rb') as f:
+            data = tomllib.load(f)
+
+        params_data = data.get('params', [])
+        return [self._generate_param_from_file_data(p) for p in params_data]
 
     def _reorder_scenes(self):
         """Reorder scenes according to the order specified in scenes_order.json"""

@@ -1,0 +1,56 @@
+# Post-processing parameter definitions
+
+[[params]]
+name = "uInvertColors"
+button = "LEFT_CUE_1"
+controller.type = "ToggleController"
+controller.args = {}
+
+[[params]]
+name = "uInvertRed"
+button = "LEFT_CUE_2"
+controller.type = "ToggleController"
+controller.args = {}
+
+[[params]]
+name = "uInvertGreen"
+button = "LEFT_CUE_3"
+controller.type = "ToggleController"
+controller.args = {}
+
+[[params]]
+name = "uInvertBlue"
+button = "LEFT_CUE_4"
+controller.type = "ToggleController"
+controller.args = {}
+
+[[params]]
+name = "uInvertHue"
+button = "RIGHT_CUE_1"
+controller.type = "ToggleController"
+controller.args = {}
+
+[[params]]
+name = "uInvertSaturation"
+button = "RIGHT_CUE_2"
+controller.type = "ToggleController"
+controller.args = {}
+
+[[params]]
+name = "uInvertValue"
+button = "RIGHT_CUE_3"
+controller.type = "ToggleController"
+controller.args = {}
+
+[[params]]
+name = "uWavesX"
+button = "LEFT_PITCH"
+controller.type = "NormalizedController"
+controller.args = {min_value = -50.0, max_value = 50.0, is_pitch = true}
+
+[[params]]
+name = "uWavesY"
+button = "RIGHT_PITCH"
+controller.type = "NormalizedController"
+controller.args = {min_value = -50.0, max_value = 50.0, is_pitch = true}
+
