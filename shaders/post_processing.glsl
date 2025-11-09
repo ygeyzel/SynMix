@@ -22,8 +22,7 @@ uniform bool uInvertValue = false;
 uniform float uWavesX;
 uniform float uWavesY;
 
-//uniform bool uIsDisplayDVDLogo = false;
-bool uIsDisplayDVDLogo = true;
+uniform bool uIsDisplayDVDLogo = false;
 
 #define PI 3.14159265359
 
