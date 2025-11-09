@@ -11,18 +11,18 @@ uniform vec3 iResolution;
 uniform float iTime;
 
 // Post-processing effect parameters
-uniform bool uInvertColors = false;
-uniform bool uInvertRed = false;
-uniform bool uInvertGreen = false;
-uniform bool uInvertBlue = false;
-uniform bool uInvertHue = false;
-uniform bool uInvertSaturation = false;
-uniform bool uInvertValue = false;
+uniform bool uInvertColors;
+uniform bool uInvertRed;
+uniform bool uInvertGreen;
+uniform bool uInvertBlue;
+uniform bool uInvertHue;
+uniform bool uInvertSaturation;
+uniform bool uInvertValue;
 
 uniform float uWavesX;
 uniform float uWavesY;
 
-uniform bool uIsDisplayDVDLogo = false;
+uniform bool uIsDisplayDVDLogo;
 
 #define PI 3.14159265359
 
