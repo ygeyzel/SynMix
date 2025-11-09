@@ -11,16 +11,17 @@ uniform vec3 iResolution;
 uniform float iTime;
 
 // Post-processing effect parameters
-uniform bool uInvertColors;
-uniform bool uInvertRed;
-uniform bool uInvertGreen;
-uniform bool uInvertBlue;
-uniform bool uInvertHue;
-uniform bool uInvertSaturation;
-uniform bool uInvertValue;
+uniform bool uInvertColors = false;
+uniform bool uInvertRed = false;
+uniform bool uInvertGreen = false;
+uniform bool uInvertBlue = false;
+uniform bool uInvertHue = false;
+uniform bool uInvertSaturation = false;
+uniform bool uInvertValue = false;
 
 uniform float uWavesX;
 uniform float uWavesY;
+
 //uniform bool uIsDisplayDVDLogo = false;
 bool uIsDisplayDVDLogo = true;
 
@@ -282,6 +283,7 @@ void main() {
     if (abs(uWavesY) > 0.01) {
         uv.y += waveY;
     }
+
     vec4 color = texture(uTexture, uv);
 
     // Color inversion effect (full RGB inversion)
