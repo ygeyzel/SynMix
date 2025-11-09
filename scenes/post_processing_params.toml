@@ -54,3 +54,8 @@ button = "RIGHT_PITCH"
 controller.type = "NormalizedController"
 controller.args = {min_value = -50.0, max_value = 50.0, is_pitch = true}
 
+[[params]]
+name = "uIsDisplayDVDLogo"
+button = "LEFT_OUT"
+controller.type = "ToggleController"
+controller.args = {}
