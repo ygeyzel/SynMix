@@ -1,9 +1,9 @@
 {
   "scene_order": [
+    "DesertDunes",
     "CBSGalaxy",
     "QuaternionFractal",
     "KeplerPlanet",
-    "WingsFractal",
-    "KeplerPlanet"
+    "WingsFractal"
   ]
 }

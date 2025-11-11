@@ -107,10 +107,11 @@ Example configuration:
 ```json
 {
   "scene_order": [
+    "DesertDunes",
     "CBSGalaxy",
     "QuaternionFractal",
     "KeplerPlanet",
-    "Deadmau5Fractal"
+    "WingsFractal"
   ]
 }
 ```
@@ -121,6 +122,18 @@ To change the scene order:
 3. Restart the application
 
 The first scene in the list will be loaded at startup by default. You can override this by using the `--start-scene` command-line argument to specify a different starting scene. When you add new scenes, make sure to add their names to this configuration file.
+
+## Available Scenes
+
+SynMix includes several real-time raymarched and fractal scenes:
+
+- **DesertDunes** - Raymarched desert landscape with binary star system, procedural dunes, and atmospheric effects
+- **CBSGalaxy** - Cosmic galaxy visualization with dynamic colors and movement
+- **QuaternionFractal** - 3D quaternion-based fractal with complex geometric patterns
+- **KeplerPlanet** - Realistic planetary rendering with continents, oceans, clouds, and binary star lighting
+- **WingsFractal** - Abstract Julia fractal with wing-like patterns and color cycling
+
+Navigate between scenes using the LEFT_LOAD and RIGHT_LOAD buttons (F2/F1 in fake MIDI mode).
 
 ## Project Structure
 
@@ -137,7 +150,19 @@ The first scene in the list will be loaded at startup by default. You can overri
 │   ├── params.py        # Parameter definitions
 │   └── valuecontrollers.py # Parameter value controllers
 ├── scenes/              # Visual scenes
+│   ├── cbs_galaxy.toml
+│   ├── desert_dunes.toml
+│   ├── kepler_planet.toml
+│   ├── quaternion_fractal.toml
+│   └── wings_fractal.toml
 ├── shaders/             # GLSL shader files
+│   ├── cbs_galaxy.glsl
+│   ├── desert_dunes.glsl
+│   ├── kepler.glsl
+│   ├── post_processing.glsl
+│   ├── quaternion_fractal.glsl
+│   ├── vertex.glsl
+│   └── wings.glsl
 ├── utils/               # Utility modules
 │   └── fakemidi.py      # Virtual MIDI controller
 └── resources/           # Additional resources
