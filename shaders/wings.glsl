@@ -21,8 +21,10 @@ uniform float flap;
 uniform float rot0;
 uniform float rot1;
 
-uniform float scaleX;
-uniform float scaleY;
+uniform float scaleX0;
+uniform float scaleX1;
+uniform float scaleY0;
+uniform float scaleY1;
 uniform float scaleXY;
 
 
@@ -77,7 +79,10 @@ void main()
 	uv /= iResolution.x*1.5113*abs(sin(timeVal));
     uv.y -= animWings*5.0; 
 	vec2 tuv = uv*125.0;
-	float rot = 3.141592654 * 0.5 + mix(rot0, rot1, (sin(iTime*0.5)*0.5+0.5)) * 3.141592654;
+
+	float rot = 3.141592654 * 0.5 + mix(rot0, rot1, sin(iTime));
+    float scaleX = mix(scaleX0, scaleX1, sin(iTime));
+    float scaleY = mix(scaleY0, scaleY1, sin(iTime));
   
     tuv.x *= scaleX;
     tuv.y *= scaleY;
