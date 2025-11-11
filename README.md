@@ -80,10 +80,25 @@ The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard input
 | **LEFT_RECORD** | Toggle | F7 | — |
 | **RIGHT_SYNC** | Toggle | F8 | — |
 | **RIGHT_RECORD** | Toggle | F9 | — |
+| **LEFT_MINUS** | Toggle | F10 | — |
+| **LEFT_PLUS** | Toggle | F11 | — |
+| **LEFT_SHIFT** | Toggle | F12 | — |
+| **RIGHT_MINUS** | Toggle | HOME | — |
+| **RIGHT_PLUS** | Toggle | END | — |
+| **RIGHT_SHIFT** | Toggle | INSERT | — |
+| **LEFT_IN** | Toggle | DELETE | — |
+| **LEFT_OUT** | Toggle | ~ (Tilde) | — |
+| **LEFT_FX_SEL** | Toggle | ! (Exclamation) | — |
+| **LEFT_FX_ON** | Toggle | @ (At) | — |
+| **RIGHT_IN** | Toggle | # (Pound) | — |
+| **RIGHT_OUT** | Toggle | $ (Dollar) | — |
+| **RIGHT_FX_SEL** | Toggle | % (Percent) | — |
+| **RIGHT_FX_ON** | Toggle | ^ (Caret) | — |
 | **LEFT_LOAD** | Toggle | F2 | — |
 | **RIGHT_LOAD** | Toggle | F1 | — |
 | **SCROLL** | Scroller | F3 | F4 |
 | **SCROLL_CLICK** | Toggle | F5 | — |
+| **CROSSFADER** | Stepper | . (Period) | / (Slash) | — |
 
 **Control Types:**
 - **Stepper**: Press first key to increase, second key to decrease (hold with Shift/Ctrl/Alt for faster changes)
