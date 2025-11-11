@@ -23,7 +23,7 @@ controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.3 }
 name = "hueShift"
 button = "LEFT_HIGH"
 controller.type = "NormalizedController"
-controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.0 }
+controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.5 }
 
 [[params]]
 name = "brightness"
@@ -41,7 +41,7 @@ controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 1.0 }
 name = "hueRange"
 button = "RIGHT_HIGH"
 controller.type = "NormalizedController"
-controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 0.5 }
+controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 1.0 }
 
 [[params]]
 name = "wingsFactor"
@@ -59,28 +59,46 @@ controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.5 }
 name = "rot0"
 button = "LEFT_VOLUME"
 controller.type = "NormalizedController"
-controller.args = { min_value = -6.28, max_value = 6.28, initial_value = 0.0}
+controller.args = { min_value = -6.28, max_value = 6.28, initial_value = -5.0}
 
 [[params]]
 name = "rot1"
 button = "RIGHT_VOLUME"
 controller.type = "NormalizedController"
-controller.args = { min_value = -6.28, max_value = 6.28, initial_value = 0.0}
+controller.args = { min_value = -6.28, max_value = 6.28, initial_value = 0.5}
 
 [[params]]
-name = "scaleX"
+name = "rotWeight"
+button = "CROSSFADER"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 3.0, initial_value = 0.5 }
+
+[[params]]
+name = "scaleX0"
 button = "LEFT_GAIN"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
 
 [[params]]
-name = "scaleY"
+name = "scaleX1"
 button = "RIGHT_GAIN"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
 
 [[params]]
+name = "scaleY0"
+button = "LEFT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
+
+[[params]]
+name = "scaleY1"
+button = "RIGHT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
+
+[[params]]
 name = "scaleXY"
-button = "CROSSFADER"
+button = "CUEMIX"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
