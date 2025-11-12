@@ -81,13 +81,13 @@ controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 1.0 }
 
 [[params]]
 name = "skyColorR"
-button = "LEFT_LENGTH"
+button = "LEFT_AMOUNT"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.25 }
 
 [[params]]
 name = "skyColorG"
-button = "RIGHT_LENGTH"
+button = "RIGHT_AMOUNT"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.8 }
 

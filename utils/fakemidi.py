@@ -7,7 +7,7 @@ from typing import Callable, Dict, List, NamedTuple, Tuple
 import mido
 from pyglet.window import key as pyglet_key
 
-from inputs.buttons import Button
+from inputs.buttons import Button, ButtonType
 from inputs.midi import get_midi_event_descriptor, MIDI_DEC_VALUE, MidiEventType, MIDI_INC_VALUE, MIDI_MAX_VALUE, MIDI_MIN_VALUE, MAX_PITCH, MIN_PITCH
 
 
@@ -21,12 +21,13 @@ class KeyMessageParams(NamedTuple):
 
 class ButtonInterface(ABC):
     def __init__(self, button: Button):
-        self.event_type = button.value.event_type
+        midi_getter = button.midi_getter
+        self.event_type = midi_getter.event_type
 
         event_descriptor = get_midi_event_descriptor(self.event_type)
         self.selector_field = event_descriptor.SELECTOR_FIELD
         self.value_field = event_descriptor.VALUE_FIELD
-        self.selector_value = button.value.selector_value
+        self.selector_value = midi_getter.selector_value
 
     def _generate_base_message_dict(self) -> dict:
         message_dict = {
@@ -37,7 +38,7 @@ class ButtonInterface(ABC):
         return message_dict
 
     @abstractmethod
-    def generate_messages(self, **kwargs) -> List[mido.Message]:
+    def generate_messages(self, *args, **kwargs) -> List[mido.Message]:
         pass
 
     @property
@@ -51,13 +52,20 @@ class ButtonInterface(ABC):
                 for params in self.key_messages_params]
 
 
-class StepperInterface(ButtonInterface):
-    def __init__(self, button: Button, init_value: int = 64, min_value: int = MIDI_MIN_VALUE, max_value: int = MIDI_MAX_VALUE, step_factor=1):
+class KnobInterface(ButtonInterface):
+    def __init__(self, button: Button):
         super().__init__(button)
-        self.current_value = init_value
-        self.min_value = min_value
-        self.max_value = max_value
-        self.step_factor = step_factor
+        event_type = button.midi_getter.event_type
+        if event_type is MidiEventType.PITCH:
+            self.current_value = 0
+            self.min_value = MIN_PITCH
+            self.max_value = MAX_PITCH
+            self.step_factor = PITCH_STEP_FACTOR
+        else:
+            self.current_value = 64
+            self.min_value = MIDI_MIN_VALUE
+            self.max_value = MIDI_MAX_VALUE
+            self.step_factor = 1
 
     def _step_value(self, step: int):
         new_value = self.current_value + step
@@ -84,7 +92,7 @@ class StepperInterface(ButtonInterface):
 
 
 class ScrollerInterface(ButtonInterface):
-    def generate_messages(self, is_inc_dir: bool, repeats: int, **kwargs) -> [mido.Message]:
+    def generate_messages(self, is_inc_dir: bool, repeats: int, **kwargs) -> List[mido.Message]:
         message_dict = self._generate_base_message_dict()
         message_dict[self.value_field] = MIDI_INC_VALUE if is_inc_dir else MIDI_DEC_VALUE
         return [mido.Message(**message_dict)] * repeats
@@ -99,12 +107,12 @@ class ScrollerInterface(ButtonInterface):
         ]
 
 
-class ToggleInterface(ButtonInterface):
+class ClickableInterface(ButtonInterface):
     def __init__(self, button: Button):
         super().__init__(button)
         self.is_on = False
 
-    def generate_messages(self, is_on, **kwargs) -> mido.Message | None:
+    def generate_messages(self, is_on, **kwargs) -> List[mido.Message]:
         if is_on == self.is_on:
             return []
 
@@ -122,30 +130,19 @@ class ToggleInterface(ButtonInterface):
         ]
 
 
-class InterfaceType(Enum):
-    STEPPER = StepperInterface
-    SCROLLER = ScrollerInterface
-    TOGGLE = ToggleInterface
+INTERFACE_BY_BUTTON_TYPE: dict[ButtonType, type[ButtonInterface]] = {
+    ButtonType.KNOB: KnobInterface,
+    ButtonType.SCROLLER: ScrollerInterface,
+    ButtonType.CLICKABLE: ClickableInterface,
+}
 
 
-def interface_factory(button: Button, interface_type: InterfaceType) -> ButtonInterface:
-    event_type = button.value.event_type
-
-    match event_type, interface_type:
-        case MidiEventType.CONTROL_CHANGE, InterfaceType.STEPPER:
-            return StepperInterface(button)
-
-        case MidiEventType.CONTROL_CHANGE, InterfaceType.SCROLLER:
-            return ScrollerInterface(button)
-
-        case MidiEventType.NOTE_ON, InterfaceType.TOGGLE:
-            return ToggleInterface(button)
-
-        case MidiEventType.PITCH, InterfaceType.STEPPER:
-            return StepperInterface(button, init_value=0, min_value=MIN_PITCH, max_value=MAX_PITCH, step_factor=PITCH_STEP_FACTOR)
-        case _:
-            raise ValueError(
-                f"Unsupported combination of event type {event_type} and interface type {interface_type}")
+def interface_factory(button: Button) -> ButtonInterface:
+    interface_cls = INTERFACE_BY_BUTTON_TYPE.get(button.button_type)
+    if interface_cls is None:
+        raise ValueError(
+            f"No interface registered for button type {button.button_type}.")
+    return interface_cls(button)
 
 
 def get_key_code(key_name: str) -> int:
@@ -157,11 +154,9 @@ def load_key_map(file_path: str) -> Dict[int, Callable]:
     Example JSON structure:
     {
         "BUTTON_NAME_0": {
-            "interface_type": "STEPPER",
             "keys": ["key1", "key2"]
         },
         "BUTTON_NAME_1": {
-            "interface_type": "TOGGLE",
             "keys": ["key3"]
         },
         ...
@@ -179,8 +174,7 @@ def load_key_map(file_path: str) -> Dict[int, Callable]:
     key_map = {}
     for button_name, mapping in config.items():
         button = Button[button_name]
-        interface_type = InterfaceType[mapping['interface_type']]
-        interface = interface_factory(button, interface_type)
+        interface = interface_factory(button)
         keys_messages_methods = interface.keys_messages_methods()
         if len(mapping['keys']) != len(keys_messages_methods):
             raise ValueError(

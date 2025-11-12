@@ -1,335 +1,283 @@
 {
   "LEFT_WHEEL": {
-    "interface_type": "SCROLLER",
     "keys": [
       "UP",
       "DOWN"
     ]
   },
   "RIGHT_WHEEL": {
-    "interface_type": "SCROLLER",
     "keys": [
       "LEFT",
       "RIGHT"
     ]
   },
   "LEFT_PITCH": {
-    "interface_type": "STEPPER",
     "keys": [
       "QUOTELEFT",
       "TAB"
     ]
   },
   "RIGHT_PITCH": {
-    "interface_type": "STEPPER",
     "keys": [
       "BACKSPACE",
       "BACKSLASH"
     ]
   },
   "LEFT_LENGTH": {
-    "interface_type": "SCROLLER",
     "keys": [
       "Q",
       "W"
     ]
   },
   "LEFT_DRY_WET": {
-    "interface_type": "SCROLLER",
     "keys": [
       "A",
       "S"
     ]
   },
   "LEFT_GAIN": {
-    "interface_type": "STEPPER",
     "keys": [
       "E",
       "R"
     ]
   },
   "LEFT_AMOUNT": {
-    "interface_type": "STEPPER",
     "keys": [
       "D",
       "F"
     ]
   },
   "LEFT_HIGH": {
-    "interface_type": "STEPPER",
     "keys": [
       "T",
       "Y"
     ]
   },
   "LEFT_MID": {
-    "interface_type": "STEPPER",
     "keys": [
       "G",
       "H"
     ]
   },
   "LEFT_LOW": {
-    "interface_type": "STEPPER",
     "keys": [
       "V",
       "B"
     ]
   },
   "RIGHT_HIGH": {
-    "interface_type": "STEPPER",
     "keys": [
       "U",
       "I"
     ]
   },
   "RIGHT_MID": {
-    "interface_type": "STEPPER",
     "keys": [
       "J",
       "K"
     ]
   },
   "RIGHT_LOW": {
-    "interface_type": "STEPPER",
     "keys": [
       "N",
       "M"
     ]
   },
   "RIGHT_LENGTH": {
-    "interface_type": "SCROLLER",
     "keys": [
       "O",
       "P"
     ]
   },
   "RIGHT_DRY_WET": {
-    "interface_type": "SCROLLER",
     "keys": [
       "L",
       "SEMICOLON"
     ]
   },
   "RIGHT_GAIN": {
-    "interface_type": "STEPPER",
     "keys": [
       "BRACKETLEFT",
       "BRACKETRIGHT"
     ]
   },
   "RIGHT_AMOUNT": {
-    "interface_type": "STEPPER",
     "keys": [
       "PERIOD",
       "SLASH"
     ]
   },
   "RIGHT_LOAD": {
-    "interface_type": "TOGGLE",
     "keys": [
       "F1"
     ]
   },
   "LEFT_LOAD": {
-    "interface_type": "TOGGLE",
     "keys": [
       "F2"
     ]
   },
   "SCROLL": {
-    "interface_type": "SCROLLER",
     "keys": [
       "F3",
       "F4"
     ]
   },
   "SCROLL_CLICK": {
-    "interface_type": "TOGGLE",
     "keys": [
       "F5"
     ]
   },
   "LEFT_VOLUME": {
-    "interface_type": "STEPPER",
     "keys": [
       "_9",
       "_0"
     ]
   },
   "RIGHT_VOLUME": {
-    "interface_type": "STEPPER",
     "keys": [
       "MINUS",
       "PLUS"
     ]
   },
   "CROSSFADER": {
-    "interface_type": "STEPPER",
     "keys": [
       "PERIOD",
       "SLASH"
     ]
   },
   "CUEMIX": {
-    "interface_type": "STEPPER",
     "keys": [
       "Z",
       "X"
     ]
   },
   "LEFT_CUE_1": {
-    "interface_type": "TOGGLE",
     "keys": [
       "_1"
     ]
   },
   "LEFT_CUE_2": {
-    "interface_type": "TOGGLE",
     "keys": [
       "_2"
     ]
   },
   "LEFT_CUE_3": {
-    "interface_type": "TOGGLE",
     "keys": [
       "_3"
     ]
   },
   "LEFT_CUE_4": {
-    "interface_type": "TOGGLE",
     "keys": [
       "_4"
     ]
   },
   "RIGHT_CUE_1": {
-    "interface_type": "TOGGLE",
     "keys": [
       "_5"
     ]
   },
   "RIGHT_CUE_2": {
-    "interface_type": "TOGGLE",
     "keys": [
       "_6"
     ]
   },
   "RIGHT_CUE_3": {
-    "interface_type": "TOGGLE",
     "keys": [
       "_7"
     ]
   },
   "RIGHT_CUE_4": {
-    "interface_type": "TOGGLE",
     "keys": [
       "_8"
     ]
   },
   "LEFT_SYNC": {
-    "interface_type": "TOGGLE",
     "keys": [
       "F6"
     ]
   },
   "LEFT_RECORD": {
-    "interface_type": "TOGGLE",
     "keys": [
       "F7"
     ]
   },
   "RIGHT_SYNC": {
-    "interface_type": "TOGGLE",
     "keys": [
       "F8"
     ]
   },
   "RIGHT_RECORD": {
-    "interface_type": "TOGGLE",
     "keys": [
       "F9"
     ]
   },
   "LEFT_MINUS": {
-    "interface_type": "TOGGLE",
     "keys": [
       "F10"
     ]
   },
   "LEFT_PLUS": {
-    "interface_type": "TOGGLE",
     "keys": [
       "F11"
     ]
   },
   "LEFT_SHIFT": {
-    "interface_type": "TOGGLE",
     "keys": [
       "F12"
     ]
   },
   "RIGHT_MINUS": {
-    "interface_type": "TOGGLE",
     "keys": [
       "HOME"
     ]
   },
   "RIGHT_PLUS": {
-    "interface_type": "TOGGLE",
     "keys": [
       "END"
     ]
   },
   "RIGHT_SHIFT": {
-    "interface_type": "TOGGLE",
     "keys": [
       "INSERT"
     ]
   },
   "LEFT_IN": {
-    "interface_type": "TOGGLE",
     "keys": [
       "DELETE"
     ]
   },
   "LEFT_OUT": {
-    "interface_type": "TOGGLE",
     "keys": [
       "ASCIITILDE"
     ]
   },
   "LEFT_FX_SEL": {
-    "interface_type": "TOGGLE",
     "keys": [
       "EXCLAMATION"
     ]
   },
   "LEFT_FX_ON": {
-    "interface_type": "TOGGLE",
     "keys": [
       "AT"
     ]
   },
   "RIGHT_IN": {
-    "interface_type": "TOGGLE",
     "keys": [
       "POUND"
     ]
   },
   "RIGHT_OUT": {
-    "interface_type": "TOGGLE",
     "keys": [
       "DOLLAR"
     ]
   },
   "RIGHT_FX_SEL": {
-    "interface_type": "TOGGLE",
     "keys": [
       "PERCENT"
     ]
   },
   "RIGHT_FX_ON": {
-    "interface_type": "TOGGLE",
     "keys": [
       "ASCIICIRCUM"
     ]

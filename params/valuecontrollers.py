@@ -1,14 +1,28 @@
 from abc import ABC, abstractmethod
-from inputs.midi import MIDI_MAX_VALUE, MIDI_MIN_VALUE, MIDI_INC_VALUE, MIDI_DEC_VALUE, MAX_PITCH, MIN_PITCH
-from typing import Any
+from typing import Any, Callable, Dict, Iterable, Tuple
+
+from inputs.buttons import ButtonType
+from inputs.midi import MIDI_DEC_VALUE, MIDI_INC_VALUE, MIDI_MAX_VALUE, MIDI_MIN_VALUE, MAX_PITCH, MIN_PITCH
 
 
-controllers_registry = {}
+controllers_registry: Dict[str, Tuple[type['ValueController'], frozenset[ButtonType]]] = {}
 
 
-def register_controller(name):
-    def decorator(cls):
-        controllers_registry[name] = cls
+def _normalize_supported_types(
+        controller_name: str,
+        supported_button_types: Iterable[ButtonType]) -> frozenset[ButtonType]:
+    supported_set = frozenset(supported_button_types)
+    if not supported_set:
+        raise ValueError(
+            f"Controller '{controller_name}' must declare at least one supported button type.")
+
+    return supported_set
+
+
+def register_controller(name: str, *supported_button_types: ButtonType) -> Callable[[type['ValueController']], type['ValueController']]:
+    def decorator(cls: type['ValueController']) -> type['ValueController']:
+        controllers_registry[name] = (
+            cls, _normalize_supported_types(name, supported_button_types))
         return cls
 
     return decorator
@@ -35,7 +49,7 @@ class ValueController(ABC):
         pass
 
 
-@register_controller('NormalizedController')
+@register_controller('NormalizedController', ButtonType.KNOB)
 class NormalizedController(ValueController):
     def __init__(self, min_value, max_value, **kwargs):
         super().__init__(**kwargs)
@@ -76,7 +90,7 @@ class IncDecController(ValueController):
             self.decrease()
 
 
-@register_controller('RangedController')
+@register_controller('RangedController', ButtonType.SCROLLER)
 class RangedController(IncDecController):
     def increase(self):
         self.value = min(self.value + self.step, self.max_value)
@@ -85,7 +99,7 @@ class RangedController(IncDecController):
         self.value = max(self.value - self.step, self.min_value)
 
 
-@register_controller('CyclicController')
+@register_controller('CyclicController', ButtonType.SCROLLER)
 class CyclicController(IncDecController):
     def increase(self):
         self.value += self.step
@@ -98,7 +112,7 @@ class CyclicController(IncDecController):
             self.value = self.max_value - (self.min_value - self.value)
 
 
-@register_controller('ToggleController')
+@register_controller('ToggleController', ButtonType.CLICKABLE)
 class ToggleController(ValueController):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -114,7 +128,7 @@ class ToggleController(ValueController):
             self.set_value(not self.value)
 
 
-@register_controller('IsPressedController')
+@register_controller('IsPressedController', ButtonType.CLICKABLE)
 class IsPressedController(ValueController):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
