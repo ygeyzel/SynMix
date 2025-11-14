@@ -66,6 +66,24 @@ class NormalizedController(ValueController):
         self.set_value(normalized_value)
 
 
+@register_controller('LinearSegmentedController', ButtonType.KNOB)
+class LinearSegmentedController(ValueController):
+    def __init__(self, segments_points: Iterable[Tuple[float, float]], **kwargs):
+        super().__init__(**kwargs)
+        self.segments_points = sorted(segments_points, key=lambda point: point[0])
+        self.num_segments = len(self.segments_points) - 1
+
+    def control_value(self, in_value: int):
+        segment_index = next((i for i, point in enumerate(self.segments_points)
+                              if point[0] >= in_value), self.num_segments) - 1
+
+        x0, y0 = self.segments_points[segment_index]
+        x1, y1 = self.segments_points[segment_index + 1]
+        value = y0 + (in_value - x0) * (y1 - y0) / (x1 - x0)
+
+        self.set_value(value)
+
+
 class IncDecController(ValueController):
     def __init__(self, min_value: float, max_value: float, step: float, inc_value: int = MIDI_INC_VALUE, dec_value: int = MIDI_DEC_VALUE, **kwargs):
         super().__init__(**kwargs)
