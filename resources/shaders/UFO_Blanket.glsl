@@ -6,14 +6,14 @@ in vec2 fragCoord;
 uniform vec3 iResolution;
 uniform float iTime;
 
-uniform float xOffset;
-uniform float yOffset;
+uniform float xOffset; //v
+uniform float yOffset; //v;
 
 uniform float hueShift;
 uniform float hueRange;
 uniform float saturation;
 uniform float brightness; //v
-uniform float wingsFactor;
+uniform float smoothness; //vx
 uniform float flap;
 
 uniform float rot0;
@@ -33,7 +33,8 @@ vec3 palette(float d) {
 vec2 rotate(vec2 p, float a) {
         float c = cos(a);
         float s = sin(a);
-        return p * mat2(c, s, -s, c);
+        return p * mat2(c, s,
+                        -s, c);
 }
 
 float map(vec3 p) {
@@ -44,7 +45,7 @@ float map(vec3 p) {
                 p.xz = abs(p.xz);
                 p.xz -= .5;
         }
-        return dot(sign(p), p) / 5.;
+        return dot(sign(p), p) / smoothness;
 }
 
 vec4 rm(vec3 ro, vec3 rd) {
@@ -66,9 +67,10 @@ vec4 rm(vec3 ro, vec3 rd) {
         }
         return vec4(col, 1. / (d * 100.));
 }
-void main()
-{
-        vec2 uv = (fragCoord - (iResolution.xy / 2.)) / iResolution.x;
+
+void main() {
+        vec2 center = iResolution.xy / 2. + vec2(yOffset, xOffset) * iResolution.xy;
+        vec2 uv = (fragCoord - center) / iResolution.x;
         vec3 ro = vec3(0., 0., -50.);
         ro.xz = rotate(ro.xz, iTime);
         vec3 cf = normalize(-ro);

@@ -5,13 +5,13 @@ fragment_shader_filename = "UFO_Blanket.glsl"
 name = "xOffset"
 button = "LEFT_WHEEL"
 controller.type = 'CyclicController'
-controller.args = { step = -0.001, min_value = -10.0, max_value = 10.0 }
+controller.args = { step = 0.01, min_value = -0.8, max_value = 0.8 }
 
 [[params]]
 name = "yOffset"
 button = "RIGHT_WHEEL"
 controller.type = "CyclicController"
-controller.args = { step = 0.001, min_value = -10.0, max_value = 10.0 }
+controller.args = { step = 0.01, min_value = -0.8, max_value = 0.8 }
 
 [[params]]
 name = "colorFactor"
@@ -44,10 +44,10 @@ controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 1.0 }
 
 [[params]]
-name = "wingsFactor"
+name = "smoothness"
 button = "RIGHT_MID"
 controller.type = "NormalizedController"
-controller.args = { min_value = 0.0, max_value = 0.6, initial_value = 0.03 }
+controller.args = { min_value = 0.7, max_value = 10.5, initial_value = 5.0 }
 
 [[params]]
 name = "flap"
