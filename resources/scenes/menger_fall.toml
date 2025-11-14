@@ -61,3 +61,20 @@ name = "scale"
 button = "CUEMIX"
 controller.type = "LinearSegmentedController"
 controller.args = { segments_points = [[0.0, 1.1], [64.0, 3.0], [127.0, 10.0]], initial_value = 3.0 }
+
+[[params]]
+name = "jitterMirror"
+button = "LEFT_FX_ON"
+controller.type = "IsPressedController"
+
+[[params]]
+name = "normalDistanceFreq"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = { min_value = -10.0, max_value = 10.0 }
+
+[[params]]
+name = "normalDistanceAmp"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = { min_value = -1.0, max_value = 1.0 }

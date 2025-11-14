@@ -4,11 +4,10 @@
 
 #define MaxSteps 30
 #define MinimumDistance 0.0009
-#define normalDistance     0.0002
+#define NormalDistance     0.0002
 
 #define Iterations 7
 #define PI 3.141592
-#define Jitter 0.05
 #define DebugNonlinearPerspective false
 
 #define LightDir vec3(1.0)
@@ -36,6 +35,12 @@ uniform float scale;
 
 uniform float ambient;
 uniform float diffuseFactor;
+
+uniform float normalDistanceFreq;
+uniform float normalDistanceAmp;
+uniform bool jitterMirror;
+
+float normalDistance = NormalDistance + sin(iTime * normalDistanceFreq) * normalDistanceAmp;
 
 vec2 rotate(vec2 v, float a) {
         return vec2(cos(a) * v.x + sin(a) * v.y, -sin(a) * v.x + cos(a) * v.y);
@@ -117,7 +122,8 @@ float rand(vec2 co) {
 
 vec4 rayMarch(in vec3 from, in vec3 dir, in vec2 fragCoord) {
 	// Add some noise to prevent banding
-	float totalDistance = Jitter*rand(fragCoord.xy+vec2(iTime));
+    float jitter = jitterMirror ? -1.0 : 0.005;
+	float totalDistance = jitter*rand(fragCoord.xy+vec2(iTime));
 	vec3 dir2 = dir;
 	float distance;
 	int steps = 0;
