@@ -12,7 +12,7 @@ script_dir = Path(__file__).resolve().parent
 project_root = script_dir.parent
 sys.path.insert(0, str(project_root))
 
-from utils.fakemidi import FakeMidi
+from fakemidi.fakemidi import FakeMidi
 
 
 class MidiMonitor(threading.Thread):

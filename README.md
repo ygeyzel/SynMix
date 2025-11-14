@@ -37,7 +37,7 @@ uv run main.py --start-scene "KeplerPlanet"
 
 The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard inputs to MIDI messages
 
-- Key mappings are configured in `config/fake_midi_key_map.json`. This JSON file maps:
+- Key mappings are configured in `resources/fake_midi_key_map.json`. This JSON file maps:
   - Button names (from `inputs/buttons.py`) directly to the keyboard keys that trigger them
   - Button behaviour (knob, scroller, clickable) is derived from the `ButtonType` assigned in `inputs/buttons.py`
 - The fake MIDI controller creates a virtual MIDI port and translates keyboard events into the corresponding MIDI messages based on this configuration
@@ -105,15 +105,15 @@ The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard input
 - **Scroller**: Press first key to scroll up/right, second key to scroll down/left (modifiers adjust repeat rate)
 - **Clickable**: Press the key to toggle on/off (no modifier support)
 
-A standalone test script is available at `scripts/test_fake_controller.py` for testing the fake MIDI controller and viewing MIDI output in real-time.
+A standalone test script is available at `fakemidi/test_fake_midi.py` for testing the fake MIDI controller and viewing MIDI output in real-time.
 Run the script with:
 ```
-uv run scripts/test_fake_controller.py
+uv run fakemidi/test_fake_midi.py
 ```
 
 ### Scene Order
 
-Scene order and navigation is controlled by `config/scenes_order.json`. This file determines:
+Scene order and navigation is controlled by `resources/scenes_order.json`. This file determines:
 - The order in which scenes are loaded
 - Which scene starts first (index 0)
 - The sequence when navigating between scenes
@@ -132,23 +132,11 @@ Example configuration:
 ```
 
 To change the scene order:
-1. Edit `config/scenes_order.json`
+1. Edit `resources/scenes_order.json`
 2. Reorder the scene names in your desired sequence
 3. Restart the application
 
 The first scene in the list will be loaded at startup by default. You can override this by using the `--start-scene` command-line argument to specify a different starting scene. When you add new scenes, make sure to add their names to this configuration file.
-
-## Available Scenes
-
-SynMix includes several real-time raymarched and fractal scenes:
-
-- **DesertDunes** - Raymarched desert landscape with binary star system, procedural dunes, and atmospheric effects
-- **CBSGalaxy** - Cosmic galaxy visualization with dynamic colors and movement
-- **QuaternionFractal** - 3D quaternion-based fractal with complex geometric patterns
-- **KeplerPlanet** - Realistic planetary rendering with continents, oceans, clouds, and binary star lighting
-- **WingsFractal** - Abstract Julia fractal with wing-like patterns and color cycling
-
-Navigate between scenes using the LEFT_LOAD and RIGHT_LOAD buttons (F2/F1 in fake MIDI mode).
 
 ## Value Controllers
 
@@ -171,9 +159,9 @@ Add custom controllers by decorating subclasses with `@register_controller("Name
 
 ```
 ├── main.py              # Main application entry point
-├── config/              # Configuration files
-│   ├── fake_midi_key_map.json # Keyboard to MIDI mapping
-│   └── scenes_order.json      # Scene loading order
+├── fakemidi/            # Virtual MIDI utilities
+│   ├── fakemidi.py      # Fake MIDI controller implementation
+│   └── test_fake_midi.py# Standalone tester
 ├── inputs/              # Input handling system
 │   ├── buttons.py       # Button mapping definitions
 │   ├── inputmanager.py  # Input event processing
@@ -181,23 +169,30 @@ Add custom controllers by decorating subclasses with `@register_controller("Name
 ├── params/              # Parameter control system
 │   ├── params.py        # Parameter definitions
 │   └── valuecontrollers.py # Parameter value controllers
-├── scenes/              # Visual scenes
-│   ├── cbs_galaxy.toml
-│   ├── desert_dunes.toml
-│   ├── kepler_planet.toml
-│   ├── quaternion_fractal.toml
-│   └── wings_fractal.toml
-├── shaders/             # GLSL shader files
-│   ├── cbs_galaxy.glsl
-│   ├── desert_dunes.glsl
-│   ├── kepler.glsl
-│   ├── post_processing.glsl
-│   ├── quaternion_fractal.glsl
-│   ├── vertex.glsl
-│   └── wings.glsl
-├── utils/               # Utility modules
-│   └── fakemidi.py      # Virtual MIDI controller
-└── resources/           # Additional resources
+├── resources/           # Data-driven content
+│   ├── fake_midi_key_map.json # Keyboard to MIDI mapping
+│   ├── scenes_order.json      # Scene loading order
+│   ├── scenes/                # Scene parameter files (TOML)
+│   │   ├── cbs_galaxy.toml
+│   │   ├── desert_dunes.toml
+│   │   ├── kepler_planet.toml
+│   │   ├── post_processing_params.toml
+│   │   ├── quaternion_fractal.toml
+│   │   └── wings_fractal.toml
+│   └── shaders/               # GLSL shader files
+│       ├── cbs_galaxy.glsl
+│       ├── desert_dunes.glsl
+│       ├── kepler.glsl
+│       ├── post_processing.glsl
+│       ├── quaternion_fractal.glsl
+│       ├── vertex.glsl
+│       └── wings.glsl
+├── scenes/              # Scene runtime logic
+│   ├── scene.py
+│   └── scenes_manager.py
+└── top_level/           # Entry-point helpers
+    ├── global_context.py
+    └── screen.py
 ```
 
 ```

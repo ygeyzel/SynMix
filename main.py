@@ -3,10 +3,10 @@ import sys
 
 import moderngl_window as mglw
 
-from global_context import GlobalCtx
 from inputs.input_manager import MidiInputManager
-from screen import Screen
-from utils.fakemidi import FakeMidi 
+from top_level.global_context import GlobalCtx
+from top_level.screen import Screen
+from fakemidi.fakemidi import FakeMidi
 
 
 MIDI_INPUT_SUBNAME = "Mixage"

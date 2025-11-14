@@ -1,6 +1,6 @@
 from typing import Optional
 
-from utils.fakemidi import FakeMidi
+from fakemidi.fakemidi import FakeMidi
 
 
 class GlobalCtx:

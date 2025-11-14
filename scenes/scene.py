@@ -60,7 +60,7 @@ def update_shader_params_from_list(shader_program, params):
             if _values_changed(org_value, param.value):
                 print(f"Set {param.name} to {param.value}")
 
-SHADERS_DIR = 'shaders'
+SHADERS_DIR = Path('resources') / 'shaders'
 
 
 class Scene:
@@ -85,8 +85,8 @@ class Scene:
         Returns:
             Tuple of (vertex_shader_source, fragment_shader_source)
         """
-        vertex_path = Path(SHADERS_DIR) / self.vertex_shader_filename
-        fragment_path = Path(SHADERS_DIR) / self.fragment_shader_filename
+        vertex_path = SHADERS_DIR / self.vertex_shader_filename
+        fragment_path = SHADERS_DIR / self.fragment_shader_filename
 
         try:
             with open(vertex_path, 'r') as vf, open(fragment_path, 'r') as ff:
