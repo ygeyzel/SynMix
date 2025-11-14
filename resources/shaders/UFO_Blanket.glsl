@@ -9,22 +9,9 @@ uniform float iTime;
 uniform float xOffset; //v
 uniform float yOffset; //v;
 
-uniform float hueShift;
-uniform float hueRange;
-uniform float saturation;
 uniform float brightness; //v
 uniform float smoothness; //vx
-uniform float flap;
-
-uniform float rot0;
-uniform float rot1;
-uniform float rotWeight;
-
-uniform float scaleX0;
-uniform float scaleX1;
-uniform float scaleY0;
-uniform float scaleY1;
-uniform float scaleXY;
+uniform float zoom; //v
 
 vec3 palette(float d) {
         return mix(vec3(0.2, 0.7, 0.9), vec3(1., 0., 1.), d);
@@ -61,7 +48,6 @@ vec4 rm(vec3 ro, vec3 rd) {
                 if (d > 100.) {
                         break;
                 }
-                //col += vec3(0.6, 0.8, 0.8) / (400. * (d));
                 col += (palette(length(p) * .1) + brightness * vec3(0.6, 0.8, 0.8)) / (400. * (d));
                 t += d;
         }
@@ -77,7 +63,7 @@ void main() {
         vec3 cs = normalize(cross(cf, vec3(0., 1., 0.)));
         vec3 cu = normalize(cross(cf, cs));
 
-        vec3 uuv = ro + cf * 3. + uv.x * cs + uv.y * cu;
+        vec3 uuv = ro + cf * zoom + uv.x * cs + uv.y * cu;
 
         vec3 rd = normalize(uuv - ro);
 
