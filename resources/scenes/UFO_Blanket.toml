@@ -1,0 +1,34 @@
+name = "UFO Blanket"
+fragment_shader_filename = "UFO_Blanket.glsl"
+
+[[params]]
+name = "xOffset"
+button = "LEFT_WHEEL"
+controller.type = 'CyclicController'
+controller.args = { step = 0.01, min_value = -0.8, max_value = 0.8 }
+
+[[params]]
+name = "yOffset"
+button = "RIGHT_WHEEL"
+controller.type = "CyclicController"
+controller.args = { step = 0.01, min_value = -0.8, max_value = 0.8 }
+
+[[params]]
+name = "brightness"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = { min_value = -1.0, max_value = 0.4, initial_value = -0.3 }
+
+[[params]]
+name = "smoothness"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.7, max_value = 10.5, initial_value = 5.0 }
+
+[[params]]
+name = "zoom"
+button = "RIGHT_LOW"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.3, max_value = 20.0, initial_value = 3.0 }
+
+
