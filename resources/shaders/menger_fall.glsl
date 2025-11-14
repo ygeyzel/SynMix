@@ -27,6 +27,7 @@ in vec2 fragCoord;
 uniform vec3 iResolution;
 uniform float iTime;
 
+uniform float zFactor0;
 uniform float fudgeFactor;
 uniform float scale;
 
@@ -73,7 +74,7 @@ float DE(in vec3 z)
 		if (z.x< z.z){ z.xz = z.zx;}
 		if (z.y<z.z){ z.yz = z.zy;}
 		z = scale*z-Offset*(scale-1.0);
-		if( z.z<-0.5*Offset.z*(scale-1.0))  z.z+=Offset.z*(scale-1.0);
+		if( z.z<zFactor0*Offset.z*(scale-1.0))  z.z+=Offset.z*(scale-1.0);
 		d = min(d, length(z) * pow(scale, float(-n)-1.0));
 	}
 	
