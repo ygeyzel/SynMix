@@ -38,72 +38,72 @@ uv run main.py --start-scene "KeplerPlanet"
 The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard inputs to MIDI messages
 
 - Key mappings are configured in `config/fake_midi_key_map.json`. This JSON file maps:
-  - Button names (from `inputs/buttons.py`) to interface types (`STEPPER`, `SCROLLER`, `TOGGLE`)
-  - Each button to specific keyboard keys
+  - Button names (from `inputs/buttons.py`) directly to the keyboard keys that trigger them
+  - Button behaviour (knob, scroller, clickable) is derived from the `ButtonType` assigned in `inputs/buttons.py`
 - The fake MIDI controller creates a virtual MIDI port and translates keyboard events into the corresponding MIDI messages based on this configuration
-- Modifiers (Shift, Ctrl, Alt) can be used in combination with mapped keys to accelerate changes (not relevant for `TOGGLE` interface)
+- Modifiers (Shift, Ctrl, Alt) can be used in combination with mapped keys to accelerate changes for knobs and scrollers (not relevant for clickables)
 
 #### Keyboard Mapping Table
 
-| Button | Control Type | Key 1 | Key 2 |
+| Button | Button Type | Key 1 | Key 2 |
 |--------|-------------|-------|-------|
 | **LEFT_WHEEL** | Scroller | ↑ UP | ↓ DOWN |
 | **RIGHT_WHEEL** | Scroller | → RIGHT | ← LEFT |
-| **LEFT_PITCH** | Stepper | \` (Backtick) | TAB |
-| **RIGHT_PITCH** | Stepper | BACKSPACE | \ (Backslash) |
+| **LEFT_PITCH** | Knob | \` (Backtick) | TAB |
+| **RIGHT_PITCH** | Knob | BACKSPACE | \ (Backslash) |
 | **LEFT_LENGTH** | Scroller | Q | W |
 | **LEFT_DRY_WET** | Scroller | A | S |
-| **LEFT_GAIN** | Stepper | E | R |
-| **LEFT_AMOUNT** | Stepper | D | F |
-| **LEFT_HIGH** | Stepper | T | Y |
-| **LEFT_MID** | Stepper | G | H |
-| **LEFT_LOW** | Stepper | V | B |
-| **RIGHT_HIGH** | Stepper | U | I |
-| **RIGHT_MID** | Stepper | J | K |
-| **RIGHT_LOW** | Stepper | N | M |
+| **LEFT_GAIN** | Knob | E | R |
+| **LEFT_AMOUNT** | Knob | D | F |
+| **LEFT_HIGH** | Knob | T | Y |
+| **LEFT_MID** | Knob | G | H |
+| **LEFT_LOW** | Knob | V | B |
+| **RIGHT_HIGH** | Knob | U | I |
+| **RIGHT_MID** | Knob | J | K |
+| **RIGHT_LOW** | Knob | N | M |
 | **RIGHT_LENGTH** | Scroller | O | P |
 | **RIGHT_DRY_WET** | Scroller | L | ; (Semicolon) |
-| **RIGHT_GAIN** | Stepper | [ | ] |
-| **RIGHT_AMOUNT** | Stepper | . | / |
-| **LEFT_VOLUME** | Stepper | 9 | 0 |
-| **RIGHT_VOLUME** | Stepper | - (Minus) | + (Plus) |
-| **CUEMIX** | Stepper | Z | X |
-| **LEFT_CUE_1** | Toggle | 1 | — |
-| **LEFT_CUE_2** | Toggle | 2 | — |
-| **LEFT_CUE_3** | Toggle | 3 | — |
-| **LEFT_CUE_4** | Toggle | 4 | — |
-| **RIGHT_CUE_1** | Toggle | 5 | — |
-| **RIGHT_CUE_2** | Toggle | 6 | — |
-| **RIGHT_CUE_3** | Toggle | 7 | — |
-| **RIGHT_CUE_4** | Toggle | 8 | — |
-| **LEFT_SYNC** | Toggle | F6 | — |
-| **LEFT_RECORD** | Toggle | F7 | — |
-| **RIGHT_SYNC** | Toggle | F8 | — |
-| **RIGHT_RECORD** | Toggle | F9 | — |
-| **LEFT_MINUS** | Toggle | F10 | — |
-| **LEFT_PLUS** | Toggle | F11 | — |
-| **LEFT_SHIFT** | Toggle | F12 | — |
-| **RIGHT_MINUS** | Toggle | HOME | — |
-| **RIGHT_PLUS** | Toggle | END | — |
-| **RIGHT_SHIFT** | Toggle | INSERT | — |
-| **LEFT_IN** | Toggle | DELETE | — |
-| **LEFT_OUT** | Toggle | ~ (Tilde) | — |
-| **LEFT_FX_SEL** | Toggle | ! (Exclamation) | — |
-| **LEFT_FX_ON** | Toggle | @ (At) | — |
-| **RIGHT_IN** | Toggle | # (Pound) | — |
-| **RIGHT_OUT** | Toggle | $ (Dollar) | — |
-| **RIGHT_FX_SEL** | Toggle | % (Percent) | — |
-| **RIGHT_FX_ON** | Toggle | ^ (Caret) | — |
-| **LEFT_LOAD** | Toggle | F2 | — |
-| **RIGHT_LOAD** | Toggle | F1 | — |
+| **RIGHT_GAIN** | Knob | [ | ] |
+| **RIGHT_AMOUNT** | Knob | . | / |
+| **LEFT_VOLUME** | Knob | 9 | 0 |
+| **RIGHT_VOLUME** | Knob | - (Minus) | + (Plus) |
+| **CUEMIX** | Knob | Z | X |
+| **LEFT_CUE_1** | Clickable | 1 | — |
+| **LEFT_CUE_2** | Clickable | 2 | — |
+| **LEFT_CUE_3** | Clickable | 3 | — |
+| **LEFT_CUE_4** | Clickable | 4 | — |
+| **RIGHT_CUE_1** | Clickable | 5 | — |
+| **RIGHT_CUE_2** | Clickable | 6 | — |
+| **RIGHT_CUE_3** | Clickable | 7 | — |
+| **RIGHT_CUE_4** | Clickable | 8 | — |
+| **LEFT_SYNC** | Clickable | F6 | — |
+| **LEFT_RECORD** | Clickable | F7 | — |
+| **RIGHT_SYNC** | Clickable | F8 | — |
+| **RIGHT_RECORD** | Clickable | F9 | — |
+| **LEFT_MINUS** | Clickable | F10 | — |
+| **LEFT_PLUS** | Clickable | F11 | — |
+| **LEFT_SHIFT** | Clickable | F12 | — |
+| **RIGHT_MINUS** | Clickable | HOME | — |
+| **RIGHT_PLUS** | Clickable | END | — |
+| **RIGHT_SHIFT** | Clickable | INSERT | — |
+| **LEFT_IN** | Clickable | DELETE | — |
+| **LEFT_OUT** | Clickable | ~ (Tilde) | — |
+| **LEFT_FX_SEL** | Clickable | ! (Exclamation) | — |
+| **LEFT_FX_ON** | Clickable | @ (At) | — |
+| **RIGHT_IN** | Clickable | # (Pound) | — |
+| **RIGHT_OUT** | Clickable | $ (Dollar) | — |
+| **RIGHT_FX_SEL** | Clickable | % (Percent) | — |
+| **RIGHT_FX_ON** | Clickable | ^ (Caret) | — |
+| **LEFT_LOAD** | Clickable | F2 | — |
+| **RIGHT_LOAD** | Clickable | F1 | — |
 | **SCROLL** | Scroller | F3 | F4 |
-| **SCROLL_CLICK** | Toggle | F5 | — |
-| **CROSSFADER** | Stepper | . (Period) | / (Slash) | — |
+| **SCROLL_CLICK** | Clickable | F5 | — |
+| **CROSSFADER** | Knob | . (Period) | / (Slash) | — |
 
-**Control Types:**
-- **Stepper**: Press first key to increase, second key to decrease (hold with Shift/Ctrl/Alt for faster changes)
-- **Scroller**: Press first key to scroll up/right, second key to scroll down/left (hold with Shift/Ctrl/Alt for faster scrolling)
-- **Toggle**: Press the key to toggle on/off
+**Button Types:**
+- **Knob**: Press first key to increase, second key to decrease (hold with Shift/Ctrl/Alt to apply modifiers)
+- **Scroller**: Press first key to scroll up/right, second key to scroll down/left (modifiers adjust repeat rate)
+- **Clickable**: Press the key to toggle on/off (no modifier support)
 
 A standalone test script is available at `scripts/test_fake_controller.py` for testing the fake MIDI controller and viewing MIDI output in real-time.
 Run the script with:
@@ -149,6 +149,23 @@ SynMix includes several real-time raymarched and fractal scenes:
 - **WingsFractal** - Abstract Julia fractal with wing-like patterns and color cycling
 
 Navigate between scenes using the LEFT_LOAD and RIGHT_LOAD buttons (F2/F1 in fake MIDI mode).
+
+## Value Controllers
+
+Parameters use value controllers defined in `params/valuecontrollers.py`. Each controller declares the `ButtonType`(s) it supports to prevent incompatible bindings when loading scenes:
+
+- **NormalizedController** (`ButtonType.KNOB`)  
+  Maps incoming MIDI values (or pitch) into a configured numeric range.
+- **RangedController** (`ButtonType.SCROLLER`)  
+  Steps a value up or down within fixed min/max bounds using incremental MIDI messages.
+- **CyclicController** (`ButtonType.SCROLLER`)  
+  Similar to `RangedController`, but wraps around when exceeding the configured range.
+- **ToggleController** (`ButtonType.CLICKABLE`)  
+  Flips a boolean state whenever it receives a MIDI “on” message.
+- **IsPressedController** (`ButtonType.CLICKABLE`)  
+  Exposes whether the associated button is currently pressed.
+
+Add custom controllers by decorating subclasses with `@register_controller("Name", supported_button_types...)`. Scene TOML files reference controllers by this registered name, and unsupported button/controller pairings raise a clear error during load.
 
 ## Project Structure
 

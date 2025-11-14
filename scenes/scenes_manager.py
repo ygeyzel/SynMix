@@ -76,8 +76,20 @@ class ScenesManager:
     @staticmethod
     def _generate_param_from_file_data(data):
         abuttom = Button.__members__[data['button']]
-        acontroller = controllers_registry[data['controller']['type']](
-            **data['controller']['args'])
+        controller_type = data['controller']['type']
+        try:
+            controller_cls, supported_button_types = controllers_registry[controller_type]
+        except KeyError as exc:
+            raise ValueError(
+                f"Controller '{controller_type}' is not registered.") from exc
+
+        if abuttom.button_type not in supported_button_types:
+            supported_names = ', '.join(bt.name for bt in supported_button_types)
+            raise ValueError(
+                f"Controller '{controller_type}' supports button types {{{supported_names}}}, "
+                f"but button '{abuttom.name}' is of type {abuttom.button_type.name}.")
+
+        acontroller = controller_cls(**data['controller']['args'])
         return Param(name=data['name'], button=abuttom, controller=acontroller)
 
     def _load_scens_from_toml_files(self):
@@ -85,6 +97,7 @@ class ScenesManager:
             if afile == POST_PROCESSING_PARAMS_FILE.name:
                 continue
             if afile.endswith('.toml'):
+                print(f'Loading scene from file: {afile}')
                 with open(SCENES_DIR / afile, 'rb') as f:
                     data = tomllib.load(f)
 

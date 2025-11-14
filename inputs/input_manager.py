@@ -1,7 +1,8 @@
-from typing import Callable
+from typing import Callable, Union
 
 import mido
 
+from inputs.buttons import Button
 from inputs.midi import MidiEventType, MidiGetter, get_midi_event_descriptor, MIDI_BUTTEN_CLICK
 from params.params import Param
 
@@ -37,16 +38,18 @@ class MidiInputManager:
             self._initialized = True
 
     def bind_param(self, param: Param):
-        self.param_bindings[param.button.value] = param
+        self.param_bindings[param.button.midi_getter] = param
 
     def bind_secondary_param(self, param: Param):
-        self.secondary_param_bindings[param.button.value] = param
+        self.secondary_param_bindings[param.button.midi_getter] = param
 
     def unbind_params(self):
         self.param_bindings = {}
 
-    def bind_general_funcs(self, event_selector: MidiGetter, afunc: Callable[[], None]):
-        self.general_funcs_bindings[event_selector.value] = afunc
+    def bind_general_funcs(self, event_selector: Union[Button, MidiGetter], afunc: Callable[[], None]):
+        midi_getter = event_selector.midi_getter if isinstance(
+            event_selector, Button) else event_selector
+        self.general_funcs_bindings[midi_getter] = afunc
 
     def _handle_midi_input(self, event_msg: mido.Message):
         try:
