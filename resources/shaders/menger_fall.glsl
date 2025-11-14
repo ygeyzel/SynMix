@@ -11,8 +11,6 @@
 #define Jitter 0.05
 #define DebugNonlinearPerspective false
 
-#define Ambient 0.32184
-#define Diffuse 0.5
 #define LightDir vec3(1.0)
 #define LightColor vec3(1.0,1.0,0.858824)
 #define LightDir2 vec3(1.0,-1.0,1.0)
@@ -36,20 +34,24 @@ uniform float zFactor0;
 uniform float fudgeFactor;
 uniform float scale;
 
+uniform float ambient;
+uniform float diffuseFactor;
+
 vec2 rotate(vec2 v, float a) {
         return vec2(cos(a) * v.x + sin(a) * v.y, -sin(a) * v.x + cos(a) * v.y);
 }
 
 // Two light sources. No specular
 vec3 getLight(in vec3 color, in vec3 normal, in vec3 dir) {
-        vec3 lightDir = normalize(LightDir);
-        float diffuse = max(0.0, dot(-normal, lightDir)); // Lambertian
-
-        vec3 lightDir2 = normalize(LightDir2);
-        float diffuse2 = max(0.0, dot(-normal, lightDir2)); // Lambertian
-
-        return (diffuse * Diffuse) * (LightColor * color) +
-                (diffuse2 * Diffuse) * (LightColor2 * color);
+	vec3 lightDir = normalize(LightDir);
+	float diffuse = max(0.0,dot(-normal, lightDir)); // Lambertian
+	
+	vec3 lightDir2 = normalize(LightDir2);
+	float diffuse2 = max(0.0,dot(-normal, lightDir2)); // Lambertian
+	
+	return
+	    (diffuse*diffuseFactor)*(LightColor*color) +
+	    (diffuse2*diffuseFactor)*(LightColor2*color);
 }
 
 // DE: Infinitely tiled Menger IFS.
@@ -114,38 +116,6 @@ float rand(vec2 co) {
 }
 
 vec4 rayMarch(in vec3 from, in vec3 dir, in vec2 fragCoord) {
-<<<<<<< HEAD
-        // Add some noise to prevent banding
-        float totalDistance = Jitter * rand(fragCoord.xy + vec2(iTime));
-        vec3 dir2 = dir;
-        float distance;
-        int steps = 0;
-        vec3 pos;
-        for (int i = 0; i < MaxSteps; i++) {
-                // Non-linear perspective applied here.
-                dir.zy = rotate(dir2.zy, totalDistance * cos(iTime / 4.0) * NonLinearPerspective);
-
-                pos = from + totalDistance * dir;
-                distance = DE(pos) * fudgeFactor;
-                totalDistance += distance;
-                if (distance < MinimumDistance) break;
-                steps = i;
-        }
-
-        // 'AO' is based on number of steps.
-        // Try to smooth the count, to combat banding.
-        float smoothStep = float(steps) + distance / MinimumDistance;
-        float ao = 1.1 - smoothStep / float(MaxSteps);
-
-        // Since our distance field is not signed,
-        // backstep when calc'ing normal
-        vec3 normal = getNormal(pos - dir * normalDistance * 3.0);
-
-        vec3 color = getColor(normal, pos);
-        vec3 light = getLight(color, normal, dir);
-        color = (color * Ambient + light) * ao;
-        return vec4(color, 1.0);
-=======
 	// Add some noise to prevent banding
 	float totalDistance = Jitter*rand(fragCoord.xy+vec2(iTime));
 	vec3 dir2 = dir;
@@ -174,7 +144,7 @@ vec4 rayMarch(in vec3 from, in vec3 dir, in vec2 fragCoord) {
 	
 	vec3 color = getColor(normal, pos);
 	vec3 light = getLight(color, normal, dir);
-	color = (color*Ambient+light)*ao;
+	color = (color*ambient+light)*ao;
 	return vec4(color,1.0);
 }
 

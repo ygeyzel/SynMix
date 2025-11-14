@@ -45,6 +45,18 @@ controller.type = "NormalizedController"
 controller.args = { min_value = 0.15, max_value = 3.0, initial_value = 0.5 }
 
 [[params]]
+name = "ambient"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = { min_value = -5.0, max_value = 5.0, initial_value = 0.3 }
+
+[[params]]
+name = "diffuseFactor"
+button = "LEFT_LOW"
+controller.type = "NormalizedController"
+controller.args = { min_value = -5.0, max_value = 5.0, initial_value = 0.5 }
+
+[[params]]
 name = "scale"
 button = "CUEMIX"
 controller.type = "LinearSegmentedController"
