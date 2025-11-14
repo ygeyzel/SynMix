@@ -104,7 +104,7 @@ class ScenesManager:
                     data = tomllib.load(f)
 
                 data['params'] = [
-                    self._generate_param_from_file_data(p) for p in data['params']
+                    self._generate_param_from_file_data(p) for p in data.get('params', [])
                 ]
                 ascene = Scene(**data)
                 self.scenes.append(ascene)
