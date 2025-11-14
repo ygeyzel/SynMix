@@ -91,7 +91,7 @@ class ScenesManager:
                 f"Controller '{controller_type}' supports button types {{{supported_names}}}, "
                 f"but button '{abuttom.name}' is of type {abuttom.button_type.name}.")
 
-        acontroller = controller_cls(**data['controller']['args'])
+        acontroller = controller_cls(**data['controller'].get('args', {}))
         return Param(name=data['name'], button=abuttom, controller=acontroller)
 
     def _load_scens_from_toml_files(self):
