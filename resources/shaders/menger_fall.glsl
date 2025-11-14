@@ -8,9 +8,7 @@
 
 #define Iterations 7
 #define PI 3.141592
-#define FieldOfView 1.0
 #define Jitter 0.05
-#define NonLinearPerspective 2.0
 #define DebugNonlinearPerspective false
 
 #define Ambient 0.32184
@@ -27,12 +25,16 @@ in vec2 fragCoord;
 uniform vec3 iResolution;
 uniform float iTime;
 
-uniform float zFactor0;
-uniform float fudgeFactor;
-uniform float scale;
+uniform float fieldOfView;
+uniform float nonLinearPerspective;
+
 uniform float camPosX;
 uniform float camPosY;
 uniform float camPosZ;
+
+uniform float zFactor0;
+uniform float fudgeFactor;
+uniform float scale;
 
 vec2 rotate(vec2 v, float a) {
         return vec2(cos(a) * v.x + sin(a) * v.y, -sin(a) * v.x + cos(a) * v.y);
@@ -112,6 +114,7 @@ float rand(vec2 co) {
 }
 
 vec4 rayMarch(in vec3 from, in vec3 dir, in vec2 fragCoord) {
+<<<<<<< HEAD
         // Add some noise to prevent banding
         float totalDistance = Jitter * rand(fragCoord.xy + vec2(iTime));
         vec3 dir2 = dir;
@@ -142,25 +145,56 @@ vec4 rayMarch(in vec3 from, in vec3 dir, in vec2 fragCoord) {
         vec3 light = getLight(color, normal, dir);
         color = (color * Ambient + light) * ao;
         return vec4(color, 1.0);
+=======
+	// Add some noise to prevent banding
+	float totalDistance = Jitter*rand(fragCoord.xy+vec2(iTime));
+	vec3 dir2 = dir;
+	float distance;
+	int steps = 0;
+	vec3 pos;
+	for (int i=0; i < MaxSteps; i++) {
+		// Non-linear perspective applied here.
+		dir.zy = rotate(dir2.zy,totalDistance*cos( iTime/4.0)*nonLinearPerspective);
+		
+		pos = from + totalDistance * dir;
+		distance = DE(pos)*fudgeFactor;
+		totalDistance += distance;
+		if (distance < MinimumDistance) break;
+		steps = i;
+	}
+	
+	// 'AO' is based on number of steps.
+	// Try to smooth the count, to combat banding.
+	float smoothStep =   float(steps) + distance/MinimumDistance;
+	float ao = 1.1-smoothStep/float(MaxSteps);
+	
+	// Since our distance field is not signed,
+	// backstep when calc'ing normal
+	vec3 normal = getNormal(pos-dir*normalDistance*3.0);
+	
+	vec3 color = getColor(normal, pos);
+	vec3 light = getLight(color, normal, dir);
+	color = (color*Ambient+light)*ao;
+	return vec4(color,1.0);
 }
 
 void main()
 {
-        // Camera position (eye), and camera target
-        vec3 camPos = vec3(camPosX, camPosY, camPosZ);
-        vec3 target = camPos + vec3(1.0, 0.0 * cos(iTime), 0.0 * sin(0.4 * iTime));
-        vec3 camUp = vec3(0.0, 1.0, 0.0);
-
-        // Calculate orthonormal camera reference system
-        vec3 camDir = normalize(target - camPos); // direction for center ray
-        camUp = normalize(camUp - dot(camDir, camUp) * camDir); // orthogonalize
-        vec3 camRight = normalize(cross(camDir, camUp));
-
-        vec2 coord = -1.0 + 2.0 * fragCoord.xy / iResolution.xy;
-        coord.x *= iResolution.x / iResolution.y;
-
-        // Get direction for this pixel
-        vec3 rayDir = normalize(camDir + (coord.x * camRight + coord.y * camUp) * FieldOfView);
-
-        fragColor = rayMarch(camPos, rayDir, fragCoord);
+	// Camera position (eye), and camera target
+	vec3 camPos = vec3(camPosX, camPosY, camPosZ);
+	vec3 target = camPos + vec3(1.0,0.0*cos(iTime),0.0*sin(0.4*iTime));
+	vec3 camUp  = vec3(0.0,1.0,0.0);
+	
+	// Calculate orthonormal camera reference system
+	vec3 camDir   = normalize(target-camPos); // direction for center ray
+	camUp = normalize(camUp-dot(camDir,camUp)*camDir); // orthogonalize
+	vec3 camRight = normalize(cross(camDir,camUp));
+	
+	vec2 coord =-1.0+2.0*fragCoord.xy/iResolution.xy;
+	coord.x *= iResolution.x/iResolution.y;
+	
+	// Get direction for this pixel
+	vec3 rayDir = normalize(camDir + (coord.x*camRight + coord.y*camUp)*fieldOfView);
+	
+	fragColor = rayMarch(camPos, rayDir, fragCoord );
 }
