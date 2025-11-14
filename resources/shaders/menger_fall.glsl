@@ -30,6 +30,9 @@ uniform float iTime;
 uniform float zFactor0;
 uniform float fudgeFactor;
 uniform float scale;
+uniform float camPosX;
+uniform float camPosY;
+uniform float camPosZ;
 
 vec2 rotate(vec2 v, float a) {
 	return vec2(cos(a)*v.x + sin(a)*v.y, -sin(a)*v.x + cos(a)*v.y);
@@ -141,7 +144,7 @@ vec4 rayMarch(in vec3 from, in vec3 dir, in vec2 fragCoord) {
 void main()
 {
 	// Camera position (eye), and camera target
-	vec3 camPos = 0.5*iTime*vec3(1.0,0.0,0.0);
+	vec3 camPos = vec3(camPosX, camPosY, camPosZ);
 	vec3 target = camPos + vec3(1.0,0.0*cos(iTime),0.0*sin(0.4*iTime));
 	vec3 camUp  = vec3(0.0,1.0,0.0);
 	

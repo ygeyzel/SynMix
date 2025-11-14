@@ -20,3 +20,21 @@ button = "CUEMIX"
 controller.type = "LinearSegmentedController"
 controller.args = { segments_points = [[0.0, 1.1], [64.0, 3.0], [127.0, 10.0]], initial_value = 3.0 }
 
+[[params]]
+name = "camPosX"
+button = "CROSSFADER"
+controller.type = "NormalizedController"
+controller.args = { min_value = -3.0, max_value = 3.0, initial_value = 1.0 }
+
+[[params]]
+name = "camPosY"
+button = "LEFT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = { min_value = -1.0, max_value = 1.0, initial_value = 0.0 }
+
+[[params]]
+name = "camPosZ"
+button = "RIGHT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = { min_value = -1.0, max_value = 1.0, initial_value = 0.0 }
+
