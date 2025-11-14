@@ -1,7 +1,6 @@
 import tomllib
 import json
 from typing import Tuple
-import os
 import random
 from pprint import pprint
 
@@ -14,7 +13,10 @@ from params.valuecontrollers import controllers_registry
 from scenes.scene import Scene, update_shader_params_from_list
 
 
-SCENES_DIR = Path('scenes')
+RESOURCES_DIR = Path('resources')
+SCENES_DIR = RESOURCES_DIR / 'scenes'
+SHADERS_DIR = RESOURCES_DIR / 'shaders'
+SCENES_ORDER_FILE = RESOURCES_DIR / 'scenes_order.json'
 POST_PROCESSING_PARAMS_FILE = SCENES_DIR / 'post_processing_params.toml'
 
 
@@ -51,8 +53,8 @@ class ScenesManager:
     def init_post_processing(self):
         """Initialize post-processing shader and FBO"""
         # Load post-processing shader
-        vertex_path = Path('shaders') / 'vertex.glsl'
-        fragment_path = Path('shaders') / 'post_processing.glsl'
+        vertex_path = SHADERS_DIR / 'vertex.glsl'
+        fragment_path = SHADERS_DIR / 'post_processing.glsl'
         
         with open(vertex_path, 'r') as vf, open(fragment_path, 'r') as ff:
             vertex_source = vf.read()
@@ -93,16 +95,17 @@ class ScenesManager:
         return Param(name=data['name'], button=abuttom, controller=acontroller)
 
     def _load_scens_from_toml_files(self):
-        for afile in os.listdir(SCENES_DIR):
-            if afile == POST_PROCESSING_PARAMS_FILE.name:
+        for scene_file in SCENES_DIR.iterdir():
+            if scene_file.name == POST_PROCESSING_PARAMS_FILE.name:
                 continue
-            if afile.endswith('.toml'):
-                print(f'Loading scene from file: {afile}')
-                with open(SCENES_DIR / afile, 'rb') as f:
+            if scene_file.suffix == '.toml':
+                print(f'Loading scene from file: {scene_file.name}')
+                with open(scene_file, 'rb') as f:
                     data = tomllib.load(f)
 
-                data['params'] = [self._generate_param_from_file_data(
-                    p) for p in data['params']]
+                data['params'] = [
+                    self._generate_param_from_file_data(p) for p in data['params']
+                ]
                 ascene = Scene(**data)
                 self.scenes.append(ascene)
                 print(f'Scene {ascene.name} loaded')
@@ -120,7 +123,7 @@ class ScenesManager:
     def _reorder_scenes(self):
         """Reorder scenes according to the order specified in scenes_order.json"""
         try:
-            with open('config/scenes_order.json', 'r') as f:
+            with open(SCENES_ORDER_FILE, 'r') as f:
                 config = json.load(f)
 
             scene_order = config.get('scene_order', [])
@@ -145,10 +148,10 @@ class ScenesManager:
             print(f'Scenes reordered according to scenes_order.json')
 
         except FileNotFoundError:
-            print('Warning: config/scenes_order.json not found. Using default order.')
+            print(f'Warning: {SCENES_ORDER_FILE} not found. Using default order.')
         except (json.JSONDecodeError, KeyError) as e:
             print(
-                f'Warning: Error parsing scenes_order.json: {e}. Using default order.')
+                f'Warning: Error parsing {SCENES_ORDER_FILE}: {e}. Using default order.')
 
     def render(self, time, frame_time, resolution):
         """

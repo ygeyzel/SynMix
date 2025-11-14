@@ -1,7 +1,7 @@
 from typing import Optional
 
 import moderngl_window as mglw
-from global_context import GlobalCtx
+from top_level.global_context import GlobalCtx
 from scenes.scenes_manager import ScenesManager
 
 
@@ -14,7 +14,7 @@ class Screen(mglw.WindowConfig):
     window_size = (800, 800)
     aspect_ratio = None
     resizable = True
-    resource_dir = 'shaders'  # Directory containing GLSL shader files
+    resource_dir = 'resources/shaders'  # Directory containing GLSL shader files
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

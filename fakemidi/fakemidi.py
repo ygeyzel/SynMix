@@ -195,7 +195,7 @@ class FakeMidi:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self, output_name='Fake MIDI Controller', key_map_file='config/fake_midi_key_map.json'):
+    def __init__(self, output_name='Fake MIDI Controller', key_map_file='resources/fake_midi_key_map.json'):
         # Only initialize if it's the first time
         if not hasattr(self, '_initialized'):
             self.output_name = output_name
