@@ -3,6 +3,12 @@ fragment_shader_filename = "menger_fall.glsl"
 
 
 [[params]]
+name = "zFactor0"
+button = "LEFT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = { min_value = -1.0, max_value = 1.0, initial_value = -0.50 }
+
+[[params]]
 name = "fudgeFactor"
 button = "LEFT_HIGH"
 controller.type = "NormalizedController"
