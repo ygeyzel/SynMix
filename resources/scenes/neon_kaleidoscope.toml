@@ -1,0 +1,2 @@
+name = "neon_kaleidoscope"
+fragment_shader_filename = "neon_kaleidoscope.glsl"
