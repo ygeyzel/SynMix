@@ -1,5 +1,5 @@
 from params.valuecontrollers import ValueController
-from inputs.buttons import Button
+from inputs.buttons import Button, ButtonType
 
 
 class Param:
@@ -14,6 +14,10 @@ class Param:
     @property
     def value(self) -> float:
         return self.controller.value
+
+    @property
+    def is_reset_on_scene_change(self) -> bool:
+        return self.button.value[1] != ButtonType.KNOB and not self.controller.is_persistent
 
     def control_param(self, value: int | float):
         self.controller.control_value(value)

@@ -4,6 +4,9 @@ from pathlib import Path
 from params.params import Param
 
 
+SHADERS_DIR = Path('resources') / 'shaders'
+
+
 def _values_changed(org_value, new_value):
     """
     Check if two values are significantly different
@@ -59,8 +62,6 @@ def update_shader_params_from_list(shader_program, params):
             # Debug output when parameter values change
             if _values_changed(org_value, param.value):
                 print(f"Set {param.name} to {param.value}")
-
-SHADERS_DIR = Path('resources') / 'shaders'
 
 
 class Scene:

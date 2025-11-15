@@ -3,7 +3,7 @@ from typing import Callable, Union
 import mido
 
 from inputs.buttons import Button
-from inputs.midi import MidiEventType, MidiGetter, get_midi_event_descriptor, MIDI_BUTTEN_CLICK
+from inputs.midi import MidiEventType, MidiGetter, get_midi_event_descriptor
 from params.params import Param
 
 
@@ -21,7 +21,7 @@ class MidiInputManager:
             self.scenes_change_funcs = None
             self.param_bindings: dict[MidiGetter, Param] = {}
             self.secondary_param_bindings: dict[MidiGetter, Param] = {}
-            self.general_funcs_bindings: dict[MidiGetter, Callable[[], None]] = {
+            self.general_funcs_bindings: dict[MidiGetter, Callable[[int], None]] = {
             }
 
             try:
@@ -46,7 +46,7 @@ class MidiInputManager:
     def unbind_params(self):
         self.param_bindings = {}
 
-    def bind_general_funcs(self, event_selector: Union[Button, MidiGetter], afunc: Callable[[], None]):
+    def bind_general_funcs(self, event_selector: Union[Button, MidiGetter], afunc: Callable[[int], None]):
         midi_getter = event_selector.midi_getter if isinstance(
             event_selector, Button) else event_selector
         self.general_funcs_bindings[midi_getter] = afunc
@@ -72,8 +72,7 @@ class MidiInputManager:
             if binded_param:
                 binded_param.control_param(value)
             else:
-                if value == MIDI_BUTTEN_CLICK:
-                    binded_func()
+                binded_func(value)
 
         except KeyError:
             print(f"Invalid MIDI event: {event_msg}")

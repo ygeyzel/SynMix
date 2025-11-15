@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from random import uniform
+from threading import Timer
 from typing import Any, Callable, Dict, Iterable, Tuple
 
 from inputs.buttons import ButtonType
@@ -47,6 +49,10 @@ class ValueController(ABC):
     @abstractmethod
     def control_value(self, in_value: int):
         pass
+
+    @property
+    def is_persistent(self) -> bool:
+        return False
 
 
 @register_controller('NormalizedController', ButtonType.KNOB)
@@ -159,3 +165,24 @@ class IsPressedController(ValueController):
 
     def control_value(self, in_value: int):
         self.set_value(in_value == MIDI_MAX_VALUE)
+
+
+@register_controller('PersistentTimerToggleController', ButtonType.CLICKABLE)
+class PersistentTimerToggleController(ValueController):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.initial_value = False
+        self.value = False
+
+        self.min_time_to_reset = kwargs.get('min_time_to_reset', 10.0)
+        self.max_time_to_reset = kwargs.get('max_time_to_reset', 600.0)
+
+    def control_value(self, in_value: int):
+        if in_value == MIDI_MAX_VALUE and not self.value:
+            self.set_value(True)
+            time_to_reset = uniform(self.min_time_to_reset, self.max_time_to_reset)
+            Timer(time_to_reset, self.reset).start()
+
+    @property
+    def is_persistent(self) -> bool:
+        return True
