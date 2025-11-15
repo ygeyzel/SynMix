@@ -22,8 +22,8 @@ SCENES_ORDER_FILE = RESOURCES_DIR / 'scenes_order.json'
 POST_PROCESSING_PARAMS_FILE = SCENES_DIR / 'post_processing_params.toml'
 
 
-TIME_OFFSET_STEP = 0.1
-TIME_SPEED_STEP = 0.1
+TIME_OFFSET_STEP = 0.3
+TIME_SPEED_STEP = 0.5
 TIME_SPEED_HOLD_INTERVAL = 0.15
 
 
@@ -350,7 +350,7 @@ class ScenesManager:
             return
 
         current = self.global_ctx.time_params or DEFAULT_TIME_PARAMS
-        new_speed = max(-3.0, min(3.0, current.speed + delta))
+        new_speed = max(-10.0, min(10.0, current.speed + delta))
 
         if new_speed == current.speed:
             return
