@@ -28,13 +28,12 @@ controller.args = { min_value = 0.7, max_value = 10.5, initial_value = 5.0 }
 [[params]]
 name = "zoom0"
 button = "LEFT_VOLUME"
-controller.type = "NormalizedController"
-controller.args = { min_value = 0.8, max_value = 20.0, initial_value = 3.0 }
+controller.type = "LinearSegmentedController"
+controller.args = { segments_points = [[0.0, 0.8], [64.0, 3.0], [127.0, 20.0]], initial_value = 3.0 }
 
 [[params]]
 name = "zoom1"
 button = "RIGHT_VOLUME"
-controller.type = "NormalizedController"
-controller.args = { min_value = 0.8, max_value = 20.0, initial_value = 3.0 }
-
+controller.type = "LinearSegmentedController"
+controller.args = { segments_points = [[0.0, 0.8], [64.0, 3.0], [127.0, 20.0]], initial_value = 3.0 }
 

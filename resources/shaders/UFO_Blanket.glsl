@@ -64,7 +64,7 @@ void main() {
         vec3 cs = normalize(cross(cf, vec3(0., 1., 0.)));
         vec3 cu = normalize(cross(cf, cs));
 
-        vec3 uuv = ro + cf * mix(zoom0, zoom1, sin(iTime)) + uv.x * cs + uv.y * cu;
+        vec3 uuv = ro + cf * mix(zoom0, zoom1, (0.5 + 0.5 * sin(iTime))) + uv.x * cs + uv.y * cu;
 
         vec3 rd = normalize(uuv - ro);
 
