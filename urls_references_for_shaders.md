@@ -13,7 +13,6 @@ https://www.shadertoy.com/view/WdyfRV
 https://www.shadertoy.com/view/X3dfz2
 https://www.shadertoy.com/view/XlSGDc
 https://www.shadertoy.com/view/Xll3Wj
-https://www.shadertoy.com/view/ddsyDN
 https://www.shadertoy.com/view/dl3SRr
 https://www.shadertoy.com/view/llGcRK
 https://www.shadertoy.com/view/llj3zV
