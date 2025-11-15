@@ -257,8 +257,7 @@ class ScenesManager:
 
 
         if 'iTime' in self.post_prog:
-            adjusted_time = self._get_adjusted_time(time)
-            self.post_prog['iTime'].value = adjusted_time
+            self.post_prog['iTime'].value = time
 
         # Update post-processing shader parameters
         update_shader_params_from_list(self.post_prog, self.post_params)
