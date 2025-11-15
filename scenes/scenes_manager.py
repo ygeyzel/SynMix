@@ -7,7 +7,7 @@ from pprint import pprint
 import moderngl_window as mglw
 from pathlib import Path
 from inputs.input_manager import MidiInputManager
-from inputs.buttons import Button
+from inputs.buttons import Button, ButtonType
 from params.params import Param
 from params.valuecontrollers import controllers_registry
 from scenes.scene import Scene, update_shader_params_from_list
@@ -257,7 +257,8 @@ class ScenesManager:
 
         # Reset all post-processing parameters to initial values
         for param in self.post_params:
-            param.controller.reset()
+            if param.button.value[1] != ButtonType.KNOB:
+                param.controller.reset()
 
         # Release old program if it exists
         if self.current_prog is not None:
@@ -274,6 +275,6 @@ class ScenesManager:
         # Bind parameters and track them for future cleanup
         self.input_manager.unbind_params()
         for param in new_csene.params:
-            # Reset scene parameters to initial values
-            param.controller.reset()
+            if param.button.value[1] != ButtonType.KNOB:
+                param.controller.reset()
             self.input_manager.bind_param(param)
