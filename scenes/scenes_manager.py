@@ -6,8 +6,8 @@ from pprint import pprint
 
 import moderngl_window as mglw
 from pathlib import Path
+from inputs.buttons import Button
 from inputs.input_manager import MidiInputManager
-from inputs.buttons import Button, ButtonType
 from inputs.midi import MIDI_BUTTEN_CLICK, MIDI_DEC_VALUE, MIDI_INC_VALUE
 from params.params import Param
 from params.valuecontrollers import controllers_registry
@@ -227,9 +227,8 @@ class ScenesManager:
         if self.current_prog is None:
             return
 
-        adjusted_time = self._get_adjusted_time(time)
-
         if 'iTime' in self.current_prog:
+            adjusted_time = self._get_adjusted_time(time)
             self.current_prog['iTime'].value = adjusted_time
 
         if 'iResolution' in self.current_prog:
@@ -254,7 +253,6 @@ class ScenesManager:
 
         if 'iResolution' in self.post_prog:
             self.post_prog['iResolution'].value = resolution
-
 
         if 'iTime' in self.post_prog:
             self.post_prog['iTime'].value = time
@@ -291,7 +289,7 @@ class ScenesManager:
 
         # Reset all post-processing parameters to initial values
         for param in self.post_params:
-            if param.button.value[1] != ButtonType.KNOB:
+            if param.is_reset_on_scene_change:
                 param.controller.reset()
 
         # Release old program if it exists
@@ -309,7 +307,7 @@ class ScenesManager:
         # Bind parameters and track them for future cleanup
         self.input_manager.unbind_params()
         for param in new_csene.params:
-            if param.button.value[1] != ButtonType.KNOB:
+            if param.is_reset_on_scene_change:
                 param.controller.reset()
             self.input_manager.bind_param(param)
 
