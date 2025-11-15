@@ -11,7 +11,8 @@ uniform float yOffset; //v;
 
 uniform float brightness; //v
 uniform float smoothness; //vx
-uniform float zoom; //v
+uniform float zoom0; //v
+uniform float zoom1; //v
 
 vec3 palette(float d) {
         return mix(vec3(0.2, 0.7, 0.9), vec3(1., 0., 1.), d);
@@ -63,7 +64,7 @@ void main() {
         vec3 cs = normalize(cross(cf, vec3(0., 1., 0.)));
         vec3 cu = normalize(cross(cf, cs));
 
-        vec3 uuv = ro + cf * zoom + uv.x * cs + uv.y * cu;
+        vec3 uuv = ro + cf * mix(zoom0, zoom1, sin(iTime)) + uv.x * cs + uv.y * cu;
 
         vec3 rd = normalize(uuv - ro);
 
