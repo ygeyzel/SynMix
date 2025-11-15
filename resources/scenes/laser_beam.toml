@@ -1,0 +1,38 @@
+name = "laser_beam"
+fragment_shader_filename = "laser_beam.glsl"
+
+[[params]]
+name = "radius_circle_a"
+button = "LEFT_WHEEL"
+controller.type = "RangedController"
+controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
+
+[[params]]
+name = "fieldScale"
+button = "RIGHT_WHEEL"
+controller.type = "RangedController"
+controller.args = {step = 0.1, min_value = 2.0, max_value = 8.0, initial_value = 4.0}
+
+[[params]]
+name = "colorIntensity"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.5, max_value = 3.0, initial_value = 1.0}
+
+[[params]]
+name = "starBrightness"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 1.0}
+
+[[params]]
+name = "animationPhase"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.5, max_value = 2.0, initial_value = 1.0}
+
+[[params]]
+name = "pulseBPM"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 40.0, max_value = 300.0, initial_value = 40.0}
