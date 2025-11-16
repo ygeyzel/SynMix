@@ -11,11 +11,22 @@ uniform float iTime;
 
 // Controllable parameters
 uniform vec3 iMouse;
+
 uniform float radius_circle_a;
 uniform float radius_circle_b;
 uniform float radius_circle_c;
-// uniform float animationPhase;
-// uniform float pulseBPM;
+uniform float lanth_squer_a;
+uniform float wighth_squer_a;
+uniform float lanth_squer_b;
+uniform float wighth_squer_b;
+
+uniform float rayAngleControler;
+
+uniform float uvSpeed;
+uniform bool move;
+uniform bool psychedelic;
+uniform vec2 myPlayerPos; 
+uniform bool savePlayerPose;
 
 float distanceToCircle(vec2 p, vec2 center, float radius) {
     return length(p - center) - radius;
@@ -26,25 +37,56 @@ float distanceToBox(vec2 p, vec2 center, vec2 halfSize) {
     return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
 }
 
+float minDistance(float d, float distToObject){
+    return min(d, distToObject);
+}
+
 float sceneDistance(vec2 p) {
-    float d = 1e9;
+    float d = 1e9; 
     d = min(d, distanceToCircle(p, vec2(-0.6,  0.4), radius_circle_a));
     d = min(d, distanceToCircle(p, vec2( 0.7, -0.5), radius_circle_b));
     d = min(d, distanceToCircle(p, vec2(-0.8, -0.55), radius_circle_c));
-    d = min(d, distanceToBox(p, vec2(0.4,  0.1), vec2(0.12, 0.12)));
-    d = min(d, distanceToBox(p, vec2(0.9,  0.6), vec2(0.05, 0.25)));
+    d = min(d, distanceToBox(p, vec2(0.4,  0.1), vec2(lanth_squer_a, wighth_squer_a)));
+    d = min(d, distanceToBox(p, vec2(0.9,  0.6), vec2(lanth_squer_b, wighth_squer_b)));
     return d;
+}
+
+vec2 uvPos() {
+    vec2 uv = fragCoord / iResolution.xy;
+    uv = uv * 2.0 - 1.0;
+    uv.x *= iResolution.x / iResolution.y;
+    return uv  ;
+}
+
+vec2 playerPos(vec2 uv, float rayAngle){
+    // float uvSpeed = 1;
+    vec2 uvP = vec2 (0.0);
+    if (psychedelic == true){
+        uvP = uv;
+    }
+    uvP.x += (cos(rayAngle) * uvSpeed);
+    uvP.y += (sin(rayAngle) * uvSpeed);
+
+    // if (savePlayerPose == true){
+    //     myPlayerPos = uvP;
+    // }   
+    // else{
+    //     uvP = myPlayerPos;
+    // }
+
+    return uvP;
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
-    vec2 uv = fragCoord / iResolution.xy;
-    uv = uv * 2.0 - 1.0;
-    uv.x *= iResolution.x / iResolution.y;
+    float rayAngle = rayAngleControler;
+    vec2 rayDir = normalize(vec2(cos(rayAngle), sin(rayAngle)));
 
+    vec2 uv = uvPos();    
+    vec2 uvP = playerPos(uv, rayAngle);
     vec3 color = vec3(0.02);
 
-    vec2 rayOrigin = vec2(0.0);
+    vec2 rayOrigin = vec2(uvP);
     if(iMouse.z > 0.0){
         vec2 mousePos = iMouse.xy / iResolution.xy;
         mousePos = mousePos * 2.0 - 1.0;
@@ -52,8 +94,6 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
         rayOrigin = mousePos;
     }
 
-    float rayAngle = iTime * 0.25;
-    vec2 rayDir = normalize(vec2(cos(rayAngle), sin(rayAngle)));
 
     float distScene = sceneDistance(uv);
     float outline = smoothstep(0.008, 0.0, abs(distScene));

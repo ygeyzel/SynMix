@@ -3,36 +3,78 @@ fragment_shader_filename = "laser_beam.glsl"
 
 [[params]]
 name = "radius_circle_a"
-button = "LEFT_WHEEL"
+button = "RIGHT_LENGTH"
 controller.type = "RangedController"
 controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
+# o p
 
 [[params]]
-name = "fieldScale"
+name = "radius_circle_b"
+button = "LEFT_DRY_WET"
+controller.type = "RangedController"
+controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
+# A S
+
+[[params]]
+name = "radius_circle_c"
+button = "LEFT_LENGTH"
+controller.type = "RangedController"
+controller.args = {step = 0.01, min_value = 0, max_value = 6.283, initial_value = 0.2}
+# q w
+
+[[params]]
+name = "rayAngleControler"
 button = "RIGHT_WHEEL"
 controller.type = "RangedController"
-controller.args = {step = 0.1, min_value = 2.0, max_value = 8.0, initial_value = 4.0}
+controller.args = {step = 0.1, min_value = -1000000000, max_value = 1000000000, initial_value = 0}
+# leaft right
+
 
 [[params]]
-name = "colorIntensity"
-button = "LEFT_HIGH"
-controller.type = "NormalizedController"
-controller.args = {min_value = 0.5, max_value = 3.0, initial_value = 1.0}
+name = "lanth_squer_a"
+button = "RIGHT_DRY_WET"
+controller.type = "RangedController"
+controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
+# L ;
 
 [[params]]
-name = "starBrightness"
-button = "RIGHT_HIGH"
-controller.type = "NormalizedController"
-controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 1.0}
+name = "wighth_squer_a"
+button = "SCROLL"
+controller.type = "RangedController"
+controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
+# f3 f4
 
 [[params]]
-name = "animationPhase"
-button = "LEFT_MID"
+name = "lanth_squer_b"
+button = "LEFT_GAIN"
 controller.type = "NormalizedController"
-controller.args = {min_value = 0.5, max_value = 2.0, initial_value = 1.0}
+controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
+# E R
 
 [[params]]
-name = "pulseBPM"
-button = "RIGHT_MID"
+name = "wighth_squer_b"
+button = "LEFT_AMOUNT"
 controller.type = "NormalizedController"
-controller.args = {min_value = 40.0, max_value = 300.0, initial_value = 40.0}
+controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
+
+# D, F
+
+[[params]]
+name = "uvSpeed"
+button = "LEFT_WHEEL"
+controller.type = "RangedController"
+controller.args = {step = 0.01, min_value = -2, max_value = 2, initial_value = 0}
+
+# BACKSPACE  \(Backslash)
+
+[[params]]
+name = "psychedelic"
+button = "LEFT_FX_ON"
+controller.type = "ToggleController"
+# @ (At)
+
+[[params]]
+name = "move"
+button = "LEFT_FX_SEL"
+controller.type = "ToggleController"
+# ! (Exclamation)
