@@ -122,6 +122,8 @@ Example configuration:
 ```json
 {
   "scene_order": [
+    "UFO Blanket",
+    "MengerFall",
     "DesertDunes",
     "CBSGalaxy",
     "QuaternionFractal",
@@ -176,15 +178,19 @@ Add custom controllers by decorating subclasses with `@register_controller("Name
 │   │   ├── cbs_galaxy.toml
 │   │   ├── desert_dunes.toml
 │   │   ├── kepler_planet.toml
+│   │   ├── menger_fall.toml
 │   │   ├── post_processing_params.toml
 │   │   ├── quaternion_fractal.toml
+│   │   ├── UFO_Blanket.toml
 │   │   └── wings_fractal.toml
 │   └── shaders/               # GLSL shader files
 │       ├── cbs_galaxy.glsl
 │       ├── desert_dunes.glsl
 │       ├── kepler.glsl
+│       ├── menger_fall.glsl
 │       ├── post_processing.glsl
 │       ├── quaternion_fractal.glsl
+│       ├── UFO_Blanket.glsl
 │       ├── vertex.glsl
 │       └── wings.glsl
 ├── scenes/              # Scene runtime logic
