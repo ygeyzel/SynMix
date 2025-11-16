@@ -1,3 +1,4 @@
+import platform
 from typing import Callable, Union
 
 import mido
@@ -23,17 +24,26 @@ class MidiInputManager:
             self.secondary_param_bindings: dict[MidiGetter, Param] = {}
             self.general_funcs_bindings: dict[MidiGetter, Callable[[int], None]] = {
             }
+            self.fake_midi = None
+            self.midi_input = None
 
-            try:
-                midi_input_name = next(
-                    name for name in mido.get_input_names() if input_subname in name
-                )
-                self.midi_input = mido.open_input(
-                    midi_input_name, callback=self._handle_midi_input)
+            # Check if we're dealing with fake MIDI on Windows
+            if input_subname == 'Fake MIDI Controller' and platform.system() == 'Windows':
+                # Import here to avoid circular import
+                from top_level.global_context import GlobalCtx
+                global_ctx = GlobalCtx()
+                self.fake_midi = global_ctx.fake_midi
+            else:
+                try:
+                    midi_input_name = next(
+                        name for name in mido.get_input_names() if input_subname in name
+                    )
+                    self.midi_input = mido.open_input(
+                        midi_input_name, callback=self._handle_midi_input)
 
-            except StopIteration:
-                raise ValueError(
-                    f"No MIDI input found with subname: {input_subname=} in {mido.get_input_names()}. You may want to use --fakemidi")
+                except StopIteration:
+                    raise ValueError(
+                        f"No MIDI input found with subname: {input_subname=} in {mido.get_input_names()}. You may want to use --fakemidi")
 
             self._initialized = True
 
@@ -76,3 +86,10 @@ class MidiInputManager:
 
         except KeyError:
             print(f"Invalid MIDI event: {event_msg}")
+
+    def process_fake_midi_messages(self):
+        """Process pending fake MIDI messages (Windows compatibility)"""
+        if self.fake_midi:
+            pending_messages = self.fake_midi.get_pending_messages()
+            for message in pending_messages:
+                self._handle_midi_input(message)
