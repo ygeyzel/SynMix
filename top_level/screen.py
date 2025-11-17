@@ -3,6 +3,7 @@ from typing import Optional
 import moderngl_window as mglw
 from top_level.global_context import GlobalCtx
 from scenes.scenes_manager import ScenesManager
+from inputs.input_manager import MidiInputManager
 
 
 class Screen(mglw.WindowConfig):
@@ -22,12 +23,15 @@ class Screen(mglw.WindowConfig):
         global_ctx = GlobalCtx()
         self.fake_midi = global_ctx.fake_midi
         self.sm = ScenesManager(self.ctx, starting_scene_name=global_ctx.starting_scene_name)
+        self.input_manager = MidiInputManager()
 
     def on_render(self, time: float, frame_time: float):
         """Main render loop - called every frame by moderngl-window"""
 
         if self.fake_midi:
             self.fake_midi.handle_keys_input()
+            # Process pending messages on Windows
+            self.input_manager.process_fake_midi_messages()
 
         # Delegate rendering to the current scene
         resolution = (self.wnd.width, self.wnd.height, 1.0)

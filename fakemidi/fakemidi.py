@@ -1,4 +1,5 @@
 import json
+import platform
 from abc import ABC, abstractmethod
 from enum import Enum
 from functools import reduce, partial
@@ -199,7 +200,12 @@ class FakeMidi:
         # Only initialize if it's the first time
         if not hasattr(self, '_initialized'):
             self.output_name = output_name
-            self.output = mido.open_output(self.output_name, virtual=True)
+            # Windows doesn't support virtual MIDI ports, so we'll store messages instead
+            if platform.system() == 'Windows':
+                self.output = None
+                self.pending_messages = []
+            else:
+                self.output = mido.open_output(self.output_name, virtual=True)
             self.held_keys = set()
             self.relesed_keys = set()
             self.modifiers = {}
@@ -224,7 +230,11 @@ class FakeMidi:
             kwargs['is_on'] = False # For released keys, set is_on to False
 
         for message in messages:
-            self.output.send(message)
+            if self.output:
+                self.output.send(message)
+            else:
+                # On Windows, store messages for retrieval by input manager
+                self.pending_messages.extend(message if isinstance(message, list) else [message])
 
         for key in self.relesed_keys:
             self.held_keys.remove(key)
@@ -242,3 +252,11 @@ class FakeMidi:
             self.relesed_keys.add(key)
 
         self.modifiers = {}
+
+    def get_pending_messages(self):
+        """Get and clear pending MIDI messages (Windows compatibility)"""
+        if hasattr(self, 'pending_messages'):
+            messages = self.pending_messages.copy()
+            self.pending_messages.clear()
+            return messages
+        return []
