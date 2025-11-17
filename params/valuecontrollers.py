@@ -186,3 +186,4 @@ class PersistentTimerToggleController(ValueController):
     @property
     def is_persistent(self) -> bool:
         return True
+

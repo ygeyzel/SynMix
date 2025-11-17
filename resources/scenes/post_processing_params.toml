@@ -59,3 +59,9 @@ name = "uIsDisplayDVDLogo"
 button = "LEFT_OUT"
 controller.type = "PersistentTimerToggleController"
 controller.args = {}
+
+[[params]]
+name = "uFract"
+button = "LEFT_RECORD"
+controller.type = "IsPressedController"
+controller.args = {}
