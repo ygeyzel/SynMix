@@ -1,5 +1,3 @@
-from typing import Optional
-
 import moderngl_window as mglw
 from top_level.global_context import GlobalCtx
 from scenes.scenes_manager import ScenesManager

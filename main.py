@@ -3,6 +3,8 @@ import sys
 
 import moderngl_window as mglw
 
+mglw.settings.WINDOW['class'] = 'moderngl_window.context.glfw.Window'
+
 from inputs.input_manager import MidiInputManager
 from top_level.global_context import GlobalCtx
 from top_level.screen import Screen

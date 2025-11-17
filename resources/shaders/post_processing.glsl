@@ -23,6 +23,7 @@ uniform float uWavesX;
 uniform float uWavesY;
 
 uniform bool uIsDisplayDVDLogo;
+uniform bool uFract;
 
 #define PI 3.14159265359
 
@@ -267,6 +268,13 @@ vec4 DVDFragShader(vec2 fragCoord, vec3 iResolution, float iTime)
 }
 //=============<\DVD>===============
 
+vec2 applyFract(vec2 uv, float scale) {
+    uv *= scale;
+    uv = fract(uv);
+    uv += 0.5;
+    return uv;
+}
+
 void main() {
     vec2 uv = fragCoord.xy / iResolution.xy;
 
@@ -281,6 +289,10 @@ void main() {
     }
     if (abs(uWavesY) > 0.01) {
         uv.y += waveY;
+    }
+
+    if (uFract) {
+        uv = applyFract(uv, 10.0 * sin(iTime * 0.5));
     }
 
     vec4 color = texture(uTexture, uv);

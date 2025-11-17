@@ -31,6 +31,11 @@ uv run main.py --fakemidi
 uv run main.py --start-scene "KeplerPlanet"
 ```
 
+**Full screen**
+```bash
+uv run main.py --window glfw --fullscreen
+```
+
 ## Configuration
 
 ### Fake MIDI Controller
