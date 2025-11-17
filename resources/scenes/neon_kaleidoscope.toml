@@ -1,2 +1,32 @@
-name = "neon_kaleidoscope"
+name = "NeonKaleidoscope"
 fragment_shader_filename = "neon_kaleidoscope.glsl"
+
+[[params]]
+name = "rotation"
+button = "LEFT_WHEEL"
+controller.type = "CyclicController"
+controller.args = {step = 0.05, min_value = -3.14159, max_value = 3.14159, initial_value = 0.0}
+
+[[params]]
+name = "rippleFrequency"
+button = "RIGHT_WHEEL"
+controller.type = "RangedController"
+controller.args = {step = 0.01, min_value = 1.0, max_value = 50.0, initial_value = 8.0}
+
+[[params]]
+name = "intensity"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.5, max_value = 3.0, initial_value = 1.5}
+
+[[params]]
+name = "glow"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.001, max_value = 0.1, initial_value = 0.01}
+
+[[params]]
+name = "iterations"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 3.0, max_value = 15.0, initial_value = 7.0}
