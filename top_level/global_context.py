@@ -29,6 +29,7 @@ class GlobalCtx:
             self.fake_midi: Optional[FakeMidi] = None
             self.starting_scene_name: Optional[str] = None
             self.time_params: TimeParams = DEFAULT_TIME_PARAMS
+            self.shared_values: dict = {}
             GlobalCtx._initialized = True
 
     def reset_time_params(self):

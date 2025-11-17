@@ -5,6 +5,7 @@ from typing import Any, Callable, Dict, Iterable, Tuple
 
 from inputs.buttons import ButtonType
 from inputs.midi import MIDI_DEC_VALUE, MIDI_INC_VALUE, MIDI_MAX_VALUE, MIDI_MIN_VALUE, MAX_PITCH, MIN_PITCH
+from top_level.global_context import GlobalCtx
 
 
 controllers_registry: Dict[str, Tuple[type['ValueController'], frozenset[ButtonType]]] = {}
@@ -53,6 +54,24 @@ class ValueController(ABC):
     @property
     def is_persistent(self) -> bool:
         return False
+
+
+class SharedValueController(ValueController):
+    def __init__(self, shared_key: str, **kwargs):
+        super().__init__(**kwargs)
+        self.shared_key = shared_key
+        self.global_ctx = GlobalCtx()
+
+        if shared_key not in self.global_ctx.shared_values:
+            self.global_ctx.shared_values[shared_key] = self.initial_value
+
+    @property
+    def value(self) -> Any:
+        return self.global_ctx.shared_values[self.shared_key]
+
+    @value.setter
+    def value(self, new_value: Any):
+        self.global_ctx.shared_values[self.shared_key] = new_value
 
 
 @register_controller('NormalizedController', ButtonType.KNOB)
