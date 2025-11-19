@@ -1,5 +1,6 @@
 name = "QuaternionFractal"
 fragment_shader_filename = "quaternion_fractal.glsl"
+res_factor = 0.5
 
 [[params]]
 name = "animationSpeed"

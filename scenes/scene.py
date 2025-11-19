@@ -67,11 +67,12 @@ def update_shader_params_from_list(shader_program, params):
 class Scene:
     """A class for common shader based visual scene functionality"""
 
-    def __init__(self, name: str, params: List[Param], fragment_shader_filename: str, vertex_shader_filename: str = 'vertex.glsl'):
+    def __init__(self, name: str, params: List[Param], fragment_shader_filename: str, vertex_shader_filename: str = 'vertex.glsl', res_factor: float = None):
         self.name = name
         self.params = params
         self.fragment_shader_filename = fragment_shader_filename
         self.vertex_shader_filename = vertex_shader_filename
+        self.res_factor = res_factor
 
     def __repr__(self):
         return f'Scene({self.name}: shaders=[{self.fragment_shader_filename},{self.vertex_shader_filename}], params:{[p for p in self.params]})'

@@ -1,5 +1,6 @@
 name = "WingsFractal"
 fragment_shader_filename = "wings.glsl"
+res_factor = 0.5
 
 [[params]]
 name = "xOffset"
