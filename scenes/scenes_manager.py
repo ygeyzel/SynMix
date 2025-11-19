@@ -191,16 +191,27 @@ class ScenesManager:
 
         width, height = int(resolution[0]), int(resolution[1])
         
+        # Apply resolution factor if specified
+        if self.current_scene.res_factor is not None:
+            fbo_width = int(width * self.current_scene.res_factor)
+            fbo_height = int(height * self.current_scene.res_factor)
+        else:
+            fbo_width = width
+            fbo_height = height
+        
         # Resize FBO if needed
-        if self.fbo is None or self.fbo_texture.width != width or self.fbo_texture.height != height:
+        if self.fbo is None or self.fbo_texture.width != fbo_width or self.fbo_texture.height != fbo_height:
             if self.fbo is not None:
                 self.fbo.release()
-            self.fbo_texture = self.screen_ctx.texture((width, height), 4)
+            self.fbo_texture = self.screen_ctx.texture((fbo_width, fbo_height), 4)
             self.fbo_texture.filter = (self.screen_ctx.LINEAR, self.screen_ctx.LINEAR)
             self.fbo = self.screen_ctx.framebuffer([self.fbo_texture])
         
+        # Create FBO resolution tuple for shader (aspect ratio based on FBO dimensions)
+        fbo_resolution = (fbo_width, fbo_height, fbo_width / fbo_height if fbo_height > 0 else 1.0)
+        
         # Update parameters for both passes
-        self._update_params(time, frame_time, resolution)
+        self._update_params(time, frame_time, fbo_resolution)
         self._update_post_params(time, frame_time, resolution)
         self._apply_speed_hold(frame_time)
         
