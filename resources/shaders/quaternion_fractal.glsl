@@ -7,12 +7,13 @@ uniform vec3 iResolution;
 uniform float iTime;
 
 // Controllable parameters
-uniform float animationSpeed;
 uniform float shellIntensity;
 uniform float rotationFactor;
 uniform float colorVariation;
 uniform float raycastSteps;
-uniform float cameraZoom;
+uniform float cameraZoom0;
+uniform float cameraZoom1;
+uniform float zoomFreq;
 uniform float detailLevel;
 uniform float colorIntensity;
 
@@ -46,10 +47,11 @@ void mainImage( out vec4 O, vec2 U) {
     
     vec3 c=vec3(0);
     // Apply zoom to UV coordinates for proper field-of-view control
+    float cameraZoom = mix(cameraZoom0, cameraZoom1, 0.5 + 0.5 * sin(iTime * zoomFreq));
     vec2 uv = (U-.5*R.xy) / cameraZoom;
     vec4 rd = normalize( vec4(uv, .8*R.y, R.y))*2000.;
     
-    float sc,dotp,totdist=0., t1=.95, tt=iTime*animationSpeed;
+    float sc,dotp,totdist=0., t1=.95, tt=iTime;
     float t=0.;
  
     float sn = mod(iTime,20.)<12. ? 0. : 1.;
