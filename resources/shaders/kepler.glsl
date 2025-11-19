@@ -16,6 +16,8 @@ uniform float cloudDensity = 3.0;      // Cloud density multiplier
 uniform float landContrast = 0.75;     // Land visibility contrast
 uniform float starBrightness = 1.0;    // Star field brightness
 uniform float surfaceDetail = 1.0;     // Surface detail level
+uniform float cameraRotX = 0.0;        // Camera horizontal rotation (azimuth)
+uniform float cameraRotY = 0.0;        // Camera vertical rotation (elevation)
 
 /*--------------------------------------------------------------------------------------
 License CC0 - http://creativecommons.org/publicdomain/zero/1.0/
@@ -245,10 +247,10 @@ void main()
 
     // Camera setup
     vec3 camUp = vec3(0, 1, 0);
-    vec3 camLookat = vec3(0, 0.0, 0);
+    vec3 camLookat = vec3(0, 0, 0);
     
-    float mx = -PI / 2.0;
-    float my = 0.0;
+    float mx = -PI / 2.0 + cameraRotX;
+    float my = cameraRotY;
     vec3 camPos = vec3(cos(my) * cos(mx), sin(my), cos(my) * sin(mx)) * cameraDistance;
 
     vec3 camVec = normalize(camLookat - camPos);
