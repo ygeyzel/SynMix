@@ -4,21 +4,21 @@ fragment_shader_filename = "kepler.glsl"
 [[params]]
 name = "orbitSpeed"
 button = "LEFT_WHEEL"
-controller.type = "RangedController"
-controller.args = {step = 0.002, min_value = 0.0, max_value = 0.5, initial_value = 0.125}
+controller.type = "CyclicController"
+controller.args = {step = 0.002, min_value = -1.0, max_value = 1.0, initial_value = 0.125}
 
 [[params]]
 name = "timeScale"
 button = "RIGHT_WHEEL"
-controller.type  = "RangedController"
-controller.args = {step = 0.001, min_value = 0.0, max_value = 0.3, initial_value = 0.1}
+controller.type  = "CyclicController"
+controller.args = {step = 0.002, min_value = -1.0, max_value = 1.0, initial_value = 0.125}
 
 
 [[params]]
 name = "cameraDistance"
 button = "LEFT_HIGH"
 controller.type = "NormalizedController"
-controller.args = {min_value = 1.5, max_value = 50.0, initial_value = 2.5}
+controller.args = {min_value = 1.5, max_value = 50.0, initial_value = 25.0}
 
 
 [[params]]
