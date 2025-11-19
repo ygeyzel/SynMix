@@ -15,13 +15,6 @@ controller.args = {step = 0.002, min_value = -1.0, max_value = 1.0, initial_valu
 
 
 [[params]]
-name = "cameraDistance"
-button = "LEFT_HIGH"
-controller.type = "NormalizedController"
-controller.args = {min_value = 1.5, max_value = 50.0, initial_value = 25.0}
-
-
-[[params]]
 name = "atmosphereIntensity"
 button = "LEFT_MID"
 controller.type = "NormalizedController"
@@ -54,4 +47,25 @@ name = "surfaceDetail"
 button = "RIGHT_LOW"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 2.0}
+
+
+[[params]]
+name = "cameraRotX"
+button = "LEFT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = {min_value = -3.14159, max_value = 3.14159, initial_value = 0.0}
+
+
+[[params]]
+name = "cameraRotY"
+button = "RIGHT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = {min_value = -1.4708, max_value = 1.4708, initial_value = 0.0}
+
+
+[[params]]
+name = "cameraDistance"
+button = "CROSSFADER"
+controller.type = "NormalizedController"
+controller.args = {min_value = 150.0, max_value = 0.5, initial_value = 25.0}
 
