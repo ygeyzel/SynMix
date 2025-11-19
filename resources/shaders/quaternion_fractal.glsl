@@ -15,6 +15,8 @@ uniform float cameraZoom0;
 uniform float cameraZoom1;
 uniform float zoomFreq;
 uniform float detailLevel;
+uniform float mandelbrotScale0;
+uniform float mandelbrotScale1;
 uniform float colorIntensity;
 
 #define rot(x) mat2(cos(x+vec4(0,11,33,0)))
@@ -90,12 +92,13 @@ void mainImage( out vec4 O, vec2 U) {
             
             w = vec4(0);
             //quaternionic mandelbrot iterations
+            float mandelbrotScale = mix(mandelbrotScale0, mandelbrotScale1, 0.5 + 0.5 * sin(iTime * zoomFreq));
             for (float k=0.; k<4.-2.*sn2;  k++) {
                 w =
                     vec4( w.x*w.x-w.y*w.y-w.z*w.z-w.w*w.w,
                        2.*w.x*w.y,
                        2.*w.x*w.z,
-                       2.*w.x*w.w ) - .35*p*detailLevel;
+                       2.*w.x*w.w ) - mandelbrotScale*p*detailLevel;
                                   
             }
         }
