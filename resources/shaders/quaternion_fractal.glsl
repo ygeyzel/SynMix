@@ -18,6 +18,7 @@ uniform float detailLevel;
 uniform float mandelbrotScale0;
 uniform float mandelbrotScale1;
 uniform float colorIntensity;
+uniform float initSc;
 
 #define rot(x) mat2(cos(x+vec4(0,11,33,0)))
 
@@ -71,7 +72,7 @@ void mainImage( out vec4 O, vec2 U) {
         p.yzw = p.xyz; 
   
      
-        sc = 1.; 
+        sc = initSc;
 
         float rotsign = p.x > 0. ? 1. : -1.;
         p.zw *= rot( (tt/3. + sin(tt/2.) )*rotsign);

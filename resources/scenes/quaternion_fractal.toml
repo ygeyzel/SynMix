@@ -67,3 +67,11 @@ name = "colorIntensity"
 button = "RIGHT_GAIN"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.2, max_value = 2.0, initial_value = 1.0}
+
+
+[[params]]
+name = "initSc"
+button = "RIGHT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.1, max_value = 10.0, initial_value = 1.0}
+
