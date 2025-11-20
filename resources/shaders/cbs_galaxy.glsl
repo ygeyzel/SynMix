@@ -8,7 +8,8 @@ uniform float iTime;
 
 // Controllable parameters
 uniform float strength;
-uniform float fieldScale;
+uniform float fieldScale0;
+uniform float fieldScale1;
 uniform float colorIntensity;
 uniform float starBrightness;
 uniform float animationPhase;
@@ -71,6 +72,11 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     vec2 uv = 2. * fragCoord.xy / iResolution.xy - 1.;
 	vec2 uvs = uv * iResolution.xy / max(iResolution.x, iResolution.y);
 	float animTime = iTime * animationPhase;
+	
+	// Interpolate between fieldScaleMin and fieldScaleMax using sine wave
+	float scaleInterp = 0.5 + 0.5 * sin(iTime);
+	float fieldScale = mix(fieldScale0, fieldScale1, scaleInterp);
+	
 	vec3 p = vec3(uvs / fieldScale, 0) + vec3(1., -1.3, 0.);
 	p += animationAmplitude * vec3(sin(animTime / 16.), sin(animTime / 12.),  sin(animTime / 128.));
 	
@@ -83,8 +89,9 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
 	float t = field(p, freqs[2]);
 	float v = (1. - exp((abs(uv.x) - 1.) * 6.)) * (1. - exp((abs(uv.y) - 1.) * 6.));
 	
-    // Second Layer
-	vec3 p2 = vec3(uvs / (fieldScale + sin(animTime*0.11)*0.2 + 0.2 + sin(animTime*0.15)*0.3 + 0.4), 1.5) + vec3(2., -1.3, -1.);
+    // Second Layer - use animated fieldScale with additional variation
+	float fieldScale2 = fieldScale + sin(animTime*0.11)*0.2 + 0.2 + sin(animTime*0.15)*0.3 + 0.4;
+	vec3 p2 = vec3(uvs / fieldScale2, 1.5) + vec3(2., -1.3, -1.);
 	p2 += 0.25 * vec3(sin(animTime / 16.), sin(animTime / 12.),  sin(animTime / 128.));
 	float t2 = field2(p2, freqs[3]);
 	vec4 c2 = mix(.4, 1., v) * vec4(1.3 * t2 * t2 * t2, 1.8 * t2 * t2, t2 * freqs[0], t2);

@@ -2,10 +2,16 @@ name = "CBSGalaxy"
 fragment_shader_filename = "cbs_galaxy.glsl"
 
 [[params]]
-name = "fieldScale"
-button = "LEFT_WHEEL"
-controller.type = "RangedController"
-controller.args = {step = 0.1, min_value = 2.0, max_value = 8.0, initial_value = 4.0}
+name = "fieldScale0"
+button = "LEFT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = {min_value = 1.0, max_value = 20.0, initial_value = 3.0}
+
+[[params]]
+name = "fieldScale1"
+button = "RIGHT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = {min_value = 1.0, max_value = 20.0, initial_value = 3.0}
 
 [[params]]
 name = "fieldOffsetZ"
