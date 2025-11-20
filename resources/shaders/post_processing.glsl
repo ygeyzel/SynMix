@@ -23,7 +23,8 @@ uniform float uWavesX;
 uniform float uWavesY;
 
 uniform bool uIsDisplayDVDLogo;
-uniform bool uFract;
+uniform float uFractTime;
+uniform bool uFractStatic;
 
 #define PI 3.14159265359
 
@@ -291,8 +292,12 @@ void main() {
         uv.y += waveY;
     }
 
-    if (uFract) {
-        uv = applyFract(uv, 10.0 * sin(iTime * 0.5));
+    if (uFractTime >= 0.0) {
+        uv = applyFract(uv, 1.0 + 40 * sin((uFractTime) * 0.15));
+    }
+    
+    if (uFractStatic) {
+        uv = applyFract(uv, 10.4);
     }
 
     vec4 color = texture(uTexture, uv);

@@ -1,3 +1,4 @@
+import time
 from abc import ABC, abstractmethod
 from random import uniform
 from threading import Timer
@@ -186,13 +187,10 @@ class CyclicController(IncDecController):
         if self.value < self.min_value:
             self.value = self.max_value - (self.min_value - self.value)
 
-
 @register_controller("ToggleController", ButtonType.CLICKABLE)
 class ToggleController(ValueController):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.initial_value = False
-        self.value = False
+        super().__init__(**kwargs, initial_value=False)
 
     def reset(self):
         """Reset the controller to its initial value"""
@@ -206,9 +204,7 @@ class ToggleController(ValueController):
 @register_controller("IsPressedController", ButtonType.CLICKABLE)
 class IsPressedController(ValueController):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.initial_value = False
-        self.value = False
+        super().__init__(**kwargs, initial_value=False)
 
     def reset(self):
         """Reset the controller to its initial value"""
@@ -221,9 +217,7 @@ class IsPressedController(ValueController):
 @register_controller("PersistentTimerToggleController", ButtonType.CLICKABLE)
 class PersistentTimerToggleController(ValueController):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.initial_value = False
-        self.value = False
+        super().__init__(**kwargs, initial_value=False)
 
         self.min_time_to_reset = kwargs.get("min_time_to_reset", 10.0)
         self.max_time_to_reset = kwargs.get("max_time_to_reset", 600.0)
@@ -237,3 +231,27 @@ class PersistentTimerToggleController(ValueController):
     @property
     def is_persistent(self) -> bool:
         return True
+
+
+@register_controller("StartTimeController", ButtonType.CLICKABLE)
+class StartTimeController(ValueController):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.click_start_time = None
+
+    def control_value(self, in_value: int):
+        if in_value == MIDI_MAX_VALUE:
+            self.click_start_time = time.time()
+
+        elif in_value == MIDI_MIN_VALUE:
+            self.click_start_time = None
+            
+    @property
+    def value(self) -> float:
+        if self.click_start_time is not None:
+            return time.time() - self.click_start_time
+        return -1.0
+
+    @value.setter
+    def value(self, new_value: Any):
+        pass

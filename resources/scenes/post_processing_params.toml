@@ -58,10 +58,13 @@ controller.args = {min_value = -50.0, max_value = 50.0, is_pitch = true}
 name = "uIsDisplayDVDLogo"
 button = "LEFT_OUT"
 controller.type = "PersistentTimerToggleController"
-controller.args = {}
 
 [[params]]
-name = "uFract"
+name = "uFractTime"
 button = "LEFT_RECORD"
+controller.type = "StartTimeController"
+
+[[params]]
+name = "uFractStatic"
+button = "RIGHT_SYNC"
 controller.type = "IsPressedController"
-controller.args = {}
