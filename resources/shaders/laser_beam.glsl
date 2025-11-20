@@ -74,7 +74,7 @@ vec2 playerPos(vec2 uv, float rayAngle){
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
-    float rayAngle = rayAngleControler;
+    float rayAngle = iTime;
     vec2 rayDir = normalize(vec2(cos(rayAngle), sin(rayAngle)));
 
     vec2 uv = uvPos();    
@@ -112,7 +112,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
         
         float dimer = 0.0;
         if (dimerControler == true) {
-            dimer = 6.0;
+            dimer = sin(iTime * 10.0) * 0.5 + 1.5;
         }
         
         float ringLine = smoothstep(pixelSize * 3.0, dimer, ring);
