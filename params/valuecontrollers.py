@@ -190,9 +190,7 @@ class CyclicController(IncDecController):
 @register_controller("ToggleController", ButtonType.CLICKABLE)
 class ToggleController(ValueController):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.initial_value = False
-        self.value = False
+        super().__init__(**kwargs, initial_value=False)
 
     def reset(self):
         """Reset the controller to its initial value"""
@@ -206,9 +204,7 @@ class ToggleController(ValueController):
 @register_controller("IsPressedController", ButtonType.CLICKABLE)
 class IsPressedController(ValueController):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.initial_value = False
-        self.value = False
+        super().__init__(**kwargs, initial_value=False)
 
     def reset(self):
         """Reset the controller to its initial value"""
@@ -221,9 +217,7 @@ class IsPressedController(ValueController):
 @register_controller("PersistentTimerToggleController", ButtonType.CLICKABLE)
 class PersistentTimerToggleController(ValueController):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.initial_value = False
-        self.value = False
+        super().__init__(**kwargs, initial_value=False)
 
         self.min_time_to_reset = kwargs.get("min_time_to_reset", 10.0)
         self.max_time_to_reset = kwargs.get("max_time_to_reset", 600.0)
@@ -237,3 +231,4 @@ class PersistentTimerToggleController(ValueController):
     @property
     def is_persistent(self) -> bool:
         return True
+
