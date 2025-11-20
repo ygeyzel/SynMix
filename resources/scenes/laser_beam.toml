@@ -1,4 +1,4 @@
-name = "laser_beam"
+name = "LaserBeam"
 fragment_shader_filename = "laser_beam.glsl"
 
 [[params]]
