@@ -19,14 +19,17 @@ uniform float lanth_squer_a;
 uniform float wighth_squer_a;
 uniform float lanth_squer_b;
 uniform float wighth_squer_b;
-
+uniform float objectsOutlineWidth;
 uniform float rayAngleControler;
-
+uniform float directionDrivingAngle;
 uniform float uvSpeed;
 uniform bool move;
 uniform bool psychedelic;
 uniform vec2 myPlayerPos; 
 uniform bool savePlayerPose;
+uniform float objectAreaShade;
+
+uniform float maxSteps;
 
 float distanceToCircle(vec2 p, vec2 center, float radius) {
     return length(p - center) - radius;
@@ -55,25 +58,17 @@ vec2 uvPos() {
     vec2 uv = fragCoord / iResolution.xy;
     uv = uv * 2.0 - 1.0;
     uv.x *= iResolution.x / iResolution.y;
-    return uv  ;
+    return uv;
 }
 
 vec2 playerPos(vec2 uv, float rayAngle){
-    // float uvSpeed = 1;
     vec2 uvP = vec2 (0.0);
     if (psychedelic == true){
         uvP = uv;
     }
-    uvP.x += (cos(rayAngle) * uvSpeed);
-    uvP.y += (sin(rayAngle) * uvSpeed);
 
-    // if (savePlayerPose == true){
-    //     myPlayerPos = uvP;
-    // }   
-    // else{
-    //     uvP = myPlayerPos;
-    // }
-
+    uvP.x += (cos(directionDrivingAngle) * uvSpeed);
+    uvP.y += (sin(directionDrivingAngle) * uvSpeed);
     return uvP;
 }
 
@@ -97,10 +92,10 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
     float distScene = sceneDistance(uv);
     float outline = smoothstep(0.008, 0.0, abs(distScene));
-    color += vec3(0.2) * outline;
-    color += step(distScene, 0.0) * vec3(0.05);
+    color += vec3(objectsOutlineWidth) * outline;
+    color += step(distScene, 0.0) * vec3(objectAreaShade);
 
-    const int MAX_STEPS = 40;
+    const float MAXCIRCLEDIST = 10;
     const float MAX_DIST = 3.0;
     const float EPSILON = 0.001;
     float travel = 0.0;
@@ -109,7 +104,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     vec2 hitPosition;
     bool hit = false;
 
-    for (int step = 0; step < MAX_STEPS; step++) {
+    for (int step = 0; step < int(maxSteps); step++) {
         vec2 currentPos = rayOrigin + rayDir * travel;
         float distToScene = sceneDistance(currentPos);
 
@@ -119,7 +114,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
         travel += distToScene;
         if (distToScene < EPSILON) { hit = true; hitPosition = currentPos; break; }
-        if (travel > MAX_DIST) break;
+        if (travel > MAXCIRCLEDIST) break;
     }
 
     float distToRay = abs(dot(uv - rayOrigin, vec2(-rayDir.y, rayDir.x)));

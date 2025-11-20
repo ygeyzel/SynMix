@@ -9,13 +9,6 @@ controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.
 # o p
 
 [[params]]
-name = "radius_circle_b"
-button = "LEFT_DRY_WET"
-controller.type = "RangedController"
-controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
-# A S
-
-[[params]]
 name = "radius_circle_c"
 button = "LEFT_LENGTH"
 controller.type = "RangedController"
@@ -23,11 +16,34 @@ controller.args = {step = 0.01, min_value = 0, max_value = 6.283, initial_value 
 # q w
 
 [[params]]
+name = "directionDrivingAngle"
+button = "LEFT_DRY_WET"
+controller.type = "RangedController"
+controller.args = {step = 0.1, min_value = -1000000000, max_value = 1000000000, initial_value = 0}
+# A S
+
+[[params]]
 name = "rayAngleControler"
 button = "RIGHT_WHEEL"
 controller.type = "RangedController"
 controller.args = {step = 0.1, min_value = -1000000000, max_value = 1000000000, initial_value = 0}
 # leaft right
+
+
+[[params]]
+name = "maxSteps"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 1, max_value = 40, initial_value = 40}
+# T Y
+
+
+[[params]]
+name = "objectsOutlineWidth"
+button = "CUEMIX"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 0.2}
+# Z X
 
 
 [[params]]
@@ -78,3 +94,14 @@ name = "move"
 button = "LEFT_FX_SEL"
 controller.type = "ToggleController"
 # ! (Exclamation)
+
+[[params]]
+name = "objectAreaShade"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.05, max_value = 1.0, initial_value = 0.05}
+# G H
+
+
+
+# radius_circle_b
