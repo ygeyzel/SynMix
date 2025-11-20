@@ -90,18 +90,18 @@ controller.type = "ToggleController"
 # @ (At)
 
 [[params]]
-name = "move"
-button = "LEFT_FX_SEL"
-controller.type = "ToggleController"
-# ! (Exclamation)
-
-[[params]]
 name = "objectAreaShade"
 button = "LEFT_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.05, max_value = 1.0, initial_value = 0.05}
 # G H
 
+
+[[params]]
+name = "dimerControler"
+button = "RIGHT_IN"
+controller.type = "ToggleController"
+# # (Pound)
 
 
 # radius_circle_b

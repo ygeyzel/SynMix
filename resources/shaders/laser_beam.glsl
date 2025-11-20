@@ -23,13 +23,13 @@ uniform float objectsOutlineWidth;
 uniform float rayAngleControler;
 uniform float directionDrivingAngle;
 uniform float uvSpeed;
-uniform bool move;
 uniform bool psychedelic;
 uniform vec2 myPlayerPos; 
 uniform bool savePlayerPose;
 uniform float objectAreaShade;
 
 uniform float maxSteps;
+uniform bool dimerControler;
 
 float distanceToCircle(vec2 p, vec2 center, float radius) {
     return length(p - center) - radius;
@@ -109,7 +109,13 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
         float distToScene = sceneDistance(currentPos);
 
         float ring = abs(length(uv - currentPos) - distToScene);
-        float ringLine = smoothstep(pixelSize * 3.0, 0.0, ring);
+        
+        float dimer = 0.0;
+        if (dimerControler == true) {
+            dimer = 6.0;
+        }
+        
+        float ringLine = smoothstep(pixelSize * 3.0, dimer, ring);
         color += vec3(0.8) * ringLine * 0.5;
 
         travel += distToScene;
@@ -130,7 +136,6 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     }
 
     color += vec3(1.0, 0.4, 0.6) * smoothstep(pixelSize * 3.0, 0.0, length(uv - rayOrigin));
-
     fragColor = vec4(color, 1.0);
 }
 
