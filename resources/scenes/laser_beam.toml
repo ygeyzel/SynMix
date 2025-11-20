@@ -9,11 +9,18 @@ controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.
 # o p
 
 [[params]]
-name = "radius_circle_c"
+name = "radius_circle_b"
 button = "LEFT_LENGTH"
 controller.type = "RangedController"
 controller.args = {step = 0.01, min_value = 0, max_value = 6.283, initial_value = 0.2}
 # q w
+
+[[params]]
+name = "radius_circle_c"
+button = "LEFT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.5}
+# V B
 
 [[params]]
 name = "directionDrivingAngle"
