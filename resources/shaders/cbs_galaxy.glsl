@@ -7,6 +7,14 @@ uniform vec3 iResolution;
 uniform float iTime;
 
 // Controllable parameters
+uniform float fieldExp0;
+uniform float fieldExp1;
+
+uniform float freqFactor0;
+uniform float freqFactor1;
+uniform float freqFactor2;
+uniform float freqFactor3;
+
 uniform float strength;
 uniform float fieldScale0;
 uniform float fieldScale1;
@@ -17,6 +25,9 @@ uniform float pulseBPM;
 uniform float fieldOffsetZ;
 uniform float animationAmplitude;
 uniform float starPower;
+
+uniform bool fieldWave0;
+uniform bool fieldWave1;
 
 // CBS Parallax scrolling fractal galaxy
 // Inspired by JoshP's Simplicity shader
@@ -29,11 +40,13 @@ float field(in vec3 p, float s) {
 	float accum = s/4.;
 	float prev = 0.;
 	float tw = 0.;
+    float fieldExp = fieldWave0 ? 10 * sin(iTime * 5.5) : 2.2;
+
 	for (int i = 0; i < 26; ++i) {
 		float mag = dot(p, p);
 		p = abs(p) / mag + vec3(-.5, -.4, fieldOffsetZ);
 		float w = exp(-float(i) / 7.);
-		accum += w * exp(-str * pow(abs(mag - prev), 2.2));
+		accum += w * exp(-str * pow(abs(mag - prev), fieldExp));
 		tw += w;
 		prev = mag;
 	}
@@ -49,11 +62,13 @@ float field2(in vec3 p, float s) {
 	float accum = s/4.;
 	float prev = 0.;
 	float tw = 0.;
+    float fieldExp = fieldWave1 ? 10 * sin(iTime * 30.0) : 2.2;
+
 	for (int i = 0; i < 18; ++i) {
 		float mag = dot(p, p);
 		p = abs(p) / mag + vec3(-.5, -.4, fieldOffsetZ);
 		float w = exp(-float(i) / 7.);
-		accum += w * exp(-str * pow(abs(mag - prev), 2.2));
+		accum += w * exp(-str * pow(abs(mag - prev), fieldExp));
 		tw += w;
 		prev = mag;
 	}
@@ -77,14 +92,15 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
 	float scaleInterp = 0.5 + 0.5 * sin(iTime);
 	float fieldScale = mix(fieldScale0, fieldScale1, scaleInterp);
 	
-	vec3 p = vec3(uvs / fieldScale, 0) + vec3(1., -1.3, 0.);
+	// vec3 p = vec3(uvs / fieldScale, 0) + vec3(1., -1.3, 0.);
+	vec3 p = vec3(uvs / fieldScale, 0) + vec3(fieldExp0, fieldExp1, 0.);
 	p += animationAmplitude * vec3(sin(animTime / 16.), sin(animTime / 12.),  sin(animTime / 128.));
 	
 	float freqs[4];
-	freqs[0] = 0.5;
-	freqs[1] = 0.6;
-	freqs[2] = 0.7;
-	freqs[3] = 0.8;
+	freqs[0] = 0.5 * freqFactor0;
+	freqs[1] = 0.6 * freqFactor1;
+	freqs[2] = 0.7 * freqFactor2;
+	freqs[3] = 0.8 * freqFactor3;
 
 	float t = field(p, freqs[2]);
 	float v = (1. - exp((abs(uv.x) - 1.) * 6.)) * (1. - exp((abs(uv.y) - 1.) * 6.));

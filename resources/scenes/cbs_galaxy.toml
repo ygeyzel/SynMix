@@ -1,6 +1,43 @@
 name = "CBSGalaxy"
 fragment_shader_filename = "cbs_galaxy.glsl"
 
+
+[[params]]
+name = "fieldExp0"
+button = "LEFT_WHEEL"
+controller.type = "CyclicController"
+controller.args = {min_value = -5.0, max_value = 5.0, step = 0.1, initial_value = 1.0}
+
+[[params]]
+name = "fieldExp1"
+button = "RIGHT_WHEEL"
+controller.type = "CyclicController"
+controller.args = {min_value = -5.0, max_value = 5.0, step = 0.1, initial_value = -1.3}
+
+[[params]]
+name = "freqFactor0"
+button = "LEFT_LENGTH"
+controller.type = "RangedController"
+controller.args = {min_value = 0.1, max_value = 10.0, step = 0.1, initial_value = 1.0}
+
+[[params]]
+name = "freqFactor1"
+button = "LEFT_DRY_WET"
+controller.type = "RangedController"
+controller.args = {min_value = 0.1, max_value = 10.0, step = 0.1, initial_value = 1.0}
+
+[[params]]
+name = "freqFactor2"
+button = "RIGHT_LENGTH"
+controller.type = "RangedController"
+controller.args = {min_value = 0.1, max_value = 10.0, step = 0.1, initial_value = 1.0}
+
+[[params]]
+name = "freqFactor3"
+button = "RIGHT_DRY_WET"
+controller.type = "RangedController"
+controller.args = {min_value = 0.1, max_value = 10.0, step = 0.1, initial_value = 1.0}
+
 [[params]]
 name = "fieldScale0"
 button = "LEFT_AMOUNT"
@@ -60,3 +97,13 @@ name = "pulseBPM"
 button = "RIGHT_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 40.0, max_value = 300.0, initial_value = 40.0}
+
+[[params]]
+name = "fieldWave0"
+button = "LEFT_FX_ON"
+controller.type = "IsPressedController"
+
+[[params]]
+name = "fieldWave1"
+button = "RIGHT_FX_ON"
+controller.type = "IsPressedController"
