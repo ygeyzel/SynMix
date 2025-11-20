@@ -59,7 +59,9 @@ class ScenesManager:
             (Button.SCROLL_CLICK, self.change_to_random_scene),
             (Button.SCROLL, self.global_ctx.adjust_time_offset),
             (Button.LEFT_MINUS, self.global_ctx.handle_decrease_speed_button),
+            (Button.RIGHT_MINUS, self.global_ctx.handle_decrease_speed_button),
             (Button.RIGHT_PLUS, self.global_ctx.handle_increase_speed_button),
+            (Button.LEFT_PLUS, self.global_ctx.handle_increase_speed_button),
         )
 
         for control_selector, afunc in binds:
