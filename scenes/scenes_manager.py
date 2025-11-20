@@ -8,11 +8,11 @@ import moderngl_window as mglw
 from pathlib import Path
 from inputs.buttons import Button
 from inputs.input_manager import MidiInputManager
-from inputs.midi import MIDI_BUTTEN_CLICK, MIDI_DEC_VALUE, MIDI_INC_VALUE
+from inputs.midi import MIDI_BUTTEN_CLICK
 from params.params import Param
 from params.valuecontrollers import controllers_registry
 from scenes.scene import Scene, update_shader_params_from_list
-from top_level.global_context import DEFAULT_TIME_PARAMS, GlobalCtx, TimeParams
+from top_level.global_context import GlobalCtx
 
 
 RESOURCES_DIR = Path("resources")
@@ -20,11 +20,6 @@ SCENES_DIR = RESOURCES_DIR / "scenes"
 SHADERS_DIR = RESOURCES_DIR / "shaders"
 SCENES_ORDER_FILE = RESOURCES_DIR / "scenes_order.json"
 POST_PROCESSING_PARAMS_FILE = SCENES_DIR / "post_processing_params.toml"
-
-
-TIME_OFFSET_STEP = 0.3
-TIME_SPEED_STEP = 0.5
-TIME_SPEED_HOLD_INTERVAL = 0.15
 
 
 class ScenesManager:
@@ -57,22 +52,14 @@ class ScenesManager:
         self.start_time = None
         pprint(self.scenes)
 
-        self.time_offset_step = TIME_OFFSET_STEP
-        self.time_speed_step = TIME_SPEED_STEP
-        self._last_time = 0.0
-        self._increase_speed_active = False
-        self._decrease_speed_active = False
-        self._increase_hold_accumulator = 0.0
-        self._decrease_hold_accumulator = 0.0
-
     def init_general_funcs_bindings(self):
         binds = (
             (Button.RIGHT_LOAD, self.change_to_next_scene),
             (Button.LEFT_LOAD, self.change_to_previous_scene),
             (Button.SCROLL_CLICK, self.change_to_random_scene),
-            (Button.SCROLL, self.adjust_time_offset),
-            (Button.LEFT_MINUS, self.handle_decrease_speed_button),
-            (Button.RIGHT_PLUS, self.handle_increase_speed_button),
+            (Button.SCROLL, self.global_ctx.adjust_time_offset),
+            (Button.LEFT_MINUS, self.global_ctx.handle_decrease_speed_button),
+            (Button.RIGHT_PLUS, self.global_ctx.handle_increase_speed_button),
         )
 
         for control_selector, afunc in binds:
@@ -201,7 +188,7 @@ class ScenesManager:
             self.load_new_scene()
             self._new_scene_index = None
 
-        self._last_time = time
+        self.global_ctx.update_last_time(time)
 
         width, height = int(resolution[0]), int(resolution[1])
 
@@ -235,7 +222,7 @@ class ScenesManager:
         # Update parameters for both passes
         self._update_params(time, frame_time, fbo_resolution)
         self._update_post_params(time, frame_time, resolution)
-        self._apply_speed_hold(frame_time)
+        self.global_ctx.apply_speed_hold(frame_time)
 
         # FIRST PASS: Render scene to FBO
         self.fbo.use()
@@ -263,7 +250,7 @@ class ScenesManager:
             return
 
         if "iTime" in self.current_prog:
-            adjusted_time = self._get_adjusted_time(time)
+            adjusted_time = self.global_ctx.get_adjusted_time(time)
             self.current_prog["iTime"].value = adjusted_time
 
         if "iResolution" in self.current_prog:
@@ -346,72 +333,3 @@ class ScenesManager:
             if param.is_reset_on_scene_change:
                 param.controller.reset()
             self.input_manager.bind_param(param)
-
-    def adjust_time_offset(self, value: int | None):
-        if value == MIDI_INC_VALUE:
-            delta = self.time_offset_step
-        elif value == MIDI_DEC_VALUE:
-            delta = -self.time_offset_step
-        else:
-            return
-
-        current = self.global_ctx.time_params or DEFAULT_TIME_PARAMS
-        print(f"Update time offset to {current.offset + delta}")
-        self._set_time_params(TimeParams(current.offset + delta, current.speed))
-
-    def handle_increase_speed_button(self, value: int | None):
-        is_pressed = value == MIDI_BUTTEN_CLICK
-        self._increase_speed_active = is_pressed
-        if not is_pressed:
-            self._increase_hold_accumulator = 0.0
-            return
-
-        if is_pressed:
-            self._update_time_speed(self.time_speed_step)
-
-    def handle_decrease_speed_button(self, value: int | None):
-        is_pressed = value == MIDI_BUTTEN_CLICK
-        self._decrease_speed_active = is_pressed
-        if not is_pressed:
-            self._decrease_hold_accumulator = 0.0
-            return
-
-        self._update_time_speed(-self.time_speed_step)
-
-    def _update_time_speed(self, delta: float):
-        if delta == 0:
-            return
-
-        current = self.global_ctx.time_params or DEFAULT_TIME_PARAMS
-        new_speed = max(-10.0, min(10.0, current.speed + delta))
-
-        if new_speed == current.speed:
-            return
-
-        current_time = self._last_time if self._last_time is not None else 0.0
-        new_offset = current.offset + current_time * (current.speed - new_speed)
-        print(f"Update time speed to {new_speed}")
-        self._set_time_params(TimeParams(new_offset, new_speed))
-
-    def _set_time_params(self, new_params: TimeParams):
-        self.global_ctx.time_params = new_params
-
-    def _get_adjusted_time(self, base_time: float) -> float:
-        params = self.global_ctx.time_params or DEFAULT_TIME_PARAMS
-        return params.offset + (base_time * params.speed)
-
-    def _apply_speed_hold(self, frame_time: float):
-        if frame_time <= 0:
-            return
-
-        if self._increase_speed_active:
-            self._increase_hold_accumulator += frame_time
-            while self._increase_hold_accumulator >= TIME_SPEED_HOLD_INTERVAL:
-                self._update_time_speed(self.time_speed_step)
-                self._increase_hold_accumulator -= TIME_SPEED_HOLD_INTERVAL
-
-        if self._decrease_speed_active:
-            self._decrease_hold_accumulator += frame_time
-            while self._decrease_hold_accumulator >= TIME_SPEED_HOLD_INTERVAL:
-                self._update_time_speed(-self.time_speed_step)
-                self._decrease_hold_accumulator -= TIME_SPEED_HOLD_INTERVAL

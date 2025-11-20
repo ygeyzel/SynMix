@@ -60,9 +60,9 @@ button = "LEFT_OUT"
 controller.type = "PersistentTimerToggleController"
 
 [[params]]
-name = "uFractDynamic"
+name = "uFractTime"
 button = "LEFT_RECORD"
-controller.type = "IsPressedController"
+controller.type = "StartTimeController"
 
 [[params]]
 name = "uFractStatic"
