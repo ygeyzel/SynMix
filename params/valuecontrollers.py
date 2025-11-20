@@ -47,9 +47,9 @@ def register_controller(
 
 
 class ValueController(ABC):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, initial_value=0.0):
         super().__init__()
-        self.initial_value = kwargs.get("initial_value", 0.0)
+        self.initial_value = initial_value
         self.value = self.initial_value
 
     def __repr__(self):
@@ -72,8 +72,8 @@ class ValueController(ABC):
 
 
 class SharedValueController(ValueController):
-    def __init__(self, shared_key: str, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, shared_key: str, initial_value=0.0):
+        super().__init__(initial_value=initial_value)
         self.shared_key = shared_key
         self.global_ctx = GlobalCtx()
 
@@ -91,12 +91,11 @@ class SharedValueController(ValueController):
 
 @register_controller("NormalizedController", ButtonType.KNOB)
 class NormalizedController(ValueController):
-    def __init__(self, min_value, max_value, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, min_value, max_value, is_pitch=False, initial_value=0.0):
+        super().__init__(initial_value=initial_value)
         self.min_value = min_value
         self.max_value = max_value
 
-        is_pitch = kwargs.get("is_pitch", False)
         self.max_input_value = MAX_PITCH if is_pitch else MIDI_MAX_VALUE
         self.min_input_value = MIN_PITCH if is_pitch else MIDI_MIN_VALUE
 
@@ -109,8 +108,8 @@ class NormalizedController(ValueController):
 
 @register_controller("LinearSegmentedController", ButtonType.KNOB)
 class LinearSegmentedController(ValueController):
-    def __init__(self, segments_points: Iterable[Tuple[float, float]], **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, segments_points: Iterable[Tuple[float, float]], initial_value=0.0):
+        super().__init__(initial_value=initial_value)
         self.segments_points = sorted(segments_points, key=lambda point: point[0])
         self.num_segments = len(self.segments_points) - 1
 
@@ -142,9 +141,9 @@ class IncDecController(ValueController):
         step: float,
         inc_value: int = MIDI_INC_VALUE,
         dec_value: int = MIDI_DEC_VALUE,
-        **kwargs,
+        initial_value=0.0,
     ):
-        super().__init__(**kwargs)
+        super().__init__(initial_value=initial_value)
         self.min_value = min_value
         self.max_value = max_value
         self.inc_value = inc_value
@@ -187,14 +186,11 @@ class CyclicController(IncDecController):
         if self.value < self.min_value:
             self.value = self.max_value - (self.min_value - self.value)
 
+
 @register_controller("ToggleController", ButtonType.CLICKABLE)
 class ToggleController(ValueController):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs, initial_value=False)
-
-    def reset(self):
-        """Reset the controller to its initial value"""
-        self.value = False
+    def __init__(self, initial_value=False):
+        super().__init__(initial_value=initial_value)
 
     def control_value(self, in_value: int):
         if in_value == MIDI_MAX_VALUE:
@@ -203,12 +199,8 @@ class ToggleController(ValueController):
 
 @register_controller("IsPressedController", ButtonType.CLICKABLE)
 class IsPressedController(ValueController):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs, initial_value=False)
-
-    def reset(self):
-        """Reset the controller to its initial value"""
-        self.value = False
+    def __init__(self):
+        super().__init__(initial_value = False)
 
     def control_value(self, in_value: int):
         self.set_value(in_value == MIDI_MAX_VALUE)
@@ -216,11 +208,11 @@ class IsPressedController(ValueController):
 
 @register_controller("PersistentTimerToggleController", ButtonType.CLICKABLE)
 class PersistentTimerToggleController(ValueController):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs, initial_value=False)
+    def __init__(self, min_time_to_reset=10.0, max_time_to_reset=600.0):
+        super().__init__(initial_value=False)
 
-        self.min_time_to_reset = kwargs.get("min_time_to_reset", 10.0)
-        self.max_time_to_reset = kwargs.get("max_time_to_reset", 600.0)
+        self.min_time_to_reset = min_time_to_reset
+        self.max_time_to_reset = max_time_to_reset
 
     def control_value(self, in_value: int):
         if in_value == MIDI_MAX_VALUE and not self.value:
@@ -235,8 +227,8 @@ class PersistentTimerToggleController(ValueController):
 
 @register_controller("StartTimeController", ButtonType.CLICKABLE)
 class StartTimeController(ValueController):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self):
+        super().__init__()
         self.click_start_time = None
 
     def control_value(self, in_value: int):

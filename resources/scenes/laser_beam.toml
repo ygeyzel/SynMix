@@ -30,7 +30,7 @@ controller.args = {min_value = 0, max_value = 0.37, initial_value = 0.2}
 name = "len_squer_b"
 button = "CROSSFADER"
 controller.type = "NormalizedController"
-controller.args = {step = 0.01, min_value = 0, max_value = 1.9, initial_value = 0.2}
+controller.args = {min_value = 0, max_value = 1.9, initial_value = 0.2}
 
 
 [[params]]
@@ -44,7 +44,7 @@ controller.args = {min_value = 0, max_value = 1, initial_value = 0.2}
 name = "width_squer_b"
 button = "LEFT_AMOUNT"
 controller.type = "NormalizedController"
-controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
+controller.args = {min_value = 0, max_value = 1, initial_value = 0.2}
 
 
 [[params]]
