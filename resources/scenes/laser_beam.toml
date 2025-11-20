@@ -1,0 +1,102 @@
+name = "LaserBeam"
+fragment_shader_filename = "laser_beam.glsl"
+
+[[params]]
+name = "radius_circle_a"
+button = "LEFT_WHEEL"
+controller.type = "RangedController"
+controller.args = {step = 0.01, min_value = 0, max_value = 0.7, initial_value = 0.2}
+
+[[params]]
+name = "radius_circle_b"
+button = "RIGHT_WHEEL"
+controller.type = "RangedController"
+controller.args = {step = 0.01, min_value = 0, max_value = 0.85, initial_value = 0.2}
+
+[[params]]
+name = "radius_circle_c"
+button = "LEFT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 0.95, initial_value = 0.5}
+
+
+[[params]]
+name = "len_squer_a"
+button = "RIGHT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0, max_value = 0.37, initial_value = 0.2}
+
+[[params]]
+name = "len_squer_b"
+button = "CROSSFADER"
+controller.type = "NormalizedController"
+controller.args = {step = 0.01, min_value = 0, max_value = 1.9, initial_value = 0.2}
+
+
+[[params]]
+name = "width_squer_a"
+button = "CUEMIX"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0, max_value = 1, initial_value = 0.2}
+
+
+[[params]]
+name = "width_squer_b"
+button = "LEFT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
+
+
+[[params]]
+name = "objectsOutlineWidth"
+button = "LEFT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 0.2}
+
+[[params]]
+name = "psychedelic"
+button = "LEFT_FX_ON"
+controller.type = "ToggleController"
+
+
+[[params]]
+name = "objectAreaShade"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.5}
+
+
+[[params]]
+name = "dimerControler"
+button = "RIGHT_IN"
+controller.type = "ToggleController"
+
+[[params]]
+name = "ringHue"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
+
+[[params]]
+name = "ringSaturation"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 1.0}
+
+[[params]]
+name = "ringHueDelta"
+button = "RIGHT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 0.1, initial_value = 0.05}
+
+[[params]]
+name = "shapeHue"
+button = "RIGHT_GAIN"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
+
+[[params]]
+name = "shapeHueDelta"
+button = "LEFT_GAIN"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 0.2, initial_value = 0.1}
