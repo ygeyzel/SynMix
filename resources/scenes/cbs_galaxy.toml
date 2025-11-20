@@ -2,16 +2,34 @@ name = "CBSGalaxy"
 fragment_shader_filename = "cbs_galaxy.glsl"
 
 [[params]]
-name = "strength"
+name = "fieldScale"
 button = "LEFT_WHEEL"
 controller.type = "RangedController"
-controller.args = {step = 0.1, min_value = 1.0, max_value = 10.0, initial_value = 10.0}
+controller.args = {step = 0.1, min_value = 2.0, max_value = 8.0, initial_value = 4.0}
 
 [[params]]
-name = "fieldScale"
-button = "RIGHT_WHEEL"
-controller.type = "RangedController"
-controller.args = {step = 0.1, min_value = 2.0, max_value = 8.0, initial_value = 4.0}
+name = "fieldOffsetZ"
+button = "CROSSFADER"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = -1.6, initial_value = -0.8}
+
+[[params]]
+name = "animationAmplitude"
+button = "LEFT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 10.0, initial_value = 0.2}
+
+[[params]]
+name = "animationPhase"
+button = "RIGHT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = {min_value = -10.0, max_value = 10.0, initial_value = 1.0}
+
+[[params]]
+name = "starPower"
+button = "RIGHT_GAIN"
+controller.type = "NormalizedController"
+controller.args = {min_value = 10.0, max_value = 80.0, initial_value = 40.0}
 
 [[params]]
 name = "colorIntensity"
@@ -26,10 +44,10 @@ controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 1.0}
 
 [[params]]
-name = "animationPhase"
+name = "strength"
 button = "LEFT_MID"
 controller.type = "NormalizedController"
-controller.args = {min_value = 0.5, max_value = 2.0, initial_value = 1.0}
+controller.args = {min_value = 3.0, max_value = 20.0, initial_value = 8.0}
 
 [[params]]
 name = "pulseBPM"

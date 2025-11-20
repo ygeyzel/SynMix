@@ -13,6 +13,9 @@ uniform float colorIntensity;
 uniform float starBrightness;
 uniform float animationPhase;
 uniform float pulseBPM;
+uniform float fieldOffsetZ;
+uniform float animationAmplitude;
+uniform float starPower;
 
 // CBS Parallax scrolling fractal galaxy
 // Inspired by JoshP's Simplicity shader
@@ -27,7 +30,7 @@ float field(in vec3 p, float s) {
 	float tw = 0.;
 	for (int i = 0; i < 26; ++i) {
 		float mag = dot(p, p);
-		p = abs(p) / mag + vec3(-.5, -.4, -1.5);
+		p = abs(p) / mag + vec3(-.5, -.4, fieldOffsetZ);
 		float w = exp(-float(i) / 7.);
 		accum += w * exp(-str * pow(abs(mag - prev), 2.2));
 		tw += w;
@@ -47,7 +50,7 @@ float field2(in vec3 p, float s) {
 	float tw = 0.;
 	for (int i = 0; i < 18; ++i) {
 		float mag = dot(p, p);
-		p = abs(p) / mag + vec3(-.5, -.4, -1.5);
+		p = abs(p) / mag + vec3(-.5, -.4, fieldOffsetZ);
 		float w = exp(-float(i) / 7.);
 		accum += w * exp(-str * pow(abs(mag - prev), 2.2));
 		tw += w;
@@ -69,7 +72,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
 	vec2 uvs = uv * iResolution.xy / max(iResolution.x, iResolution.y);
 	float animTime = iTime * animationPhase;
 	vec3 p = vec3(uvs / fieldScale, 0) + vec3(1., -1.3, 0.);
-	p += .2 * vec3(sin(animTime / 16.), sin(animTime / 12.),  sin(animTime / 128.));
+	p += animationAmplitude * vec3(sin(animTime / 16.), sin(animTime / 12.),  sin(animTime / 128.));
 	
 	float freqs[4];
 	freqs[0] = 0.5;
@@ -90,13 +93,13 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
 	vec2 seed = p.xy * 2.0;	
 	seed = floor(seed * iResolution.x);
 	vec3 rnd = nrand3( seed );
-	vec4 starcolor = vec4(pow(rnd.y, 40.0));
+	vec4 starcolor = vec4(pow(rnd.y, starPower));
 	
 	// Second Layer stars
 	vec2 seed2 = p2.xy * 2.0;
 	seed2 = floor(seed2 * iResolution.x);
 	vec3 rnd2 = nrand3( seed2 );
-	starcolor += vec4(pow(rnd2.y, 40.0));
+	starcolor += vec4(pow(rnd2.y, starPower));
 	
 	fragColor = colorIntensity * (mix(freqs[3] - .3, 1., v) * vec4(1.5 * freqs[2] * t * t * t, 1.2 * freqs[1] * t * t, freqs[3] * t, 1.0) + c2 + starcolor * starBrightness);
 }
