@@ -13,14 +13,16 @@ class Screen(mglw.WindowConfig):
     window_size = (800, 800)
     aspect_ratio = None
     resizable = True
-    resource_dir = 'resources/shaders'  # Directory containing GLSL shader files
+    resource_dir = "resources/shaders"  # Directory containing GLSL shader files
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         global_ctx = GlobalCtx()
         self.fake_midi = global_ctx.fake_midi
-        self.sm = ScenesManager(self.ctx, starting_scene_name=global_ctx.starting_scene_name)
+        self.sm = ScenesManager(
+            self.ctx, starting_scene_name=global_ctx.starting_scene_name
+        )
         self.input_manager = MidiInputManager()
 
     def on_render(self, time: float, frame_time: float):
@@ -43,4 +45,3 @@ class Screen(mglw.WindowConfig):
 
             elif action == self.wnd.keys.ACTION_RELEASE:
                 self.fake_midi.on_key_release(key)
-

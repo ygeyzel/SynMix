@@ -9,7 +9,7 @@ class Param:
         self.controller = controller
 
     def __repr__(self):
-        return f'Param({self.name}, {self.button}, {self.controller})'
+        return f"Param({self.name}, {self.button}, {self.controller})"
 
     @property
     def value(self) -> float:
@@ -17,7 +17,10 @@ class Param:
 
     @property
     def is_reset_on_scene_change(self) -> bool:
-        return self.button.value[1] != ButtonType.KNOB and not self.controller.is_persistent
+        return (
+            self.button.value[1] != ButtonType.KNOB
+            and not self.controller.is_persistent
+        )
 
     def control_param(self, value: int | float):
         self.controller.control_value(value)

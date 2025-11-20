@@ -9,7 +9,16 @@ import mido
 from pyglet.window import key as pyglet_key
 
 from inputs.buttons import Button, ButtonType
-from inputs.midi import get_midi_event_descriptor, MIDI_DEC_VALUE, MidiEventType, MIDI_INC_VALUE, MIDI_MAX_VALUE, MIDI_MIN_VALUE, MAX_PITCH, MIN_PITCH
+from inputs.midi import (
+    get_midi_event_descriptor,
+    MIDI_DEC_VALUE,
+    MidiEventType,
+    MIDI_INC_VALUE,
+    MIDI_MAX_VALUE,
+    MIDI_MIN_VALUE,
+    MAX_PITCH,
+    MIN_PITCH,
+)
 
 
 PITCH_STEP_FACTOR = 64
@@ -32,7 +41,7 @@ class ButtonInterface(ABC):
 
     def _generate_base_message_dict(self) -> dict:
         message_dict = {
-            'type': self.event_type.value,
+            "type": self.event_type.value,
             self.selector_field: self.selector_value,
         }
 
@@ -48,9 +57,15 @@ class ButtonInterface(ABC):
         pass
 
     def keys_messages_methods(self) -> List[Tuple[Callable, Callable | None]]:
-        return [(partial(self.generate_messages, **params.pressed_params),
-                 partial(self.generate_messages, **params.released_params) if params.released_params else None)
-                for params in self.key_messages_params]
+        return [
+            (
+                partial(self.generate_messages, **params.pressed_params),
+                partial(self.generate_messages, **params.released_params)
+                if params.released_params
+                else None,
+            )
+            for params in self.key_messages_params
+        ]
 
 
 class KnobInterface(ButtonInterface):
@@ -70,10 +85,11 @@ class KnobInterface(ButtonInterface):
 
     def _step_value(self, step: int):
         new_value = self.current_value + step
-        self.current_value = max(
-            self.min_value, min(self.max_value, new_value))
+        self.current_value = max(self.min_value, min(self.max_value, new_value))
 
-    def generate_messages(self, step: int, is_inc_dir: bool, **kwargs) -> List[mido.Message]:
+    def generate_messages(
+        self, step: int, is_inc_dir: bool, **kwargs
+    ) -> List[mido.Message]:
         message_dict = self._generate_base_message_dict()
 
         dir_factor = 1 if is_inc_dir else -1
@@ -85,26 +101,30 @@ class KnobInterface(ButtonInterface):
     @property
     def key_messages_params(self) -> List[KeyMessageParams]:
         return [
+            KeyMessageParams(pressed_params={"is_inc_dir": True}, released_params=None),
             KeyMessageParams(
-                pressed_params={'is_inc_dir': True}, released_params=None),
-            KeyMessageParams(
-                pressed_params={'is_inc_dir': False}, released_params=None),
+                pressed_params={"is_inc_dir": False}, released_params=None
+            ),
         ]
 
 
 class ScrollerInterface(ButtonInterface):
-    def generate_messages(self, is_inc_dir: bool, repeats: int, **kwargs) -> List[mido.Message]:
+    def generate_messages(
+        self, is_inc_dir: bool, repeats: int, **kwargs
+    ) -> List[mido.Message]:
         message_dict = self._generate_base_message_dict()
-        message_dict[self.value_field] = MIDI_INC_VALUE if is_inc_dir else MIDI_DEC_VALUE
+        message_dict[self.value_field] = (
+            MIDI_INC_VALUE if is_inc_dir else MIDI_DEC_VALUE
+        )
         return [mido.Message(**message_dict)] * repeats
 
     @property
     def key_messages_params(self) -> List[KeyMessageParams]:
         return [
+            KeyMessageParams(pressed_params={"is_inc_dir": True}, released_params=None),
             KeyMessageParams(
-                pressed_params={'is_inc_dir': True}, released_params=None),
-            KeyMessageParams(
-                pressed_params={'is_inc_dir': False}, released_params=None),
+                pressed_params={"is_inc_dir": False}, released_params=None
+            ),
         ]
 
 
@@ -126,8 +146,9 @@ class ClickableInterface(ButtonInterface):
     @property
     def key_messages_params(self) -> List[KeyMessageParams]:
         return [
-            KeyMessageParams(pressed_params={'is_on': True}, released_params={
-                             'is_on': False}),
+            KeyMessageParams(
+                pressed_params={"is_on": True}, released_params={"is_on": False}
+            ),
         ]
 
 
@@ -142,7 +163,8 @@ def interface_factory(button: Button) -> ButtonInterface:
     interface_cls = INTERFACE_BY_BUTTON_TYPE.get(button.button_type)
     if interface_cls is None:
         raise ValueError(
-            f"No interface registered for button type {button.button_type}.")
+            f"No interface registered for button type {button.button_type}."
+        )
     return interface_cls(button)
 
 
@@ -151,7 +173,7 @@ def get_key_code(key_name: str) -> int:
 
 
 def load_key_map(file_path: str) -> Dict[int, Callable]:
-    '''
+    """
     Example JSON structure:
     {
         "BUTTON_NAME_0": {
@@ -169,19 +191,20 @@ def load_key_map(file_path: str) -> Dict[int, Callable]:
         <key3>: (<method to generate message for key3 press>, <method to generate message for key3 release>),
         ...
     }
-    '''
-    with open(file_path, 'r') as f:
+    """
+    with open(file_path, "r") as f:
         config = json.load(f)
     key_map = {}
     for button_name, mapping in config.items():
         button = Button[button_name]
         interface = interface_factory(button)
         keys_messages_methods = interface.keys_messages_methods()
-        if len(mapping['keys']) != len(keys_messages_methods):
+        if len(mapping["keys"]) != len(keys_messages_methods):
             raise ValueError(
-                f"Number of keys does not match number of message methods for button '{button_name}'")
+                f"Number of keys does not match number of message methods for button '{button_name}'"
+            )
 
-        for key, methods in zip(mapping['keys'], keys_messages_methods):
+        for key, methods in zip(mapping["keys"], keys_messages_methods):
             key_code = get_key_code(key)
             key_map[key_code] = methods
 
@@ -196,12 +219,16 @@ class FakeMidi:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self, output_name='Fake MIDI Controller', key_map_file='resources/fake_midi_key_map.json'):
+    def __init__(
+        self,
+        output_name="Fake MIDI Controller",
+        key_map_file="resources/fake_midi_key_map.json",
+    ):
         # Only initialize if it's the first time
-        if not hasattr(self, '_initialized'):
+        if not hasattr(self, "_initialized"):
             self.output_name = output_name
             # Windows doesn't support virtual MIDI ports, so we'll store messages instead
-            if platform.system() == 'Windows':
+            if platform.system() == "Windows":
                 self.output = None
                 self.pending_messages = []
             else:
@@ -213,28 +240,33 @@ class FakeMidi:
             self._initialized = True
 
     def handle_keys_input(self):
-        amp = reduce(lambda s, m: s * (2 if m else 1),
-                     self.modifiers.values(), 1)
+        amp = reduce(lambda s, m: s * (2 if m else 1), self.modifiers.values(), 1)
 
-        kwargs = {'step': amp, 'is_on': True, 'repeats': amp}
-        pressed_keys_methods = [self.key_map[key][0]
-                                for key in self.held_keys if key in self.key_map]
-        relesed_keys_methods = [self.key_map[key][1]
-                                for key in self.relesed_keys if key in self.key_map and self.key_map[key][1]]
+        kwargs = {"step": amp, "is_on": True, "repeats": amp}
+        pressed_keys_methods = [
+            self.key_map[key][0] for key in self.held_keys if key in self.key_map
+        ]
+        relesed_keys_methods = [
+            self.key_map[key][1]
+            for key in self.relesed_keys
+            if key in self.key_map and self.key_map[key][1]
+        ]
 
         messages = []
         for methods in (pressed_keys_methods, relesed_keys_methods):
             for method in methods:
                 message = method(**kwargs)
                 messages += message
-            kwargs['is_on'] = False # For released keys, set is_on to False
+            kwargs["is_on"] = False  # For released keys, set is_on to False
 
         for message in messages:
             if self.output:
                 self.output.send(message)
             else:
                 # On Windows, store messages for retrieval by input manager
-                self.pending_messages.extend(message if isinstance(message, list) else [message])
+                self.pending_messages.extend(
+                    message if isinstance(message, list) else [message]
+                )
 
         for key in self.relesed_keys:
             self.held_keys.remove(key)
@@ -255,7 +287,7 @@ class FakeMidi:
 
     def get_pending_messages(self):
         """Get and clear pending MIDI messages (Windows compatibility)"""
-        if hasattr(self, 'pending_messages'):
+        if hasattr(self, "pending_messages"):
             messages = self.pending_messages.copy()
             self.pending_messages.clear()
             return messages

@@ -15,11 +15,11 @@ from scenes.scene import Scene, update_shader_params_from_list
 from top_level.global_context import DEFAULT_TIME_PARAMS, GlobalCtx, TimeParams
 
 
-RESOURCES_DIR = Path('resources')
-SCENES_DIR = RESOURCES_DIR / 'scenes'
-SHADERS_DIR = RESOURCES_DIR / 'shaders'
-SCENES_ORDER_FILE = RESOURCES_DIR / 'scenes_order.json'
-POST_PROCESSING_PARAMS_FILE = SCENES_DIR / 'post_processing_params.toml'
+RESOURCES_DIR = Path("resources")
+SCENES_DIR = RESOURCES_DIR / "scenes"
+SHADERS_DIR = RESOURCES_DIR / "shaders"
+SCENES_ORDER_FILE = RESOURCES_DIR / "scenes_order.json"
+POST_PROCESSING_PARAMS_FILE = SCENES_DIR / "post_processing_params.toml"
 
 
 TIME_OFFSET_STEP = 0.3
@@ -43,8 +43,15 @@ class ScenesManager:
 
         self.init_general_funcs_bindings()
         self.init_post_processing()
-        self.current_scene_index = 0 if starting_scene_name is None else self.scenes.index(
-            next(scene for scene in self.scenes if scene.name == starting_scene_name))
+        self.current_scene_index = (
+            0
+            if starting_scene_name is None
+            else self.scenes.index(
+                next(
+                    scene for scene in self.scenes if scene.name == starting_scene_name
+                )
+            )
+        )
         self._new_scene_index = self.current_scene_index
         self.load_new_scene()
         self.start_time = None
@@ -74,20 +81,21 @@ class ScenesManager:
     def init_post_processing(self):
         """Initialize post-processing shader and FBO"""
         # Load post-processing shader
-        vertex_path = SHADERS_DIR / 'vertex.glsl'
-        fragment_path = SHADERS_DIR / 'post_processing.glsl'
-        
-        with open(vertex_path, 'r') as vf, open(fragment_path, 'r') as ff:
+        vertex_path = SHADERS_DIR / "vertex.glsl"
+        fragment_path = SHADERS_DIR / "post_processing.glsl"
+
+        with open(vertex_path, "r") as vf, open(fragment_path, "r") as ff:
             vertex_source = vf.read()
             fragment_source = ff.read()
-        
+
         # Create post-processing shader program
-        self.post_prog = self.screen_ctx.program(vertex_shader=vertex_source,
-                                                 fragment_shader=fragment_source)
-        
+        self.post_prog = self.screen_ctx.program(
+            vertex_shader=vertex_source, fragment_shader=fragment_source
+        )
+
         # Load post-processing parameters from dedicated file
         self.post_params = self._load_post_processing_params()
-        
+
         # Bind post-processing parameters to secondary bindings
         for param in self.post_params:
             self.input_manager.bind_secondary_param(param)
@@ -98,56 +106,61 @@ class ScenesManager:
 
     @staticmethod
     def _generate_param_from_file_data(data):
-        abuttom = Button.__members__[data['button']]
-        controller_type = data['controller']['type']
+        abuttom = Button.__members__[data["button"]]
+        controller_type = data["controller"]["type"]
         try:
-            controller_cls, supported_button_types = controllers_registry[controller_type]
+            controller_cls, supported_button_types = controllers_registry[
+                controller_type
+            ]
         except KeyError as exc:
             raise ValueError(
-                f"Controller '{controller_type}' is not registered.") from exc
+                f"Controller '{controller_type}' is not registered."
+            ) from exc
 
         if abuttom.button_type not in supported_button_types:
-            supported_names = ', '.join(bt.name for bt in supported_button_types)
+            supported_names = ", ".join(bt.name for bt in supported_button_types)
             raise ValueError(
                 f"Controller '{controller_type}' supports button types {{{supported_names}}}, "
-                f"but button '{abuttom.name}' is of type {abuttom.button_type.name}.")
+                f"but button '{abuttom.name}' is of type {abuttom.button_type.name}."
+            )
 
-        acontroller = controller_cls(**data['controller'].get('args', {}))
-        return Param(name=data['name'], button=abuttom, controller=acontroller)
+        acontroller = controller_cls(**data["controller"].get("args", {}))
+        return Param(name=data["name"], button=abuttom, controller=acontroller)
 
     def _load_scens_from_toml_files(self):
         for scene_file in SCENES_DIR.iterdir():
             if scene_file.name == POST_PROCESSING_PARAMS_FILE.name:
                 continue
-            if scene_file.suffix == '.toml':
-                print(f'Loading scene from file: {scene_file.name}')
-                with open(scene_file, 'rb') as f:
+            if scene_file.suffix == ".toml":
+                print(f"Loading scene from file: {scene_file.name}")
+                with open(scene_file, "rb") as f:
                     data = tomllib.load(f)
 
-                data['params'] = [
-                    self._generate_param_from_file_data(p) for p in data.get('params', [])
+                data["params"] = [
+                    self._generate_param_from_file_data(p)
+                    for p in data.get("params", [])
                 ]
                 ascene = Scene(**data)
                 self.scenes.append(ascene)
-                print(f'Scene {ascene.name} loaded')
+                print(f"Scene {ascene.name} loaded")
 
         # Reorder scenes according to scenes_order.json
         self._reorder_scenes()
 
     def _load_post_processing_params(self):
-        with open(POST_PROCESSING_PARAMS_FILE, 'rb') as f:
+        with open(POST_PROCESSING_PARAMS_FILE, "rb") as f:
             data = tomllib.load(f)
 
-        params_data = data.get('params', [])
+        params_data = data.get("params", [])
         return [self._generate_param_from_file_data(p) for p in params_data]
 
     def _reorder_scenes(self):
         """Reorder scenes according to the order specified in scenes_order.json"""
         try:
-            with open(SCENES_ORDER_FILE, 'r') as f:
+            with open(SCENES_ORDER_FILE, "r") as f:
                 config = json.load(f)
 
-            scene_order = config.get('scene_order', [])
+            scene_order = config.get("scene_order", [])
             if not scene_order:
                 return
 
@@ -166,13 +179,14 @@ class ScenesManager:
                     ordered_scenes.append(scene)
 
             self.scenes = ordered_scenes
-            print(f'Scenes reordered according to scenes_order.json')
+            print(f"Scenes reordered according to scenes_order.json")
 
         except FileNotFoundError:
-            print(f'Warning: {SCENES_ORDER_FILE} not found. Using default order.')
+            print(f"Warning: {SCENES_ORDER_FILE} not found. Using default order.")
         except (json.JSONDecodeError, KeyError) as e:
             print(
-                f'Warning: Error parsing {SCENES_ORDER_FILE}: {e}. Using default order.')
+                f"Warning: Error parsing {SCENES_ORDER_FILE}: {e}. Using default order."
+            )
 
     def render(self, time, frame_time, resolution):
         """
@@ -190,7 +204,7 @@ class ScenesManager:
         self._last_time = time
 
         width, height = int(resolution[0]), int(resolution[1])
-        
+
         # Apply resolution factor if specified
         if self.current_scene.res_factor is not None:
             fbo_width = int(width * self.current_scene.res_factor)
@@ -198,35 +212,45 @@ class ScenesManager:
         else:
             fbo_width = width
             fbo_height = height
-        
+
         # Resize FBO if needed
-        if self.fbo is None or self.fbo_texture.width != fbo_width or self.fbo_texture.height != fbo_height:
+        if (
+            self.fbo is None
+            or self.fbo_texture.width != fbo_width
+            or self.fbo_texture.height != fbo_height
+        ):
             if self.fbo is not None:
                 self.fbo.release()
             self.fbo_texture = self.screen_ctx.texture((fbo_width, fbo_height), 4)
             self.fbo_texture.filter = (self.screen_ctx.LINEAR, self.screen_ctx.LINEAR)
             self.fbo = self.screen_ctx.framebuffer([self.fbo_texture])
-        
+
         # Create FBO resolution tuple for shader (aspect ratio based on FBO dimensions)
-        fbo_resolution = (fbo_width, fbo_height, fbo_width / fbo_height if fbo_height > 0 else 1.0)
-        
+        fbo_resolution = (
+            fbo_width,
+            fbo_height,
+            fbo_width / fbo_height if fbo_height > 0 else 1.0,
+        )
+
         # Update parameters for both passes
         self._update_params(time, frame_time, fbo_resolution)
         self._update_post_params(time, frame_time, resolution)
         self._apply_speed_hold(frame_time)
-        
+
         # FIRST PASS: Render scene to FBO
         self.fbo.use()
         self.fbo.clear()
         self.quad.render(self.current_prog)
-        
+
         # SECOND PASS: Render FBO texture to screen with post-processing
         self.screen_ctx.screen.use()
         self.screen_ctx.clear()
         self.fbo_texture.use(0)
         self.quad.render(self.post_prog)
 
-    def _update_params(self, time: float, frame_time: float, resolution: Tuple[float, float, float]):
+    def _update_params(
+        self, time: float, frame_time: float, resolution: Tuple[float, float, float]
+    ):
         """
         Update shader uniforms with current parameter values for first pass
 
@@ -238,19 +262,21 @@ class ScenesManager:
         if self.current_prog is None:
             return
 
-        if 'iTime' in self.current_prog:
+        if "iTime" in self.current_prog:
             adjusted_time = self._get_adjusted_time(time)
-            self.current_prog['iTime'].value = adjusted_time
+            self.current_prog["iTime"].value = adjusted_time
 
-        if 'iResolution' in self.current_prog:
-            self.current_prog['iResolution'].value = resolution
+        if "iResolution" in self.current_prog:
+            self.current_prog["iResolution"].value = resolution
 
         _ = frame_time  # for future use
 
         # Update shader parameters using the scene's method
         self.current_scene.update_shader_params(self.current_prog)
 
-    def _update_post_params(self, time: float, frame_time: float, resolution: Tuple[float, float, float]):
+    def _update_post_params(
+        self, time: float, frame_time: float, resolution: Tuple[float, float, float]
+    ):
         """
         Update shader uniforms with current parameter values for second pass
 
@@ -262,11 +288,11 @@ class ScenesManager:
         if self.post_prog is None:
             return
 
-        if 'iResolution' in self.post_prog:
-            self.post_prog['iResolution'].value = resolution
+        if "iResolution" in self.post_prog:
+            self.post_prog["iResolution"].value = resolution
 
-        if 'iTime' in self.post_prog:
-            self.post_prog['iTime'].value = time
+        if "iTime" in self.post_prog:
+            self.post_prog["iTime"].value = time
 
         # Update post-processing shader parameters
         update_shader_params_from_list(self.post_prog, self.post_params)
@@ -274,28 +300,26 @@ class ScenesManager:
     def change_to_next_scene(self, value: int | None = None):
         if value is not None and value != MIDI_BUTTEN_CLICK:
             return
-        self._new_scene_index = (
-            self.current_scene_index + 1) % len(self.scenes)
+        self._new_scene_index = (self.current_scene_index + 1) % len(self.scenes)
 
     def change_to_previous_scene(self, value: int | None = None):
         if value is not None and value != MIDI_BUTTEN_CLICK:
             return
-        self._new_scene_index = (
-            self.current_scene_index - 1) % len(self.scenes)
+        self._new_scene_index = (self.current_scene_index - 1) % len(self.scenes)
 
     def change_to_random_scene(self, value: int | None = None):
         if value is not None and value != MIDI_BUTTEN_CLICK:
             return
         available_scenes = [
-            scene for scene in self.scenes if scene != self.current_scene]
+            scene for scene in self.scenes if scene != self.current_scene
+        ]
         if available_scenes:
-            self._new_scene_index = self.scenes.index(
-                random.choice(available_scenes))
+            self._new_scene_index = self.scenes.index(random.choice(available_scenes))
 
     def load_new_scene(self):
         self.current_scene_index = self._new_scene_index
         new_csene = self.current_scene
-        print(f'Change to scene {new_csene.name}')
+        print(f"Change to scene {new_csene.name}")
         self.global_ctx.reset_time_params()
 
         # Reset all post-processing parameters to initial values
@@ -311,8 +335,9 @@ class ScenesManager:
         vertex_source, fragment_source = new_csene.get_shaders()
 
         # Create shader program
-        self.current_prog = self.screen_ctx.program(vertex_shader=vertex_source,
-                                                    fragment_shader=fragment_source)
+        self.current_prog = self.screen_ctx.program(
+            vertex_shader=vertex_source, fragment_shader=fragment_source
+        )
         self.quad = mglw.geometry.quad_fs()
 
         # Bind parameters and track them for future cleanup
@@ -331,7 +356,7 @@ class ScenesManager:
             return
 
         current = self.global_ctx.time_params or DEFAULT_TIME_PARAMS
-        print(f'Update time offset to {current.offset + delta}')
+        print(f"Update time offset to {current.offset + delta}")
         self._set_time_params(TimeParams(current.offset + delta, current.speed))
 
     def handle_increase_speed_button(self, value: int | None):
@@ -365,7 +390,7 @@ class ScenesManager:
 
         current_time = self._last_time if self._last_time is not None else 0.0
         new_offset = current.offset + current_time * (current.speed - new_speed)
-        print(f'Update time speed to {new_speed}')
+        print(f"Update time speed to {new_speed}")
         self._set_time_params(TimeParams(new_offset, new_speed))
 
     def _set_time_params(self, new_params: TimeParams):

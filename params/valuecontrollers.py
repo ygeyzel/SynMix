@@ -4,28 +4,42 @@ from threading import Timer
 from typing import Any, Callable, Dict, Iterable, Tuple
 
 from inputs.buttons import ButtonType
-from inputs.midi import MIDI_DEC_VALUE, MIDI_INC_VALUE, MIDI_MAX_VALUE, MIDI_MIN_VALUE, MAX_PITCH, MIN_PITCH
+from inputs.midi import (
+    MIDI_DEC_VALUE,
+    MIDI_INC_VALUE,
+    MIDI_MAX_VALUE,
+    MIDI_MIN_VALUE,
+    MAX_PITCH,
+    MIN_PITCH,
+)
 from top_level.global_context import GlobalCtx
 
 
-controllers_registry: Dict[str, Tuple[type['ValueController'], frozenset[ButtonType]]] = {}
+controllers_registry: Dict[
+    str, Tuple[type["ValueController"], frozenset[ButtonType]]
+] = {}
 
 
 def _normalize_supported_types(
-        controller_name: str,
-        supported_button_types: Iterable[ButtonType]) -> frozenset[ButtonType]:
+    controller_name: str, supported_button_types: Iterable[ButtonType]
+) -> frozenset[ButtonType]:
     supported_set = frozenset(supported_button_types)
     if not supported_set:
         raise ValueError(
-            f"Controller '{controller_name}' must declare at least one supported button type.")
+            f"Controller '{controller_name}' must declare at least one supported button type."
+        )
 
     return supported_set
 
 
-def register_controller(name: str, *supported_button_types: ButtonType) -> Callable[[type['ValueController']], type['ValueController']]:
-    def decorator(cls: type['ValueController']) -> type['ValueController']:
+def register_controller(
+    name: str, *supported_button_types: ButtonType
+) -> Callable[[type["ValueController"]], type["ValueController"]]:
+    def decorator(cls: type["ValueController"]) -> type["ValueController"]:
         controllers_registry[name] = (
-            cls, _normalize_supported_types(name, supported_button_types))
+            cls,
+            _normalize_supported_types(name, supported_button_types),
+        )
         return cls
 
     return decorator
@@ -34,11 +48,11 @@ def register_controller(name: str, *supported_button_types: ButtonType) -> Calla
 class ValueController(ABC):
     def __init__(self, *args, **kwargs):
         super().__init__()
-        self.initial_value = kwargs.get('initial_value', 0.0)
+        self.initial_value = kwargs.get("initial_value", 0.0)
         self.value = self.initial_value
 
     def __repr__(self):
-        return f'{self.__class__.__name__}({self.__dict__})'
+        return f"{self.__class__.__name__}({self.__dict__})"
 
     def set_value(self, value: Any):
         self.value = value
@@ -74,24 +88,25 @@ class SharedValueController(ValueController):
         self.global_ctx.shared_values[self.shared_key] = new_value
 
 
-@register_controller('NormalizedController', ButtonType.KNOB)
+@register_controller("NormalizedController", ButtonType.KNOB)
 class NormalizedController(ValueController):
     def __init__(self, min_value, max_value, **kwargs):
         super().__init__(**kwargs)
         self.min_value = min_value
         self.max_value = max_value
 
-        is_pitch = kwargs.get('is_pitch', False)
+        is_pitch = kwargs.get("is_pitch", False)
         self.max_input_value = MAX_PITCH if is_pitch else MIDI_MAX_VALUE
         self.min_input_value = MIN_PITCH if is_pitch else MIDI_MIN_VALUE
 
     def control_value(self, in_value: int):
         normalized_value = self.min_value + (in_value - self.min_input_value) * (
-            self.max_value - self.min_value) / (self.max_input_value - self.min_input_value)
+            self.max_value - self.min_value
+        ) / (self.max_input_value - self.min_input_value)
         self.set_value(normalized_value)
 
 
-@register_controller('LinearSegmentedController', ButtonType.KNOB)
+@register_controller("LinearSegmentedController", ButtonType.KNOB)
 class LinearSegmentedController(ValueController):
     def __init__(self, segments_points: Iterable[Tuple[float, float]], **kwargs):
         super().__init__(**kwargs)
@@ -99,8 +114,17 @@ class LinearSegmentedController(ValueController):
         self.num_segments = len(self.segments_points) - 1
 
     def control_value(self, in_value: int):
-        segment_index = next((i for i, point in enumerate(self.segments_points)
-                              if point[0] >= in_value), self.num_segments) - 1
+        segment_index = (
+            next(
+                (
+                    i
+                    for i, point in enumerate(self.segments_points)
+                    if point[0] >= in_value
+                ),
+                self.num_segments,
+            )
+            - 1
+        )
 
         x0, y0 = self.segments_points[segment_index]
         x1, y1 = self.segments_points[segment_index + 1]
@@ -110,7 +134,15 @@ class LinearSegmentedController(ValueController):
 
 
 class IncDecController(ValueController):
-    def __init__(self, min_value: float, max_value: float, step: float, inc_value: int = MIDI_INC_VALUE, dec_value: int = MIDI_DEC_VALUE, **kwargs):
+    def __init__(
+        self,
+        min_value: float,
+        max_value: float,
+        step: float,
+        inc_value: int = MIDI_INC_VALUE,
+        dec_value: int = MIDI_DEC_VALUE,
+        **kwargs,
+    ):
         super().__init__(**kwargs)
         self.min_value = min_value
         self.max_value = max_value
@@ -133,7 +165,7 @@ class IncDecController(ValueController):
             self.decrease()
 
 
-@register_controller('RangedController', ButtonType.SCROLLER)
+@register_controller("RangedController", ButtonType.SCROLLER)
 class RangedController(IncDecController):
     def increase(self):
         self.value = min(self.value + self.step, self.max_value)
@@ -142,7 +174,7 @@ class RangedController(IncDecController):
         self.value = max(self.value - self.step, self.min_value)
 
 
-@register_controller('CyclicController', ButtonType.SCROLLER)
+@register_controller("CyclicController", ButtonType.SCROLLER)
 class CyclicController(IncDecController):
     def increase(self):
         self.value += self.step
@@ -155,7 +187,7 @@ class CyclicController(IncDecController):
             self.value = self.max_value - (self.min_value - self.value)
 
 
-@register_controller('ToggleController', ButtonType.CLICKABLE)
+@register_controller("ToggleController", ButtonType.CLICKABLE)
 class ToggleController(ValueController):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -171,7 +203,7 @@ class ToggleController(ValueController):
             self.set_value(not self.value)
 
 
-@register_controller('IsPressedController', ButtonType.CLICKABLE)
+@register_controller("IsPressedController", ButtonType.CLICKABLE)
 class IsPressedController(ValueController):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -186,15 +218,15 @@ class IsPressedController(ValueController):
         self.set_value(in_value == MIDI_MAX_VALUE)
 
 
-@register_controller('PersistentTimerToggleController', ButtonType.CLICKABLE)
+@register_controller("PersistentTimerToggleController", ButtonType.CLICKABLE)
 class PersistentTimerToggleController(ValueController):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.initial_value = False
         self.value = False
 
-        self.min_time_to_reset = kwargs.get('min_time_to_reset', 10.0)
-        self.max_time_to_reset = kwargs.get('max_time_to_reset', 600.0)
+        self.min_time_to_reset = kwargs.get("min_time_to_reset", 10.0)
+        self.max_time_to_reset = kwargs.get("max_time_to_reset", 600.0)
 
     def control_value(self, in_value: int):
         if in_value == MIDI_MAX_VALUE and not self.value:
@@ -205,4 +237,3 @@ class PersistentTimerToggleController(ValueController):
     @property
     def is_persistent(self) -> bool:
         return True
-

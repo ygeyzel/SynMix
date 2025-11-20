@@ -17,20 +17,23 @@ class MidiInputManager:
 
         return cls._instance
 
-    def __init__(self, input_subname: str = ''):
-        if not hasattr(self, '_initialized'):
+    def __init__(self, input_subname: str = ""):
+        if not hasattr(self, "_initialized"):
             self.scenes_change_funcs = None
             self.param_bindings: dict[MidiGetter, Param] = {}
             self.secondary_param_bindings: dict[MidiGetter, Param] = {}
-            self.general_funcs_bindings: dict[MidiGetter, Callable[[int], None]] = {
-            }
+            self.general_funcs_bindings: dict[MidiGetter, Callable[[int], None]] = {}
             self.fake_midi = None
             self.midi_input = None
 
             # Check if we're dealing with fake MIDI on Windows
-            if input_subname == 'Fake MIDI Controller' and platform.system() == 'Windows':
+            if (
+                input_subname == "Fake MIDI Controller"
+                and platform.system() == "Windows"
+            ):
                 # Import here to avoid circular import
                 from top_level.global_context import GlobalCtx
+
                 global_ctx = GlobalCtx()
                 self.fake_midi = global_ctx.fake_midi
             else:
@@ -39,11 +42,13 @@ class MidiInputManager:
                         name for name in mido.get_input_names() if input_subname in name
                     )
                     self.midi_input = mido.open_input(
-                        midi_input_name, callback=self._handle_midi_input)
+                        midi_input_name, callback=self._handle_midi_input
+                    )
 
                 except StopIteration:
                     raise ValueError(
-                        f"No MIDI input found with subname: {input_subname=} in {mido.get_input_names()}. You may want to use --fakemidi")
+                        f"No MIDI input found with subname: {input_subname=} in {mido.get_input_names()}. You may want to use --fakemidi"
+                    )
 
             self._initialized = True
 
@@ -56,9 +61,14 @@ class MidiInputManager:
     def unbind_params(self):
         self.param_bindings = {}
 
-    def bind_general_funcs(self, event_selector: Union[Button, MidiGetter], afunc: Callable[[int], None]):
-        midi_getter = event_selector.midi_getter if isinstance(
-            event_selector, Button) else event_selector
+    def bind_general_funcs(
+        self, event_selector: Union[Button, MidiGetter], afunc: Callable[[int], None]
+    ):
+        midi_getter = (
+            event_selector.midi_getter
+            if isinstance(event_selector, Button)
+            else event_selector
+        )
         self.general_funcs_bindings[midi_getter] = afunc
 
     def _handle_midi_input(self, event_msg: mido.Message):
@@ -71,7 +81,8 @@ class MidiInputManager:
             event_selector = MidiGetter(event_type, selector_value)
 
             binded_param = self.param_bindings.get(
-                event_selector) or self.secondary_param_bindings.get(event_selector)
+                event_selector
+            ) or self.secondary_param_bindings.get(event_selector)
             binded_func = self.general_funcs_bindings.get(event_selector)
 
             if not binded_param and not binded_func:

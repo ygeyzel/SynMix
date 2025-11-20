@@ -4,17 +4,17 @@ from pathlib import Path
 from params.params import Param
 
 
-SHADERS_DIR = Path('resources') / 'shaders'
+SHADERS_DIR = Path("resources") / "shaders"
 
 
 def _values_changed(org_value, new_value):
     """
     Check if two values are significantly different
-    
+
     Args:
         org_value: Original value
         new_value: New value
-        
+
     Returns:
         True if values have changed, False otherwise
     """
@@ -25,34 +25,36 @@ def _values_changed(org_value, new_value):
             values_changed = abs(org_value - new_value) > 1e-6
 
         # For sequences (vectors, tuples, lists)
-        elif hasattr(org_value, '__len__') and hasattr(new_value, '__len__'):
+        elif hasattr(org_value, "__len__") and hasattr(new_value, "__len__"):
             if len(org_value) == len(new_value):
-                values_changed = any(abs(a - b) > 1e-6 for a, b in zip(org_value, new_value))
+                values_changed = any(
+                    abs(a - b) > 1e-6 for a, b in zip(org_value, new_value)
+                )
             else:
                 values_changed = True
 
         # For other types, use direct comparison
         else:
-            values_changed = (org_value != new_value)
+            values_changed = org_value != new_value
 
     except (TypeError, AttributeError):
         # Fallback to direct comparison if numeric operations fail
         values_changed = org_value != new_value
-    
+
     return values_changed
 
 
 def update_shader_params_from_list(shader_program, params):
     """
     Update shader uniforms with current parameter values from a list of params
-    
+
     Args:
         shader_program: The shader program to update
         params: List of Param objects to update
     """
     if shader_program is None:
         return
-    
+
     for param in params:
         if param.name in shader_program:
             shader_param = shader_program[param.name]
@@ -67,7 +69,14 @@ def update_shader_params_from_list(shader_program, params):
 class Scene:
     """A class for common shader based visual scene functionality"""
 
-    def __init__(self, name: str, params: List[Param], fragment_shader_filename: str, vertex_shader_filename: str = 'vertex.glsl', res_factor: float = None):
+    def __init__(
+        self,
+        name: str,
+        params: List[Param],
+        fragment_shader_filename: str,
+        vertex_shader_filename: str = "vertex.glsl",
+        res_factor: float = None,
+    ):
         self.name = name
         self.params = params
         self.fragment_shader_filename = fragment_shader_filename
@@ -75,7 +84,7 @@ class Scene:
         self.res_factor = res_factor
 
     def __repr__(self):
-        return f'Scene({self.name}: shaders=[{self.fragment_shader_filename},{self.vertex_shader_filename}], params:{[p for p in self.params]})'
+        return f"Scene({self.name}: shaders=[{self.fragment_shader_filename},{self.vertex_shader_filename}], params:{[p for p in self.params]})"
 
     def __str__(self):
         return self.__repr__()
@@ -91,21 +100,23 @@ class Scene:
         fragment_path = SHADERS_DIR / self.fragment_shader_filename
 
         try:
-            with open(vertex_path, 'r') as vf, open(fragment_path, 'r') as ff:
+            with open(vertex_path, "r") as vf, open(fragment_path, "r") as ff:
                 vertex_source = vf.read()
                 fragment_source = ff.read()
                 return vertex_source, fragment_source
 
         except OSError as e:
-            raise RuntimeError(f'Failed to load shader files:\n'
-                               f"  Vertex shader: {vertex_path}\n"
-                               f"  Fragment shader: {fragment_path}\n"
-                               f"Error: {e}") from e
+            raise RuntimeError(
+                f"Failed to load shader files:\n"
+                f"  Vertex shader: {vertex_path}\n"
+                f"  Fragment shader: {fragment_path}\n"
+                f"Error: {e}"
+            ) from e
 
     def update_shader_params(self, shader_program):
         """
         Update shader uniforms with current parameter values
-        
+
         Args:
             shader_program: The shader program to update
         """
