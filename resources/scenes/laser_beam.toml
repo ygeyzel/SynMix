@@ -48,19 +48,6 @@ controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.
 
 
 [[params]]
-name = "directionDrivingAngle"
-button = "LEFT_DRY_WET"
-controller.type = "RangedController"
-controller.args = {step = 0.1, min_value = -1000000000, max_value = 1000000000, initial_value = 0}
-
-[[params]]
-name = "maxSteps"
-button = "LEFT_HIGH"
-controller.type = "NormalizedController"
-controller.args = {min_value = 1, max_value = 40, initial_value = 40}
-
-
-[[params]]
 name = "objectsOutlineWidth"
 button = "LEFT_LOW"
 controller.type = "NormalizedController"
@@ -70,21 +57,46 @@ controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 0.2}
 name = "psychedelic"
 button = "LEFT_FX_ON"
 controller.type = "ToggleController"
-# @ (At)
+
 
 [[params]]
 name = "objectAreaShade"
 button = "LEFT_MID"
 controller.type = "NormalizedController"
-controller.args = {min_value = 0.05, max_value = 1.0, initial_value = 0.05}
-# G H
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.5}
 
 
 [[params]]
 name = "dimerControler"
 button = "RIGHT_IN"
 controller.type = "ToggleController"
-# # (Pound)
 
+[[params]]
+name = "ringHue"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
 
-# radius_circle_b
+[[params]]
+name = "ringSaturation"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 1.0}
+
+[[params]]
+name = "ringHueDelta"
+button = "RIGHT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 0.1, initial_value = 0.05}
+
+[[params]]
+name = "shapeHue"
+button = "RIGHT_GAIN"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
+
+[[params]]
+name = "shapeHueDelta"
+button = "LEFT_GAIN"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 0.2, initial_value = 0.1}

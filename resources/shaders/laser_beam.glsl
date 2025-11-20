@@ -21,13 +21,16 @@ uniform float len_squer_b;
 uniform float width_squer_b;
 uniform float objectsOutlineWidth;
 uniform float rayAngleControler;
-uniform float directionDrivingAngle;
 uniform bool psychedelic;
 uniform bool savePlayerPose;
 uniform float objectAreaShade;
 
-uniform float maxSteps;
 uniform bool dimerControler;
+uniform float ringHue;
+uniform float ringSaturation;
+uniform float ringHueDelta;
+uniform float shapeHue;
+uniform float shapeHueDelta;
 
 float distanceToCircle(vec2 p, vec2 center, float radius) {
     return length(p - center) - radius;
@@ -36,6 +39,12 @@ float distanceToCircle(vec2 p, vec2 center, float radius) {
 float distanceToBox(vec2 p, vec2 center, vec2 halfSize) {
     vec2 d = abs(p - center) - halfSize;
     return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
+}
+
+vec3 hsv2rgb(vec3 c) {
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
 float minDistance(float d, float distToObject){
@@ -50,6 +59,23 @@ float sceneDistance(vec2 p) {
     d = min(d, distanceToBox(p, vec2(0.4,  0.1), vec2(len_squer_a, width_squer_a)));
     d = min(d, distanceToBox(p, vec2(0.9,  0.6), vec2(len_squer_b, width_squer_b)));
     return d;
+}
+
+// Returns the shape index (0-4) for the closest shape at point p
+int getShapeIndex(vec2 p) {
+    float d0 = distanceToCircle(p, vec2(-0.6,  0.4), radius_circle_a);
+    float d1 = distanceToCircle(p, vec2( 0.7, -0.5), radius_circle_b);
+    float d2 = distanceToCircle(p, vec2(-0.8, -0.55), radius_circle_c);
+    float d3 = distanceToBox(p, vec2(0.4,  0.1), vec2(len_squer_a, width_squer_a));
+    float d4 = distanceToBox(p, vec2(0.9,  0.6), vec2(len_squer_b, width_squer_b));
+    
+    float minDist = min(min(min(min(d0, d1), d2), d3), d4);
+    
+    if (abs(minDist - d0) < 0.001) return 0;
+    if (abs(minDist - d1) < 0.001) return 1;
+    if (abs(minDist - d2) < 0.001) return 2;
+    if (abs(minDist - d3) < 0.001) return 3;
+    return 4;
 }
 
 vec2 uvPos() {
@@ -76,21 +102,31 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     }
 
 
+    const float COLOR_VALUE = 1.0;
+
     float distScene = sceneDistance(uv);
     float outline = smoothstep(0.008, 0.0, abs(distScene));
-    color += vec3(objectsOutlineWidth) * outline;
-    color += step(distScene, 0.0) * vec3(objectAreaShade);
+    
+    // Calculate shape hue based on which shape is closest
+    int shapeIdx = getShapeIndex(uv);
+    float currentShapeHue = fract(shapeHue + float(shapeIdx) * shapeHueDelta);
+    vec3 outlineColor = hsv2rgb(vec3(currentShapeHue, ringSaturation, COLOR_VALUE));
+    color += outlineColor * outline * objectsOutlineWidth;
+    
+    vec3 areaColor = hsv2rgb(vec3(currentShapeHue, ringSaturation, COLOR_VALUE));
+    color += step(distScene, 0.0) * areaColor * objectAreaShade;
 
     const float MAXCIRCLEDIST = 10;
     const float MAX_DIST = 3.0;
     const float EPSILON = 0.001;
+    const int MAX_STEPS = 40;
     float travel = 0.0;
     float pixelSize = 1.5 / iResolution.y;
 
     vec2 hitPosition;
     bool hit = false;
 
-    for (int step = 0; step < int(maxSteps); step++) {
+    for (int step = 0; step < MAX_STEPS; step++) {
         vec2 currentPos = rayOrigin + rayDir * travel;
         float distToScene = sceneDistance(currentPos);
 
@@ -101,8 +137,12 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
             dimer = sin(iTime * 10.0) * 0.5 + 1.5;
         }
         
+        // Calculate HSV color for this ring - constant hue based on step
+        float hue = fract(ringHue + float(step) * ringHueDelta);
+        vec3 ringColor = hsv2rgb(vec3(hue, ringSaturation, COLOR_VALUE));
+        
         float ringLine = smoothstep(pixelSize * 3.0, dimer, ring);
-        color += vec3(0.8) * ringLine * 0.5;
+        color += ringColor * ringLine * 0.5;
 
         travel += distToScene;
         if (distToScene < EPSILON) { hit = true; hitPosition = currentPos; break; }
