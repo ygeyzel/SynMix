@@ -3,15 +3,21 @@ fragment_shader_filename = "quaternion_fractal.glsl"
 res_factor = 0.5
 
 [[params]]
-name = "animationSpeed"
+name = "mandelbrotScale0"
 button = "LEFT_WHEEL"
-controller.type = "RangedController"
-controller.args = {step = 0.01, min_value = 0.0, max_value = 2.0, initial_value = 1.0}
+controller.type = "CyclicController"
+controller.args = {min_value = -10.0, max_value = 10.0, step=0.1, initial_value = 0.35}
+
+[[params]]
+name = "mandelbrotScale1"
+button = "RIGHT_WHEEL"
+controller.type = "CyclicController"
+controller.args = {min_value = -10.0, max_value = 10.0, step=0.1, initial_value = 0.35}
 
 [[params]]
 name = "shellIntensity"
-button = "RIGHT_WHEEL"
-controller.type = "RangedController"
+button = "LEFT_AMOUNT"
+controller.type = "NormalizedController"
 controller.args = {step = 0.01, min_value = 0.0, max_value = 3.0, initial_value = 1.0}
 
 [[params]]
@@ -22,7 +28,7 @@ controller.args = {min_value = 0.0, max_value = 2.0, initial_value = 1.0}
 
 [[params]]
 name = "colorVariation"
-button = "LEFT_MID"
+button = "LEFT_GAIN"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 3.0, initial_value = 1.0}
 
@@ -33,19 +39,39 @@ controller.type = "NormalizedController"
 controller.args = {min_value = 20.0, max_value = 100.0, initial_value = 60.0}
 
 [[params]]
-name = "cameraZoom"
-button = "RIGHT_HIGH"
+name = "cameraZoom0"
+button = "LEFT_LOW"
 controller.type = "NormalizedController"
-controller.args = {min_value = 0.5, max_value = 3.0, initial_value = 1.0}
+controller.args = {min_value = 0.1, max_value = 30.0, initial_value = 1.0}
+
+[[params]]
+name = "cameraZoom1"
+button = "RIGHT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.1, max_value = 30.0, initial_value = 1.0}
+
+[[params]]
+name = "zoomFreq"
+button = "CUEMIX"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.1, max_value = 10.0, initial_value = 0.5}
 
 [[params]]
 name = "detailLevel"
 button = "RIGHT_MID"
 controller.type = "NormalizedController"
-controller.args = {min_value = 0.1, max_value = 1.0, initial_value = 0.5}
+controller.args = {min_value = 0.1, max_value = 5.0, initial_value = 0.5}
 
 [[params]]
 name = "colorIntensity"
-button = "RIGHT_LOW"
+button = "RIGHT_GAIN"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.2, max_value = 2.0, initial_value = 1.0}
+
+
+[[params]]
+name = "initSc"
+button = "RIGHT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.1, max_value = 10.0, initial_value = 1.0}
+

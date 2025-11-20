@@ -7,14 +7,18 @@ uniform vec3 iResolution;
 uniform float iTime;
 
 // Controllable parameters
-uniform float animationSpeed;
 uniform float shellIntensity;
 uniform float rotationFactor;
 uniform float colorVariation;
 uniform float raycastSteps;
-uniform float cameraZoom;
+uniform float cameraZoom0;
+uniform float cameraZoom1;
+uniform float zoomFreq;
 uniform float detailLevel;
+uniform float mandelbrotScale0;
+uniform float mandelbrotScale1;
 uniform float colorIntensity;
+uniform float initSc;
 
 #define rot(x) mat2(cos(x+vec4(0,11,33,0)))
 
@@ -46,10 +50,11 @@ void mainImage( out vec4 O, vec2 U) {
     
     vec3 c=vec3(0);
     // Apply zoom to UV coordinates for proper field-of-view control
+    float cameraZoom = mix(cameraZoom0, cameraZoom1, 0.5 + 0.5 * sin(iTime * zoomFreq));
     vec2 uv = (U-.5*R.xy) / cameraZoom;
     vec4 rd = normalize( vec4(uv, .8*R.y, R.y))*2000.;
     
-    float sc,dotp,totdist=0., t1=.95, tt=iTime*animationSpeed;
+    float sc,dotp,totdist=0., t1=.95, tt=iTime;
     float t=0.;
  
     float sn = mod(iTime,20.)<12. ? 0. : 1.;
@@ -67,7 +72,7 @@ void mainImage( out vec4 O, vec2 U) {
         p.yzw = p.xyz; 
   
      
-        sc = 1.; 
+        sc = initSc;
 
         float rotsign = p.x > 0. ? 1. : -1.;
         p.zw *= rot( (tt/3. + sin(tt/2.) )*rotsign);
@@ -88,12 +93,13 @@ void mainImage( out vec4 O, vec2 U) {
             
             w = vec4(0);
             //quaternionic mandelbrot iterations
+            float mandelbrotScale = mix(mandelbrotScale0, mandelbrotScale1, 0.5 + 0.5 * sin(iTime * zoomFreq));
             for (float k=0.; k<4.-2.*sn2;  k++) {
                 w =
                     vec4( w.x*w.x-w.y*w.y-w.z*w.z-w.w*w.w,
                        2.*w.x*w.y,
                        2.*w.x*w.z,
-                       2.*w.x*w.w ) - .35*p*detailLevel;
+                       2.*w.x*w.w ) - mandelbrotScale*p*detailLevel;
                                   
             }
         }

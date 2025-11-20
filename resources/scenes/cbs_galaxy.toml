@@ -1,17 +1,78 @@
 name = "CBSGalaxy"
 fragment_shader_filename = "cbs_galaxy.glsl"
 
-[[params]]
-name = "strength"
-button = "LEFT_WHEEL"
-controller.type = "RangedController"
-controller.args = {step = 0.1, min_value = 1.0, max_value = 10.0, initial_value = 10.0}
 
 [[params]]
-name = "fieldScale"
+name = "fieldExp0"
+button = "LEFT_WHEEL"
+controller.type = "CyclicController"
+controller.args = {min_value = -5.0, max_value = 5.0, step = 0.1, initial_value = 1.0}
+
+[[params]]
+name = "fieldExp1"
 button = "RIGHT_WHEEL"
+controller.type = "CyclicController"
+controller.args = {min_value = -5.0, max_value = 5.0, step = 0.1, initial_value = -1.3}
+
+[[params]]
+name = "freqFactor0"
+button = "LEFT_LENGTH"
 controller.type = "RangedController"
-controller.args = {step = 0.1, min_value = 2.0, max_value = 8.0, initial_value = 4.0}
+controller.args = {min_value = 0.1, max_value = 10.0, step = 0.1, initial_value = 1.0}
+
+[[params]]
+name = "freqFactor1"
+button = "LEFT_DRY_WET"
+controller.type = "RangedController"
+controller.args = {min_value = 0.1, max_value = 10.0, step = 0.1, initial_value = 1.0}
+
+[[params]]
+name = "freqFactor2"
+button = "RIGHT_LENGTH"
+controller.type = "RangedController"
+controller.args = {min_value = 0.1, max_value = 10.0, step = 0.1, initial_value = 1.0}
+
+[[params]]
+name = "freqFactor3"
+button = "RIGHT_DRY_WET"
+controller.type = "RangedController"
+controller.args = {min_value = 0.1, max_value = 10.0, step = 0.1, initial_value = 1.0}
+
+[[params]]
+name = "fieldScale0"
+button = "LEFT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = {min_value = 1.0, max_value = 20.0, initial_value = 3.0}
+
+[[params]]
+name = "fieldScale1"
+button = "RIGHT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = {min_value = 1.0, max_value = 20.0, initial_value = 3.0}
+
+[[params]]
+name = "fieldOffsetZ"
+button = "CROSSFADER"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = -1.6, initial_value = -0.8}
+
+[[params]]
+name = "animationAmplitude"
+button = "LEFT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 10.0, initial_value = 0.2}
+
+[[params]]
+name = "animationPhase"
+button = "RIGHT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = {min_value = -10.0, max_value = 10.0, initial_value = 1.0}
+
+[[params]]
+name = "starPower"
+button = "RIGHT_GAIN"
+controller.type = "NormalizedController"
+controller.args = {min_value = 10.0, max_value = 80.0, initial_value = 40.0}
 
 [[params]]
 name = "colorIntensity"
@@ -26,13 +87,23 @@ controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 1.0}
 
 [[params]]
-name = "animationPhase"
+name = "strength"
 button = "LEFT_MID"
 controller.type = "NormalizedController"
-controller.args = {min_value = 0.5, max_value = 2.0, initial_value = 1.0}
+controller.args = {min_value = 3.0, max_value = 20.0, initial_value = 8.0}
 
 [[params]]
 name = "pulseBPM"
 button = "RIGHT_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 40.0, max_value = 300.0, initial_value = 40.0}
+
+[[params]]
+name = "fieldWave0"
+button = "LEFT_FX_ON"
+controller.type = "IsPressedController"
+
+[[params]]
+name = "fieldWave1"
+button = "RIGHT_FX_ON"
+controller.type = "IsPressedController"

@@ -11,7 +11,7 @@ controller.args = { step = 0.01, min_value = 0.0, max_value = 2.0 }
 name = "cameraSpeed"
 button = "RIGHT_WHEEL"
 controller.type = "CyclicController"
-controller.args = { step = 0.01, min_value = 0.0, max_value = 1.0 }
+controller.args = { step = 0.01, min_value = 0.0, max_value = 10.0 }
 
 [[params]]
 name = "cameraHeight"
@@ -33,19 +33,19 @@ controller.args = { min_value = 0.5, max_value = 3.0, initial_value = 1.0 }
 
 [[params]]
 name = "sunRotationSpeed"
-button = "RIGHT_HIGH"
+button = "LEFT_AMOUNT"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 3.0, initial_value = 1.0 }
 
 [[params]]
 name = "sunOrbit"
-button = "RIGHT_MID"
+button = "RIGHT_GAIN"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.4 }
 
 [[params]]
 name = "sunPulse"
-button = "RIGHT_LOW"
+button = "CUEMIX"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 3.0, initial_value = 1.0 }
 
@@ -69,7 +69,7 @@ controller.args = { min_value = 0.0, max_value = 0.1, initial_value = 0.025 }
 
 [[params]]
 name = "fogDensity"
-button = "RIGHT_GAIN"
+button = "RIGHT_AMOUNT"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 0.5, initial_value = 0.05 }
 
@@ -81,18 +81,18 @@ controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 1.0 }
 
 [[params]]
 name = "skyColorR"
-button = "LEFT_AMOUNT"
+button = "RIGHT_HIGH"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.25 }
 
 [[params]]
 name = "skyColorG"
-button = "RIGHT_AMOUNT"
+button = "RIGHT_MID"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.8 }
 
 [[params]]
 name = "skyColorB"
-button = "CUEMIX"
+button = "RIGHT_LOW"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.8 }
