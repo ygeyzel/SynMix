@@ -3,92 +3,68 @@ fragment_shader_filename = "laser_beam.glsl"
 
 [[params]]
 name = "radius_circle_a"
-button = "RIGHT_LENGTH"
+button = "LEFT_WHEEL"
 controller.type = "RangedController"
-controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
-# o p
+controller.args = {step = 0.01, min_value = 0, max_value = 0.7, initial_value = 0.2}
 
 [[params]]
 name = "radius_circle_b"
-button = "LEFT_LENGTH"
+button = "RIGHT_WHEEL"
 controller.type = "RangedController"
-controller.args = {step = 0.01, min_value = 0, max_value = 6.283, initial_value = 0.2}
-# q w
+controller.args = {step = 0.01, min_value = 0, max_value = 0.85, initial_value = 0.2}
 
 [[params]]
 name = "radius_circle_c"
-button = "LEFT_LOW"
+button = "LEFT_VOLUME"
 controller.type = "NormalizedController"
-controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.5}
-# V B
+controller.args = {min_value = 0.0, max_value = 0.95, initial_value = 0.5}
+
+
+[[params]]
+name = "len_squer_a"
+button = "RIGHT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0, max_value = 0.37, initial_value = 0.2}
+
+[[params]]
+name = "len_squer_b"
+button = "CROSSFADER"
+controller.type = "NormalizedController"
+controller.args = {step = 0.01, min_value = 0, max_value = 1.9, initial_value = 0.2}
+
+
+[[params]]
+name = "width_squer_a"
+button = "CUEMIX"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0, max_value = 1, initial_value = 0.2}
+
+
+[[params]]
+name = "width_squer_b"
+button = "LEFT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
+
 
 [[params]]
 name = "directionDrivingAngle"
 button = "LEFT_DRY_WET"
 controller.type = "RangedController"
 controller.args = {step = 0.1, min_value = -1000000000, max_value = 1000000000, initial_value = 0}
-# A S
-
-[[params]]
-name = "rayAngleControler"
-button = "RIGHT_WHEEL"
-controller.type = "RangedController"
-controller.args = {step = 0.1, min_value = -1000000000, max_value = 1000000000, initial_value = 0}
-# leaft right
-
 
 [[params]]
 name = "maxSteps"
 button = "LEFT_HIGH"
 controller.type = "NormalizedController"
 controller.args = {min_value = 1, max_value = 40, initial_value = 40}
-# T Y
 
 
 [[params]]
 name = "objectsOutlineWidth"
-button = "CUEMIX"
+button = "LEFT_LOW"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 0.2}
-# Z X
-
-
-[[params]]
-name = "lanth_squer_a"
-button = "RIGHT_DRY_WET"
-controller.type = "RangedController"
-controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
-# L ;
-
-[[params]]
-name = "wighth_squer_a"
-button = "SCROLL"
-controller.type = "RangedController"
-controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
-# f3 f4
-
-[[params]]
-name = "lanth_squer_b"
-button = "LEFT_GAIN"
-controller.type = "NormalizedController"
-controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
-# E R
-
-[[params]]
-name = "wighth_squer_b"
-button = "LEFT_AMOUNT"
-controller.type = "NormalizedController"
-controller.args = {step = 0.01, min_value = 0, max_value = 1, initial_value = 0.2}
-
-# D, F
-
-[[params]]
-name = "uvSpeed"
-button = "LEFT_WHEEL"
-controller.type = "RangedController"
-controller.args = {step = 0.01, min_value = -2, max_value = 2, initial_value = 0}
-
-# BACKSPACE  \(Backslash)
 
 [[params]]
 name = "psychedelic"

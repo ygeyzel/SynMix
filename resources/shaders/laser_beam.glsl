@@ -15,16 +15,14 @@ uniform vec3 iMouse;
 uniform float radius_circle_a;
 uniform float radius_circle_b;
 uniform float radius_circle_c;
-uniform float lanth_squer_a;
-uniform float wighth_squer_a;
-uniform float lanth_squer_b;
-uniform float wighth_squer_b;
+uniform float len_squer_a;
+uniform float width_squer_a;
+uniform float len_squer_b;
+uniform float width_squer_b;
 uniform float objectsOutlineWidth;
 uniform float rayAngleControler;
 uniform float directionDrivingAngle;
-uniform float uvSpeed;
 uniform bool psychedelic;
-uniform vec2 myPlayerPos; 
 uniform bool savePlayerPose;
 uniform float objectAreaShade;
 
@@ -49,8 +47,8 @@ float sceneDistance(vec2 p) {
     d = min(d, distanceToCircle(p, vec2(-0.6,  0.4), radius_circle_a));
     d = min(d, distanceToCircle(p, vec2( 0.7, -0.5), radius_circle_b));
     d = min(d, distanceToCircle(p, vec2(-0.8, -0.55), radius_circle_c));
-    d = min(d, distanceToBox(p, vec2(0.4,  0.1), vec2(lanth_squer_a, wighth_squer_a)));
-    d = min(d, distanceToBox(p, vec2(0.9,  0.6), vec2(lanth_squer_b, wighth_squer_b)));
+    d = min(d, distanceToBox(p, vec2(0.4,  0.1), vec2(len_squer_a, width_squer_a)));
+    d = min(d, distanceToBox(p, vec2(0.9,  0.6), vec2(len_squer_b, width_squer_b)));
     return d;
 }
 
@@ -61,27 +59,15 @@ vec2 uvPos() {
     return uv;
 }
 
-vec2 playerPos(vec2 uv, float rayAngle){
-    vec2 uvP = vec2 (0.0);
-    if (psychedelic == true){
-        uvP = uv;
-    }
-
-    uvP.x += (cos(directionDrivingAngle) * uvSpeed);
-    uvP.y += (sin(directionDrivingAngle) * uvSpeed);
-    return uvP;
-}
-
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
     float rayAngle = iTime;
     vec2 rayDir = normalize(vec2(cos(rayAngle), sin(rayAngle)));
 
     vec2 uv = uvPos();    
-    vec2 uvP = playerPos(uv, rayAngle);
     vec3 color = vec3(0.02);
 
-    vec2 rayOrigin = vec2(uvP);
+    vec2 rayOrigin = psychedelic ? uv : vec2(0.0);
     if(iMouse.z > 0.0){
         vec2 mousePos = iMouse.xy / iResolution.xy;
         mousePos = mousePos * 2.0 - 1.0;
