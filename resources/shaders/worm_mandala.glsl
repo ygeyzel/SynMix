@@ -5,14 +5,13 @@ in vec2 fragCoord;
 out vec4 fragColor;
 
 uniform vec3 iResolution;
-
+uniform float iTime; 
 
 uniform bool CHAR_A;
 uniform bool CHAR_C;
 uniform bool CHAR_L;
 uniform bool CHAR_X;
 
-uniform float time;
 uniform float rController;
 
 uniform float floatFragmentColor;
@@ -24,6 +23,8 @@ uniform float colerShade;
 uniform float scale;
 uniform float floatBrightness;
 int brightness = int(floatBrightness);
+uniform float frecImage;
+
 
 vec2 mouse = vec2(0,0);
 
@@ -86,7 +87,7 @@ const float AA = 2.0;
 float R = rController;
 
 vec3 circles[NCIRCLES] =
-  vec3[](vec3(0,0,1),
+  vec3[](vec3(0,0,frecImage),
          vec3(-2,1,R),
          vec3(2,1,R),
          vec3(0,0,-5));
@@ -125,15 +126,15 @@ vec3 getcolor(vec2 z0, vec2 w) {
 
 void main() {
   vec3 color = vec3(brightness);
-  vec2 w = vec2(0,-0.25) + vec2(0,cos(0.618*time));
+  vec2 w = vec2(0,-0.25) + vec2(0,cos(0.618*iTime));
   if (mouse.x > 0.0 && (!CHAR_A)) {
     w = (2.0*mouse.xy-iResolution.xy)/iResolution.y;
     w *= scale;
     if (CHAR_X) w.x = 0.0;
   }
   circles[0].xy = w;
-  circles[1].x += sin(0.5*time);
-  circles[2].x -= sin(0.5*time);
+  circles[1].x += sin(0.5*iTime);
+  circles[2].x -= sin(0.5*iTime);
   for (float i = lightness; i < AA; i++) {
     for (float j = 0.0; j < AA; j++) {
       vec2 z = (2.0*(fragCoord+vec2(i,j)/AA)-iResolution.xy)/iResolution.y;

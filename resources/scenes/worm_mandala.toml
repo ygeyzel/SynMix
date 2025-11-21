@@ -28,13 +28,6 @@ button = "RIGHT_OUT"
 controller.type = "ToggleController"
 # $ (Dollar)
 
-[[params]]
-name = "time"
-button = "LEFT_WHEEL"
-controller.type = "RangedController"
-controller.args = {step = 0.1, min_value = 0, max_value = 1000000, initial_value = 0}
-# up down
-
 
 [[params]]
 name = "rController"
@@ -91,4 +84,13 @@ button = "LEFT_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = -6, max_value = 6, initial_value = 0}
 # G H
+
+
+[[params]]
+name = "frecImage"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = -6, max_value = 9, initial_value = 1}
+# U I
+
 

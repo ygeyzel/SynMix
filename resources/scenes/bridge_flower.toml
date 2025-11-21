@@ -1,0 +1,10 @@
+name = "bridge_flower"
+fragment_shader_filename = "bridge_flower.glsl"
+
+[[params]]
+name = "time"
+button = "LEFT_WHEEL"
+controller.type = "RangedController"
+controller.args = {step = 0.1, min_value = 0.0, max_value = 1000000, initial_value = 0.0}
+# up down
+
