@@ -1,0 +1,93 @@
+name = "flower_mandala"
+fragment_shader_filename = "flower_mandala.glsl"
+
+[[params]]
+name = "CHAR_C"
+button = "LEFT_FX_SEL"
+controller.type = "ToggleController"
+# ! (Exclamation)
+
+[[params]]
+name = "CHAR_L"
+button = "LEFT_FX_ON"
+controller.type = "ToggleController"
+# @ (At)
+
+[[params]]
+name = "CHAR_M"
+button = "RIGHT_IN"
+controller.type = "ToggleController"
+# # (Pound)
+
+[[params]]
+name = "time"
+button = "LEFT_WHEEL"
+controller.type = "RangedController"
+controller.args = {step = 0.1, min_value = 0, max_value = 1000000, initial_value = 0}
+# up down
+
+[[params]]
+name = "floatColorControler"
+button = "RIGHT_WHEEL"
+controller.type = "CyclicController"
+controller.args = {step = 0.3, min_value = -60, max_value = 22, initial_value = 0}
+# left right
+
+
+[[params]]
+name = "lightness"
+button = "LEFT_GAIN"
+controller.type = "NormalizedController"
+controller.args = {step = 0.2, min_value = -4, max_value = 4, initial_value = 0}
+# E R
+
+[[params]]
+name = "scaleControler"
+button = "LEFT_DRY_WET"
+controller.type = "RangedController"
+controller.args = {step = 0.1, min_value = 0.5, max_value = 20.0, initial_value = 2.0}
+# A S
+
+
+
+[[params]]
+name = "fraction"
+button = "RIGHT_LENGTH"
+controller.type = "RangedController"
+controller.args = {step = 1, min_value = 0, max_value = 200, initial_value = 7}
+# O P
+
+
+[[params]]
+name = "floatColorFraction"
+button = "LEFT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0, max_value = 20, initial_value = 20}
+# D F
+
+
+[[params]]
+name = "floatLeafNumber"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0, max_value = 7, initial_value = 0}
+# T Y
+
+
+[[params]]
+name = "anotherColorControler"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.2, max_value = 20.0, initial_value = 10.0}
+# G H
+
+
+
+[[params]]
+name = "lineWidth"
+button = "LEFT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 0.9, initial_value = 0.7}
+# V B
+# requaier CHAR_L to be true (@)
+
