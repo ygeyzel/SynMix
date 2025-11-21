@@ -1,4 +1,4 @@
-name = "flower_mandala"
+name = "FlowerMandala"
 fragment_shader_filename = "flower_mandala.glsl"
 
 [[params]]
