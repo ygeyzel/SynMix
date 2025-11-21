@@ -88,8 +88,9 @@ class SharedValueController(ValueController):
 
 @register_controller("NormalizedController", ButtonType.KNOB)
 class NormalizedController(ValueController):
-    def __init__(self, min_value, max_value, is_pitch=False, initial_value=0.0):
-        super().__init__(initial_value=initial_value, is_persistent=True)
+    def __init__(self, min_value, max_value, is_pitch=False, initial_value=0.0, *args, **kwargs):
+        is_persistent = kwargs.pop("is_persistent", True)
+        super().__init__(initial_value=initial_value, is_persistent=is_persistent)
         self.min_value = min_value
         self.max_value = max_value
 

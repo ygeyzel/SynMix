@@ -1,5 +1,5 @@
 from params.valuecontrollers import ValueController
-from inputs.buttons import Button, ButtonType
+from inputs.buttons import Button
 
 
 class Param:
