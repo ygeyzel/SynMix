@@ -4,6 +4,7 @@ in vec2 fragCoord;
 out vec4 fragColor;
 
 uniform vec3 iResolution;
+uniform float iTime;
 uniform float time;
 
 uniform bool CHAR_C;
@@ -12,7 +13,7 @@ uniform bool CHAR_M;
 
 
 uniform float lightness;
-uniform float scaleControler;
+uniform float scale;
 uniform int fraction;
 uniform float floatColorFraction;
 int colorFraction = int(floatColorFraction);
@@ -27,6 +28,13 @@ int leafNumber = int(floatLeafNumber);
 
 uniform float lineWidth;
 
+uniform float mouse_x;
+uniform float mouse_y;
+vec2 iMouse = vec2 (mouse_x, mouse_y);
+
+uniform bool zoomMovment;
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Inversive Kaleidoscope
 // mla, 2020
@@ -37,7 +45,6 @@ uniform float lineWidth;
 // m: mouse
 ////////////////////////////////////////////////////////////////////////////////
 
-vec2 iMouse = vec2 (0,0);
 
 const float PI = 3.1415927;
 
@@ -107,7 +114,7 @@ vec3 getcolor(vec2 z0, vec2 w) {
     else break;
   }
   if (i == N) return vec3(0);
-  vec3 col = vec3(1);
+  vec3 col;
   col = hsv2rgb(vec3(float(i)/anotherColorControler,1,1));
   if (CHAR_L) {
     vec3 ccol = vec3(0);
@@ -129,10 +136,16 @@ vec3 getcolor(vec2 z0, vec2 w) {
 void main() {
   float AA = 2.0;
   vec3 color = vec3(lightness);
-  float scale = scaleControler;
   for (float i = 0.0; i < AA; i++) {
     for (float j = 0.0; j < AA; j++) {
-      vec2 z = scale*(2.0*(fragCoord+vec2(i,j)/AA)-iResolution.xy)/iResolution.y;
+      float zoom;
+      if (zoomMovment) zoom = int(iTime * 10) % 20;
+      
+      else zoom = 2.0;
+
+      vec2 z = scale*(zoom*(fragCoord+vec2(i,j)/AA)-iResolution.xy)/iResolution.y;
+
+      
       vec2 w = vec2(2.0,0.25)+vec2(-0.25*sin(0.618*time),0.5*cos(0.618*time));
       if (iMouse.x > 0.0 && (!CHAR_M)) w = scale*(2.0*iMouse.xy-iResolution.xy)/iResolution.y;
       color += getcolor(z,w);

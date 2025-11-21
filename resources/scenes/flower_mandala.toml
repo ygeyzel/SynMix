@@ -42,7 +42,7 @@ controller.args = {step = 0.2, min_value = -4, max_value = 4, initial_value = 0}
 # E R
 
 [[params]]
-name = "scaleControler"
+name = "scale"
 button = "LEFT_DRY_WET"
 controller.type = "RangedController"
 controller.args = {step = 0.1, min_value = 0.5, max_value = 20.0, initial_value = 2.0}
@@ -90,4 +90,26 @@ controller.args = {min_value = 0.0, max_value = 0.9, initial_value = 0.7}
 # V B
 # requaier CHAR_L to be true (@)
 
+
+[[params]]
+name = "mouse_x"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 500.0, max_value = 1000.0, initial_value = 0}
+# U I
+
+
+[[params]]
+name = "mouse_y"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 500.0, max_value = 1000.0, initial_value = 0}
+# J K
+
+
+[[params]]
+name = "zoomMovment"
+button = "RIGHT_PLUS"
+controller.type = "ToggleController"
+# END
 
