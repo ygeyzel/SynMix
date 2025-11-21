@@ -114,7 +114,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
         if (dimerControler == true) {
             dimer = 6.0;
         }
-        
+
         float ringLine = smoothstep(pixelSize * 3.0, dimer, ring);
         color += vec3(0.8) * ringLine * 0.5;
 
