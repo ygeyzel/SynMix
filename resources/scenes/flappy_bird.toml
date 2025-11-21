@@ -1,0 +1,2 @@
+name = "FlappyBird"
+fragment_shader_filename = "flappy_bird.glsl"
