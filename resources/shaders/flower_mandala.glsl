@@ -8,6 +8,7 @@ uniform float iTime;
 uniform float time;
 
 uniform bool CHAR_C;
+uniform float lineBrightnes;
 uniform bool CHAR_L;
 uniform bool CHAR_M;
 
@@ -33,6 +34,8 @@ uniform float mouse_y;
 vec2 iMouse = vec2 (mouse_x, mouse_y);
 
 uniform bool zoomMovment;
+uniform float floatZoomSpeed;
+int zoomSpeed = int(floatZoomSpeed);
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,6 +50,10 @@ uniform bool zoomMovment;
 
 
 const float PI = 3.1415927;
+
+int timeMunipulation(int speed, int segment){
+  return int(iTime * speed) % segment;
+}
 
 vec3 hsv2rgb(in vec3 c) {
   vec3 rgb = clamp( abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );
@@ -70,6 +77,7 @@ bool inside(vec2 z, vec3 c) {
 
 float kfact = 0.8;
 float lwidth = lineWidth;
+
 vec3 draw(float d, vec3 col, vec3 ccol, float pwidth) {
   pwidth *= 0.1; //0.25;
   col = mix(ccol,col,mix(1.0,smoothstep(0.5*lwidth,max(pwidth,lwidth),d),kfact));
@@ -117,14 +125,14 @@ vec3 getcolor(vec2 z0, vec2 w) {
   vec3 col;
   col = hsv2rgb(vec3(float(i)/anotherColorControler,1,1));
   if (CHAR_L) {
-    vec3 ccol = vec3(0);
+    vec3 ccol = vec3(lineBrightnes);
     col = drawline(z,col,ccol,l0);
     col = drawline(z,col,ccol,l1);
     col = drawcircle(z,col,ccol,c0);
     col = drawcircle(z,col,ccol,c1);
   }
   if (CHAR_C) {
-    vec3 ccol = vec3(1);
+    vec3 ccol = vec3(0);
     col = drawline(z0,col,ccol,l0);
     col = drawline(z0,col,ccol,l1);
     col = drawcircle(z0,col,ccol,c0);
@@ -139,7 +147,7 @@ void main() {
   for (float i = 0.0; i < AA; i++) {
     for (float j = 0.0; j < AA; j++) {
       float zoom;
-      if (zoomMovment) zoom = int(iTime * 10) % 20;
+      if (zoomMovment) zoom = timeMunipulation(zoomSpeed, 20);
       
       else zoom = 2.0;
 

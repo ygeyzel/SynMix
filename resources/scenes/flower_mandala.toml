@@ -113,3 +113,19 @@ button = "RIGHT_PLUS"
 controller.type = "ToggleController"
 # END
 
+
+[[params]]
+name = "floatZoomSpeed"
+button = "RIGHT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 8.0, max_value = 80.0, initial_value = 10.0}
+# N M
+
+
+[[params]]
+name = "lineBrightnes"
+button = "RIGHT_GAIN"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
+# N M
+
