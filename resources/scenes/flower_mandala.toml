@@ -39,7 +39,6 @@ name = "lightness"
 button = "LEFT_GAIN"
 controller.type = "NormalizedController"
 controller.args = { min_value = -4, max_value = 4, initial_value = 0}
-# E R
 
 [[params]]
 name = "scaleControler"
