@@ -9,7 +9,7 @@ controller.args = {}
 [[params]]
 name = "uTvError"
 button = "LEFT_CUE_2"
-controller.type = "PersistentTimerToggleController"
+controller.type = "TimerToggleController"
 controller.args = {min_time_to_reset = 3.0, max_time_to_reset = 30.0}
 
 [[params]]
