@@ -20,7 +20,7 @@ controller.type = "ToggleController"
 # # (Pound)
 
 [[params]]
-name = "time"
+name = "timeControler"
 button = "LEFT_WHEEL"
 controller.type = "RangedController"
 controller.args = {step = 0.1, min_value = 0, max_value = 1000000, initial_value = 0}
@@ -129,3 +129,9 @@ controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
 # N M
 
+
+[[params]]
+name = "flowTime"
+button = "RIGHT_FX_SEL"
+controller.type = "ToggleController"
+# % (Percent)

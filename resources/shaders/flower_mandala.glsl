@@ -5,7 +5,9 @@ out vec4 fragColor;
 
 uniform vec3 iResolution;
 uniform float iTime;
-uniform float time;
+
+uniform float timeControler;
+uniform bool flowTime;
 
 uniform bool CHAR_C;
 uniform float lineBrightnes;
@@ -38,6 +40,7 @@ uniform float floatZoomSpeed;
 int zoomSpeed = int(floatZoomSpeed);
 
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // Inversive Kaleidoscope
 // mla, 2020
@@ -50,6 +53,8 @@ int zoomSpeed = int(floatZoomSpeed);
 
 
 const float PI = 3.1415927;
+float time;
+
 
 int timeMunipulation(int speed, int segment){
   return int(iTime * speed) % segment;
@@ -105,7 +110,11 @@ vec3 getcolor(vec2 z0, vec2 w) {
   z0 += 1e-2;
   vec2 z = z0;
   float r2 = 2.0-cos(time);
-  float theta = PI/float(P);
+  float theta;
+  if (flowTime){
+      theta = PI/timeControler;
+  }
+  else theta = PI/float(P);
   vec2 l0 = vec2(0,1);
   vec2 l1 = vec2(sin(theta),-cos(theta));
   vec3 c0 = vec3(0,0,r2);
@@ -142,10 +151,15 @@ vec3 getcolor(vec2 z0, vec2 w) {
 }
 
 void main() {
+
+  if (flowTime) time = iTime;
+  else time = timeControler;
+
   float AA = 2.0;
   vec3 color = vec3(lightness);
   for (float i = 0.0; i < AA; i++) {
     for (float j = 0.0; j < AA; j++) {
+
       float zoom;
       if (zoomMovment) zoom = timeMunipulation(zoomSpeed, 20);
       
@@ -153,7 +167,6 @@ void main() {
 
       vec2 z = scale*(zoom*(fragCoord+vec2(i,j)/AA)-iResolution.xy)/iResolution.y;
 
-      
       vec2 w = vec2(2.0,0.25)+vec2(-0.25*sin(0.618*time),0.5*cos(0.618*time));
       if (iMouse.x > 0.0 && (!CHAR_M)) w = scale*(2.0*iMouse.xy-iResolution.xy)/iResolution.y;
       color += getcolor(z,w);
