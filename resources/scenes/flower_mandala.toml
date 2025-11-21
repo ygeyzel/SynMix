@@ -82,7 +82,6 @@ controller.args = {min_value = 0.2, max_value = 20.0, initial_value = 10.0}
 # G H
 
 
-
 [[params]]
 name = "lineWidth"
 button = "LEFT_LOW"
@@ -90,4 +89,5 @@ controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 0.9, initial_value = 0.7}
 # V B
 # requaier CHAR_L to be true (@)
+
 
