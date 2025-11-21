@@ -477,6 +477,7 @@ dependencies = [
     { name = "moderngl" },
     { name = "moderngl-window" },
     { name = "numpy" },
+    { name = "pillow" },
     { name = "python-rtmidi" },
 ]
 
@@ -488,6 +489,7 @@ requires-dist = [
     { name = "moderngl", specifier = ">=5.12.0" },
     { name = "moderngl-window", specifier = ">=3.1.1" },
     { name = "numpy", specifier = ">=2.3.2" },
+    { name = "pillow", specifier = ">=10.0.0" },
     { name = "python-rtmidi", specifier = ">=1.5.8" },
 ]
 
