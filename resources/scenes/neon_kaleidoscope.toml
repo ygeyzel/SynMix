@@ -1,0 +1,50 @@
+name = "neon_kaleidoscope"
+fragment_shader_filename = "neon_kaleidoscope.glsl"
+
+[[params]]
+name = "iMax"
+button = "LEFT_PITCH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 3.0, max_value = 9.0, initial_value = 6.0, is_pitch = true}
+
+[[params]]
+name = "w_d"
+button = "RIGHT_PITCH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 2.0, max_value = 25.0, initial_value = 8.0, is_pitch = true}
+
+[[params]]
+name = "phase_r"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 3.14, initial_value = 0.263}
+
+[[params]]
+name = "phase_g"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 3.14, initial_value = 0.416}
+
+[[params]]
+name = "phase_b"
+button = "LEFT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 3.14, initial_value = 0.557}
+
+[[params]]
+name = "time_dilation"
+button = "LEFT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 5.0, initial_value = 0.0}
+
+[[params]]
+name = "uv_factor"
+button = "CROSSFADER"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.5, max_value = 2.0, initial_value = 1.25}
+
+[[params]]
+name = "uvi_factor"
+button = "CUEMIX"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.5, max_value = 2.5, initial_value = 1.5}
