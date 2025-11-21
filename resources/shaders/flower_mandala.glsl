@@ -4,7 +4,7 @@ in vec2 fragCoord;
 out vec4 fragColor;
 
 uniform vec3 iResolution;
-uniform float iTime;
+uniform float time;
 
 uniform bool CHAR_C;
 uniform bool CHAR_L;
@@ -89,7 +89,7 @@ int P = fraction;
 vec3 getcolor(vec2 z0, vec2 w) {
   z0 += 1e-2;
   vec2 z = z0;
-  float r2 = 2.0-cos(iTime);
+  float r2 = 2.0-cos(time);
   float theta = PI/float(P);
   vec2 l0 = vec2(0,1);
   vec2 l1 = vec2(sin(theta),-cos(theta));
@@ -133,7 +133,7 @@ void main() {
   for (float i = 0.0; i < AA; i++) {
     for (float j = 0.0; j < AA; j++) {
       vec2 z = scale*(2.0*(fragCoord+vec2(i,j)/AA)-iResolution.xy)/iResolution.y;
-      vec2 w = vec2(2.0,0.25)+vec2(-0.25*sin(0.618*iTime),0.5*cos(0.618*iTime));
+      vec2 w = vec2(2.0,0.25)+vec2(-0.25*sin(0.618*time),0.5*cos(0.618*time));
       if (iMouse.x > 0.0 && (!CHAR_M)) w = scale*(2.0*iMouse.xy-iResolution.xy)/iResolution.y;
       color += getcolor(z,w);
     }
