@@ -1,0 +1,2 @@
+name = "Triskelion"
+fragment_shader_filename = "triskelion.glsl"
