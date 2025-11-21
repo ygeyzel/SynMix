@@ -5,6 +5,7 @@ out vec4 fragColor;
 
 // Input texture from first pass
 uniform sampler2D uTexture;
+uniform sampler2D uTexture_tv_error;
 
 // Screen resolution
 uniform vec3 iResolution;
@@ -18,6 +19,7 @@ uniform bool uInvertBlue;
 uniform bool uInvertHue;
 uniform bool uInvertSaturation;
 uniform bool uInvertValue;
+uniform bool uTvError;
 
 uniform float uWavesX;
 uniform float uWavesY;
@@ -342,5 +344,9 @@ void main() {
         color = mix(color, dvd, dvd.a);
     }
 
-    fragColor = color;
+    if (uTvError) {
+        fragColor = texture(uTexture_tv_error, uv);
+    } else {
+        fragColor = color;
+    }
 }

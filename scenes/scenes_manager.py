@@ -1,6 +1,6 @@
 import tomllib
 import json
-from typing import Tuple
+from typing import Tuple, Dict
 import random
 from pprint import pprint
 
@@ -14,10 +14,18 @@ from params.valuecontrollers import controllers_registry
 from scenes.scene import Scene, update_shader_params_from_list
 from top_level.global_context import GlobalCtx
 
+try:
+    from PIL import Image
+    import numpy as np
+    PIL_AVAILABLE = True
+except ImportError:
+    PIL_AVAILABLE = False
+
 
 RESOURCES_DIR = Path("resources")
 SCENES_DIR = RESOURCES_DIR / "scenes"
 SHADERS_DIR = RESOURCES_DIR / "shaders"
+TEXTURES_DIR = RESOURCES_DIR / "textures"
 SCENES_ORDER_FILE = RESOURCES_DIR / "scenes_order.json"
 POST_PROCESSING_PARAMS_FILE = SCENES_DIR / "post_processing_params.toml"
 
@@ -33,6 +41,7 @@ class ScenesManager:
         self.fbo = None
         self.fbo_texture = None
         self.global_ctx = GlobalCtx()
+        self.textures: Dict[str, any] = {}  # Store loaded textures
         self._load_scens_from_toml_files()
         assert len(self.scenes) > 0, "No scenes are loaded."
 
@@ -67,8 +76,49 @@ class ScenesManager:
         for control_selector, afunc in binds:
             self.input_manager.bind_general_funcs(control_selector, afunc)
 
+    def _load_textures(self):
+        """Load all images from resources/textures directory as textures"""
+        if not PIL_AVAILABLE:
+            print("Warning: PIL/Pillow not available. Textures will not be loaded.")
+            print("Install Pillow with: pip install Pillow")
+            return
+
+        if not TEXTURES_DIR.exists():
+            print(f"Warning: Textures directory {TEXTURES_DIR} does not exist.")
+            return
+
+        # Supported image formats
+        image_extensions = {".jpg", ".jpeg", ".png", ".bmp", ".tga", ".gif"}
+
+        for texture_file in TEXTURES_DIR.iterdir():
+            if texture_file.suffix.lower() in image_extensions:
+                try:
+                    # Load image with PIL
+                    if not PIL_AVAILABLE:
+                        continue
+                    # Type checker: Image and np are available when PIL_AVAILABLE is True
+                    assert Image is not None and np is not None, "PIL modules should be available"  # type: ignore
+                    img = Image.open(texture_file).convert("RGB")  # type: ignore
+                    img_data = np.array(img)  # type: ignore
+
+                    # Create texture from image data
+                    texture = self.screen_ctx.texture(img.size, 3, img_data.tobytes())
+                    texture.filter = (self.screen_ctx.LINEAR, self.screen_ctx.LINEAR)
+                    texture.build_mipmaps()
+
+                    # Store texture with filename (without extension) as key
+                    texture_name = texture_file.stem
+                    self.textures[texture_name] = texture
+                    print(f"Loaded texture: {texture_name} from {texture_file.name}")
+
+                except Exception as e:
+                    print(f"Error loading texture {texture_file.name}: {e}")
+
     def init_post_processing(self):
         """Initialize post-processing shader and FBO"""
+        # Load textures first
+        self._load_textures()
+
         # Load post-processing shader
         vertex_path = SHADERS_DIR / "vertex.glsl"
         fragment_path = SHADERS_DIR / "post_processing.glsl"
@@ -82,12 +132,51 @@ class ScenesManager:
             vertex_shader=vertex_source, fragment_shader=fragment_source
         )
 
+        # Bind textures to shader uniforms (uniforms must be declared in shader)
+        self._bind_textures_to_shader()
+
         # Load post-processing parameters from dedicated file
         self.post_params = self._load_post_processing_params()
 
         # Bind post-processing parameters to secondary bindings
         for param in self.post_params:
             self.input_manager.bind_secondary_param(param)
+
+    def _bind_textures_to_shader(self):
+        """Bind loaded textures to post-processing shader uniforms.
+        
+        Textures are bound to uniforms that are manually declared in the shader.
+        The method tries to match texture names to uniform names using common conventions:
+        - uTexture_<texture_name>
+        - <texture_name>
+        """
+        if not self.textures or not self.post_prog:
+            return
+
+        # Bind textures to texture units starting from 1 (0 is reserved for uTexture)
+        texture_unit = 1
+        for texture_name, texture in self.textures.items():
+            # Clean the texture name for uniform matching
+            clean_name = texture_name.replace("-", "_").replace(" ", "_")
+            
+            # Try different uniform name conventions
+            uniform_candidates = [
+                f"uTexture_{clean_name}",  # uTexture_tv_error
+                clean_name,  # tv_error
+            ]
+            
+            bound = False
+            for uniform_name in uniform_candidates:
+                if uniform_name in self.post_prog:
+                    texture.use(texture_unit)
+                    self.post_prog[uniform_name].value = texture_unit
+                    texture_unit += 1
+                    bound = True
+                    break
+            
+            if not bound:
+                print(f"Warning: Texture '{texture_name}' loaded but no matching uniform found in shader. "
+                      f"Declare a uniform like 'uniform sampler2D uTexture_{clean_name};' in the shader.")
 
     @property
     def current_scene(self):
@@ -235,6 +324,8 @@ class ScenesManager:
         self.screen_ctx.screen.use()
         self.screen_ctx.clear()
         self.fbo_texture.use(0)
+        # Re-bind textures in case they need to be refreshed
+        self._bind_textures_to_shader()
         self.quad.render(self.post_prog)
 
     def _update_params(
