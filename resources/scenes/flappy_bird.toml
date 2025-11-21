@@ -4,18 +4,18 @@ fragment_shader_filename = "flappy_bird.glsl"
 
 [[params]]
 name = "bounce_factor"
-button = "LEFT_PITCH"
+button = "LEFT_VOLUME"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 4.0 , initial_value = 1.0}
 
 [[params]]
 name = "help_factor"
-button = "CUEMIX"
+button = "CROSSFADER"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0 , initial_value = 0.0}
 
 [[params]]
 name = "user_height"
-button = "RIGHT_PITCH"
+button = "RIGHT_VOLUME"
 controller.type = "NormalizedController"
 controller.args = { min_value = -200.0, max_value = 800.0 , initial_value = 0.0}
