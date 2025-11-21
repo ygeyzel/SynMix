@@ -1,2 +1,21 @@
 name = "FlappyBird"
 fragment_shader_filename = "flappy_bird.glsl"
+
+
+[[params]]
+name = "bounce_factor"
+button = "LEFT_PITCH"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 4.0 , initial_value = 1.0}
+
+[[params]]
+name = "help_factor"
+button = "CUEMIX"
+controller.type = "NormalizedController"
+controller.args = { min_value = 0.0, max_value = 1.0 , initial_value = 0.0}
+
+[[params]]
+name = "user_height"
+button = "RIGHT_PITCH"
+controller.type = "NormalizedController"
+controller.args = { min_value = -200.0, max_value = 800.0 , initial_value = 0.0}

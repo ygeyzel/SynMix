@@ -8,6 +8,9 @@ uniform vec3 iResolution;
 uniform float iTime;
 
 // Controllable parameters
+uniform float bounce_factor; // 0.0 to 5.0
+uniform float help_factor; // 0.0 to 1.0
+uniform float user_height; // -200.0 to 200.0
 
 // Flappy Bird (tribute), fragment shader by movAX13h, Feb.2014
 
@@ -191,8 +194,12 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   float ch = hAt(i);                       // current height
   float nh = hAt(i + 1.0);                 // next height
   float bh = abs(60.0 * sin(iTime * 6.0)); // bounce height
+  // hero y
   float hy =
-      bh - mix(ch, nh, min(1.0, mod(sx, 400.0) * 0.005)) + 80.0; // hero y
+      bounce_factor * bh 
+      - help_factor * mix(ch, nh, min(1.0, mod(sx, 400.0) * 0.005))
+      + user_height
+      + 80.0; 
   float angle = -min(0.1, 0.002 * (bh));
   hero(col, vec2(hx, hy) - p, angle);
 
