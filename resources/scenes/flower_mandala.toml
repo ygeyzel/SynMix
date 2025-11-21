@@ -38,7 +38,7 @@ controller.args = {step = 0.3, min_value = -60, max_value = 22, initial_value = 
 name = "lightness"
 button = "LEFT_GAIN"
 controller.type = "NormalizedController"
-controller.args = {step = 0.2, min_value = -4, max_value = 4, initial_value = 0}
+controller.args = { min_value = -4, max_value = 4, initial_value = 0}
 # E R
 
 [[params]]
