@@ -1,0 +1,68 @@
+name = "Triskelion"
+fragment_shader_filename = "triskelion.glsl"
+
+[[params]]
+name = "mx"
+button = "LEFT_PITCH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.5, max_value = 1.5, initial_value = 1.0, is_pitch = true}
+
+[[params]]
+name = "my"
+button = "RIGHT_PITCH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.5, max_value = 1.5, initial_value = 1.0, is_pitch = true}
+
+[[params]]
+name = "mw"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.5, max_value = 1.5, initial_value = 1.0}
+
+[[params]]
+name = "tx"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.5, max_value = 1.5, initial_value = 1.0}
+
+[[params]]
+name = "ty"
+button = "LEFT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.5, max_value = 1.5, initial_value = 1.0}
+
+[[params]]
+name = "dp"
+button = "LEFT_VOLUME"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.75, max_value = 1.25, initial_value = 1.0}
+
+[[params]]
+name = "iMax"
+button = "CROSSFADER"
+controller.type = "NormalizedController"
+controller.args = {min_value = 10.0, max_value = 30.0, initial_value = 24.0}
+
+[[params]]
+name = "t3_factor"
+button = "CUEMIX"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 5.0, initial_value = 0.0}
+
+[[params]]
+name = "d_factor"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.5, max_value = 3.0, initial_value = 1.0}
+
+[[params]]
+name = "p_factor"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 10.0, max_value = 20.0, initial_value = 5.0}
+
+[[params]]
+name = "t_factor"
+button = "RIGHT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.9, max_value = 1.1, initial_value = 1.0}
