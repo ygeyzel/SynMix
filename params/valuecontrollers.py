@@ -47,10 +47,11 @@ def register_controller(
 
 
 class ValueController(ABC):
-    def __init__(self, initial_value=0.0):
+    def __init__(self, initial_value=0.0, is_persistent=False):
         super().__init__()
         self.initial_value = initial_value
         self.value = self.initial_value
+        self.is_persistent = is_persistent
 
     def __repr__(self):
         return f"{self.__class__.__name__}({self.__dict__})"
@@ -65,10 +66,6 @@ class ValueController(ABC):
     @abstractmethod
     def control_value(self, in_value: int):
         pass
-
-    @property
-    def is_persistent(self) -> bool:
-        return False
 
 
 class SharedValueController(ValueController):
@@ -91,8 +88,9 @@ class SharedValueController(ValueController):
 
 @register_controller("NormalizedController", ButtonType.KNOB)
 class NormalizedController(ValueController):
-    def __init__(self, min_value, max_value, is_pitch=False, initial_value=0.0):
-        super().__init__(initial_value=initial_value)
+    def __init__(self, min_value, max_value, is_pitch=False, initial_value=0.0, *args, **kwargs):
+        is_persistent = kwargs.pop("is_persistent", True)
+        super().__init__(initial_value=initial_value, is_persistent=is_persistent)
         self.min_value = min_value
         self.max_value = max_value
 
@@ -109,7 +107,7 @@ class NormalizedController(ValueController):
 @register_controller("LinearSegmentedController", ButtonType.KNOB)
 class LinearSegmentedController(ValueController):
     def __init__(self, segments_points: Iterable[Tuple[float, float]], initial_value=0.0):
-        super().__init__(initial_value=initial_value)
+        super().__init__(initial_value=initial_value, is_persistent=True)
         self.segments_points = sorted(segments_points, key=lambda point: point[0])
         self.num_segments = len(self.segments_points) - 1
 
@@ -206,10 +204,10 @@ class IsPressedController(ValueController):
         self.set_value(in_value == MIDI_MAX_VALUE)
 
 
-@register_controller("PersistentTimerToggleController", ButtonType.CLICKABLE)
-class PersistentTimerToggleController(ValueController):
-    def __init__(self, min_time_to_reset=10.0, max_time_to_reset=600.0):
-        super().__init__(initial_value=False)
+@register_controller("TimerToggleController", ButtonType.CLICKABLE)
+class TimerToggleController(ValueController):
+    def __init__(self, min_time_to_reset=10.0, max_time_to_reset=600.0, is_persistent=True):
+        super().__init__(initial_value=False, is_persistent=is_persistent)
 
         self.min_time_to_reset = min_time_to_reset
         self.max_time_to_reset = max_time_to_reset
@@ -219,10 +217,6 @@ class PersistentTimerToggleController(ValueController):
             self.set_value(True)
             time_to_reset = uniform(self.min_time_to_reset, self.max_time_to_reset)
             Timer(time_to_reset, self.reset).start()
-
-    @property
-    def is_persistent(self) -> bool:
-        return True
 
 
 @register_controller("StartTimeController", ButtonType.CLICKABLE)

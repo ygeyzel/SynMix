@@ -46,18 +46,19 @@ controller.args = {}
 name = "uWavesX"
 button = "LEFT_PITCH"
 controller.type = "NormalizedController"
-controller.args = {min_value = -50.0, max_value = 50.0, is_pitch = true}
+controller.args = {min_value = -50.0, max_value = 50.0, is_pitch = true, is_persistent = false}
 
 [[params]]
 name = "uWavesY"
 button = "RIGHT_PITCH"
 controller.type = "NormalizedController"
-controller.args = {min_value = -50.0, max_value = 50.0, is_pitch = true}
+controller.args = {min_value = -50.0, max_value = 50.0, is_pitch = true, is_persistent = false}
 
 [[params]]
 name = "uIsDisplayDVDLogo"
 button = "LEFT_OUT"
-controller.type = "PersistentTimerToggleController"
+controller.type = "TimerToggleController"
+controller.args = {is_persistent = true}
 
 [[params]]
 name = "uFractTime"
