@@ -90,3 +90,9 @@ controller.args = {min_value = 0.0, max_value = 0.9, initial_value = 0.7}
 # requaier CHAR_L to be true (@)
 
 
+[[params]]
+name = "rotationNormalized"
+button = "RIGHT_DRY_WET"
+controller.type = "CyclicController"
+controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.0, step = 0.01 }
+# L ;

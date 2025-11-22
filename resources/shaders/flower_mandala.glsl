@@ -27,6 +27,8 @@ int leafNumber = int(floatLeafNumber);
 
 uniform float lineWidth;
 
+uniform float rotationNormalized;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Inversive Kaleidoscope
 // mla, 2020
@@ -40,6 +42,18 @@ uniform float lineWidth;
 vec2 iMouse = vec2 (0,0);
 
 const float PI = 3.1415927;
+
+
+
+vec2 rotate2D(vec2 point, float angle) {
+        float cosR = cos(angle);
+        float sinR = sin(angle);
+        return vec2(
+                point.x * cosR - point.y * sinR,
+                point.x * sinR + point.y * cosR
+        );
+}
+
 
 vec3 hsv2rgb(in vec3 c) {
   vec3 rgb = clamp( abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );
@@ -80,7 +94,6 @@ vec3 drawline(vec2 z, vec3 col, vec3 ccol, vec2 line) {
   float d = abs(dot(z,line));
   return draw(d,col,ccol,fwidth(z.x));
 }
-
 
 
 
@@ -127,6 +140,10 @@ vec3 getcolor(vec2 z0, vec2 w) {
 }
 
 void main() {
+  vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.y;
+  float angle = rotationNormalized * 6.28318;
+  uv = rotate2D(uv, angle);
+  
   float AA = 2.0;
   vec3 color = vec3(lightness);
   float scale = scaleControler;
