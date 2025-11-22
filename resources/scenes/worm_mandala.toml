@@ -1,0 +1,94 @@
+name = "worm_mandala"
+fragment_shader_filename = "worm_mandala.glsl"
+
+
+
+[[params]]
+name = "CHAR_C"
+button = "LEFT_FX_SEL"
+controller.type = "ToggleController"
+# ! (Exclamation)
+
+[[params]]
+name = "CHAR_L"
+button = "LEFT_FX_ON"
+controller.type = "ToggleController"
+# @ (At)
+
+[[params]]
+name = "CHAR_A"
+button = "RIGHT_IN"
+controller.type = "ToggleController"
+# # (Pound)
+
+
+[[params]]
+name = "CHAR_X"
+button = "RIGHT_OUT"
+controller.type = "ToggleController"
+# $ (Dollar)
+
+[[params]]
+name = "time"
+button = "LEFT_WHEEL"
+controller.type = "RangedController"
+controller.args = {step = 0.1, min_value = 0, max_value = 1000000, initial_value = 0}
+# up down
+
+
+[[params]]
+name = "rController"
+button = "RIGHT_WHEEL"
+controller.type = "CyclicController"
+controller.args = {step = 0.2, min_value = -30.0, max_value = 30.0, initial_value = 10.0}
+# left right
+
+
+[[params]]
+name = "floatFragmentColor"
+button = "LEFT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = {step = 1, min_value = 0, max_value = 40, initial_value = 20}
+# D F
+
+
+[[params]]
+name = "lineWidth"
+button = "LEFT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 0.6, initial_value = 0.01}
+# V B
+# requaier CHAR_L to be true (@) or
+# requaier CHAR_C to be true (!)
+
+
+[[params]]
+name = "lightness"
+button = "LEFT_GAIN"
+controller.type = "NormalizedController"
+controller.args = {step = 0.1, min_value = -15.0, max_value = 4.0, initial_value = 0.0}
+# E R
+
+
+[[params]]
+name = "colerShade"
+button = "LEFT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.001, max_value = 20, initial_value = 0.4545}
+# D F
+
+[[params]]
+name = "scale"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.001, max_value = 20, initial_value = 4.0}
+# T Y
+
+
+[[params]]
+name = "floatBrightness"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = -6, max_value = 6, initial_value = 0}
+# G H
+

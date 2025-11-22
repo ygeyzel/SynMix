@@ -136,6 +136,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
         if (dimerControler == true) {
             dimer = sin(iTime * 10.0) * 0.5 + 1.5;
         }
+
         
         // Calculate HSV color for this ring - constant hue based on step
         float hue = fract(ringHue + float(step) * ringHueDelta);
