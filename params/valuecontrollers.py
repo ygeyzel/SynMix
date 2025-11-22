@@ -168,10 +168,10 @@ class IncDecController(ValueController):
 @register_controller("RangedController", ButtonType.SCROLLER)
 class RangedController(IncDecController):
     def increase(self):
-        self.value = min(self.value + self.step, self.max_value)
+        self.value = max(min(self.value + self.step, self.max_value), self.min_value)
 
     def decrease(self):
-        self.value = max(self.value - self.step, self.min_value)
+        self.value = min(max(self.value - self.step, self.min_value), self.max_value)
 
 
 @register_controller("CyclicController", ButtonType.SCROLLER)
