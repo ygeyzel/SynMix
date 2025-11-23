@@ -18,6 +18,12 @@ uniform float y_j;
 
 const int MAX_ITERATIONS = 128;
 
+// cosine based palette, 4 vec3 params
+vec3 palette( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
+{
+    return a + b*cos( 6.283185*(c*t+d) );
+}
+
 struct complex {
   float real;
   float imaginary;
@@ -67,13 +73,11 @@ vec2 fragCoordToXY(vec2 fragCoord) {
 }
 
 vec3 juliaColor(float v) {
-  float v0 = pow(v, 0.75);
-  return vec3(v0, 0.0, 0.0);
+  return palette(v, vec3(0.4, 0.8, 0.5), vec3(0.2, 0.2, 0.4), vec3(1.0, 2.0, 1.0), vec3(0.25, 0.00, 0.25)) * pow(v, 0.75);
 }
 
 vec3 mandelbrotColor(float v) {
-  float v0 = pow(v, 0.75);
-  return vec3(0.0, v0, 0.0);
+  return palette(v, vec3(0.8, 0.5, 0.4), vec3(0.2, 0.4, 0.2), vec3(2.0, 1.0, 1.0), vec3(0.00, 0.25, 0.25)) * pow(v, 0.75);
 }
 
 vec3 clickPointColor(float v) {
@@ -105,10 +109,10 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
       smoothstep(0.02 * 1.1, 0.02, length(clickPosition - coordinate));
 
   fragColor = vec4(
-    mandelbrotColor(mandelbrotValue)
-    + juliaColor(juliaValue)
-    + clickPointColor(clickPoint),
-    1.0);
+    clamp(mandelbrotColor(mandelbrotValue), 0.0, 1.0)
+    + clamp(juliaColor(juliaValue), 0.0, 1.0)
+    + clamp(clickPointColor(clickPoint), 0.0, 1.0)
+    , 1.0);
 }
 
 void main() {
