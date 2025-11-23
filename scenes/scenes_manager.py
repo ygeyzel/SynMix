@@ -56,10 +56,9 @@ class ScenesManager:
                 )
             )
         )
-        self._new_scene_index = self.current_scene_index
-        self.load_new_scene()
-        self.start_time = None
         pprint(self.scenes)
+        self._new_scene_index = self.current_scene_index  # triggers self.load_new_scene()
+        self.start_time = None
 
     def init_general_funcs_bindings(self):
         binds = (
@@ -399,6 +398,7 @@ class ScenesManager:
     def load_new_scene(self):
         self.current_scene_index = self._new_scene_index
         new_csene = self.current_scene
+        print("=" * 80)
         print(f"Change to scene {new_csene.name}")
         self.global_ctx.reset_time_params()
 
@@ -426,3 +426,11 @@ class ScenesManager:
             if param.is_reset_on_scene_change:
                 param.controller.reset()
             self.input_manager.bind_param(param)
+            print(
+                f"{param.name:20} {param.button.name:16}",
+                ' '.join(
+                    self.global_ctx.fake_midi.key_dict[param.button.name]
+                ) if self.global_ctx.fake_midi else ''
+            )
+        print("=" * 80)
+        

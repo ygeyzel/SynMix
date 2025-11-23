@@ -210,6 +210,11 @@ def load_key_map(file_path: str) -> Dict[int, Callable]:
 
     return key_map
 
+def load_key_dict(file_path: str) -> Dict[str, tuple[str, ...]]:
+    with open(file_path, "r") as f:
+        config = json.load(f)
+    return {button_name: tuple(button_params["keys"]) for button_name, button_params in config.items()}
+
 
 class FakeMidi:
     _instance = None
@@ -237,6 +242,7 @@ class FakeMidi:
             self.relesed_keys = set()
             self.modifiers = {}
             self.key_map = load_key_map(key_map_file)
+            self.key_dict = load_key_dict(key_map_file)
             self._initialized = True
 
     def handle_keys_input(self):
