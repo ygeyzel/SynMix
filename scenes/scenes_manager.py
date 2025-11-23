@@ -397,9 +397,9 @@ class ScenesManager:
 
     def load_new_scene(self):
         self.current_scene_index = self._new_scene_index
-        new_csene = self.current_scene
+        new_scene = self.current_scene
         print("=" * 80)
-        print(f"Change to scene {new_csene.name}")
+        print(f"Change to scene {new_scene.name}")
         self.global_ctx.reset_time_params()
 
         # Reset all post-processing parameters to initial values
@@ -412,7 +412,7 @@ class ScenesManager:
             self.current_prog.release()
 
         # Load shader source code from the scene
-        vertex_source, fragment_source = new_csene.get_shaders()
+        vertex_source, fragment_source = new_scene.get_shaders()
 
         # Create shader program
         self.current_prog = self.screen_ctx.program(
@@ -422,7 +422,7 @@ class ScenesManager:
 
         # Bind parameters and track them for future cleanup
         self.input_manager.unbind_params()
-        for param in new_csene.params:
+        for param in new_scene.params:
             if param.is_reset_on_scene_change:
                 param.controller.reset()
             self.input_manager.bind_param(param)
