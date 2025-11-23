@@ -94,11 +94,11 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   vec2 j1t = vec2(-0.51, 0.59);
   vec2 j_zoom_center = (clickPosition-j0) / (j1-j0)*(j1t-j0t)+j0t;
 
-  float juliaValue = julia(
-    coordinate * pow(2.0, -zoom_j)
-    + (vec2(x_j, y_j) - j_zoom_center) * pow(1.3, -zoom_j) + j_zoom_center,
-    clickPosition, n
-  );
+  // we add the offset, with a factor to balance its speed.
+  vec2 coordinate_j = 
+    (coordinate - j_zoom_center) * pow(2.0, -zoom_j) + j_zoom_center
+    + vec2(x_j, y_j) * pow(1.4, -zoom_j);
+  float juliaValue = julia(coordinate_j, clickPosition, n);
 
   vec2 coordinate2 = coordinate - clickPosition;
   coordinate2 = coordinate2 * pow(2.0, -zoom_m);
