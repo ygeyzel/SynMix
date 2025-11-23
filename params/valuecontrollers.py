@@ -178,9 +178,13 @@ class CyclicController(IncDecController):
         self.value += self.step
         if self.value > self.max_value:
             self.value = self.min_value + (self.value - self.max_value)
+        if self.value < self.min_value:
+            self.value = self.max_value - (self.min_value - self.value)
 
     def decrease(self):
         self.value -= self.step
+        if self.value > self.max_value:
+            self.value = self.min_value + (self.value - self.max_value)
         if self.value < self.min_value:
             self.value = self.max_value - (self.min_value - self.value)
 
