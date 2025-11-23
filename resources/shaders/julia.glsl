@@ -10,6 +10,12 @@ uniform float x;
 uniform float y;
 uniform float n;
 
+uniform float zoom_m;
+uniform float zoom_j;
+
+uniform float x_j;
+uniform float y_j;
+
 const int MAX_ITERATIONS = 128;
 
 struct complex {
@@ -76,11 +82,24 @@ vec3 clickPointColor(float v) {
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   vec2 coordinate = fragCoordToXY(fragCoord);
-  vec2 coordinate2 = fragCoordToXY(fragCoord);
   vec2 clickPosition = vec2(x, y);
 
-  float juliaValue = julia(coordinate2, clickPosition, n);
-  float mandelbrotValue = mandelbrot(coordinate, n);
+  vec2 j0 = vec2(-0.33, 0.0);
+  vec2 j0t = j0;
+  vec2 j1 = vec2(-0.77, 0.98);
+  vec2 j1t = vec2(-0.51, 0.59);
+  vec2 j_zoom_center = (clickPosition-j0) / (j1-j0)*(j1t-j0t)+j0t;
+
+  float juliaValue = julia(
+    coordinate * pow(2.0, -zoom_j)
+    + (vec2(x_j, y_j) - j_zoom_center) * pow(2.0, -zoom_j) + j_zoom_center, 
+    clickPosition, n
+  );
+
+  vec2 coordinate2 = coordinate - clickPosition;
+  coordinate2 = coordinate2 * pow(2.0, -zoom_m);
+  coordinate2 = coordinate2 + clickPosition;
+  float mandelbrotValue = mandelbrot(coordinate2, n);
 
   float clickPoint =
       smoothstep(0.02 * 1.1, 0.02, length(clickPosition - coordinate));

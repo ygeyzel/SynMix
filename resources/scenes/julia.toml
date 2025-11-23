@@ -18,3 +18,27 @@ name = "n"
 button = "LEFT_LENGTH"
 controller.type = "RangedController"
 controller.args = {min_value = 2.0, max_value = 13.0, initial_value = 2.0, step = 0.1}
+
+[[params]]
+name = "zoom_m"
+button = "RIGHT_LENGTH"
+controller.type = "RangedController"
+controller.args = {min_value = 0.0, max_value = 7.0, initial_value = 0.0, step = 0.1}
+
+[[params]]
+name = "zoom_j"
+button = "RIGHT_DRY_WET"
+controller.type = "RangedController"
+controller.args = {min_value = 0.0, max_value = 7.0, initial_value = 0.0, step = 0.1}
+
+[[params]]
+name = "x_j"
+button = "LEFT_LENGTH"
+controller.type = "RangedController"
+controller.args = {min_value = -2.0, max_value = 2.0, initial_value = 0.0, step = 0.1}
+
+[[params]]
+name = "y_j"
+button = "LEFT_DRY_WET"
+controller.type = "RangedController"
+controller.args = {min_value = -2.0, max_value = 2.0, initial_value = 0.0, step = 0.1}
