@@ -3,15 +3,15 @@ fragment_shader_filename = "neon_kaleidoscope.glsl"
 
 [[params]]
 name = "iMax"
-button = "LEFT_PITCH"
+button = "RIGHT_HIGH"
 controller.type = "NormalizedController"
-controller.args = {min_value = 0.01, max_value = 48.0, initial_value = 6.0, is_pitch = true}
+controller.args = {min_value = 0.01, max_value = 14.0, initial_value = 6.0}
 
 [[params]]
 name = "w_d"
-button = "RIGHT_PITCH"
+button = "RIGHT_MID"
 controller.type = "NormalizedController"
-controller.args = {min_value = 2.0, max_value = 25.0, initial_value = 8.0, is_pitch = true}
+controller.args = {min_value = 2.0, max_value = 25.0, initial_value = 8.0}
 
 [[params]]
 name = "phase_r"
