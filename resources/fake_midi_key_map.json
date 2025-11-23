@@ -61,8 +61,8 @@
   },
   "LEFT_LOW": {
     "keys": [
-      "V",
-      "B"
+      "B",
+      "N"
     ]
   },
   "RIGHT_HIGH": {
@@ -79,8 +79,8 @@
   },
   "RIGHT_LOW": {
     "keys": [
-      "N",
-      "M"
+      "M",
+      "COMMA"
     ]
   },
   "RIGHT_LENGTH": {
@@ -137,13 +137,13 @@
   "RIGHT_VOLUME": {
     "keys": [
       "MINUS",
-      "PLUS"
+      "EQUAL"
     ]
   },
   "CROSSFADER": {
     "keys": [
-      "PERIOD",
-      "SLASH"
+      "C",
+      "V"
     ]
   },
   "CUEMIX": {
