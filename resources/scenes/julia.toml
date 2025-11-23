@@ -1,0 +1,20 @@
+name = "Julia"
+fragment_shader_filename = "julia.glsl"
+
+[[params]]
+name = "x"
+button = "RIGHT_WHEEL"
+controller.type = "CyclicController"
+controller.args = {step = -0.002, min_value = -1.0, max_value = 1.0, initial_value = 0.0}
+
+[[params]]
+name = "y"
+button = "LEFT_WHEEL"
+controller.type = "CyclicController"
+controller.args = {step = 0.002, min_value = -1.0, max_value = 1.0, initial_value = 0.0}
+
+[[params]]
+name = "n"
+button = "LEFT_LENGTH"
+controller.type = "RangedController"
+controller.args = {min_value = 2.0, max_value = 13.0, initial_value = 2.0, step = 0.1}
