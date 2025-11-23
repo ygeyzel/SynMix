@@ -15,7 +15,7 @@ controller.args = {step = 0.002, min_value = -1.15, max_value = 1.15, initial_va
 
 [[params]]
 name = "n"
-button = "LEFT_LENGTH"
+button = "SCROLL"
 controller.type = "RangedController"
 controller.args = {min_value = 2.0, max_value = 13.0, initial_value = 2.0, step = 0.1}
 
