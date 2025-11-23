@@ -13,8 +13,8 @@
   },
   "LEFT_PITCH": {
     "keys": [
-      "QUOTELEFT",
-      "TAB"
+      "PAGEUP",
+      "PAGEDOWN"
     ]
   },
   "RIGHT_PITCH": {
