@@ -5,13 +5,13 @@ fragment_shader_filename = "julia.glsl"
 name = "x"
 button = "RIGHT_WHEEL"
 controller.type = "CyclicController"
-controller.args = {step = -0.002, min_value = -1.0, max_value = 1.0, initial_value = 0.0}
+controller.args = {step = -0.002, min_value = -2.0, max_value = 0.5, initial_value = 0.0}
 
 [[params]]
 name = "y"
 button = "LEFT_WHEEL"
 controller.type = "CyclicController"
-controller.args = {step = 0.002, min_value = -1.0, max_value = 1.0, initial_value = 0.0}
+controller.args = {step = 0.002, min_value = -1.15, max_value = 1.15, initial_value = 0.0}
 
 [[params]]
 name = "n"
