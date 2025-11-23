@@ -96,7 +96,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
   float juliaValue = julia(
     coordinate * pow(2.0, -zoom_j)
-    + (vec2(x_j, y_j) - j_zoom_center) * pow(2.0, -zoom_j) + j_zoom_center, 
+    + (vec2(x_j, y_j) - j_zoom_center) * pow(1.3, -zoom_j) + j_zoom_center,
     clickPosition, n
   );
 
