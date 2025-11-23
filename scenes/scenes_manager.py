@@ -390,10 +390,10 @@ class ScenesManager:
         if value is not None and value != MIDI_BUTTEN_CLICK:
             return
         available_scenes = [
-            scene for scene in self.scenes if scene != self.current_scene
+            idx for idx, scene in enumerate(self.scenes) if scene != self.current_scene
         ]
         if available_scenes:
-            self._new_scene_index = self.scenes.index(random.choice(available_scenes))
+            self._new_scene_index = random.choice(available_scenes)
 
     def load_new_scene(self):
         self.current_scene_index = self._new_scene_index
