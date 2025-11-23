@@ -51,13 +51,13 @@ vec3 hsv2rgb(vec3 c) {
 vec2 applyWaveDistortion(vec2 uv, float time) {
     float waveAmplitude = 0.03;
     float waveSpeed = 2.0;
-    float waveY = sin(uv.x * uWavesY + time * waveSpeed) * waveAmplitude;
-    float waveX = cos(uv.y * uWavesX + 0.7 + time * waveSpeed * 1.3) * waveAmplitude;
+    float waveY = sin(uv.x * uWavesY + time * waveSpeed) * waveAmplitude * uWavesY / 50.;
+    float waveX = cos(uv.y * uWavesX + 0.7 + time * waveSpeed * 1.3) * waveAmplitude * uWavesX / 50.;
 
-    if (abs(uWavesX) > 0.01) {
+    if (abs(uWavesX) > 0.02) {
         uv.x += waveX;
     }
-    if (abs(uWavesY) > 0.01) {
+    if (abs(uWavesY) > 0.02) {
         uv.y += waveY;
     }
     return uv;
@@ -280,19 +280,7 @@ vec2 applyFract(vec2 uv, float scale) {
 
 void main() {
     vec2 uv = fragCoord.xy / iResolution.xy;
-
-    float waveAmplitude = 0.01;
-    float waveFrequency = 100.0;
-    float waveSpeed = 2.0;
-    float waveX = sin(uv.y * waveFrequency + iTime * waveSpeed) * waveAmplitude;
-    float waveY = cos(uv.x * waveFrequency * 0.7 + iTime * waveSpeed * 1.3) * waveAmplitude;
-
-    if (abs(uWavesX) > 0.01) {
-        uv.x += waveX;
-    }
-    if (abs(uWavesY) > 0.01) {
-        uv.y += waveY;
-    }
+    uv = applyWaveDistortion(uv, iTime);
 
     if (uFractTime >= 0.0) {
         uv = applyFract(uv, 1.0 + 40 * sin((uFractTime) * 0.15));
@@ -336,8 +324,6 @@ void main() {
 
         color.rgb = hsv2rgb(hsv);
     }
-
-    uv = applyWaveDistortion(uv, iTime);
 
     if (uIsDisplayDVDLogo) {
         vec4 dvd = DVDFragShader(fragCoord, iResolution, iTime);
