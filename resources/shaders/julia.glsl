@@ -16,12 +16,15 @@ uniform float zoom_j;
 uniform float x_j;
 uniform float y_j;
 
+// constants
 const int MAX_ITERATIONS = 128;
+const float TAU = 6.283185;
+const float Y_RANGE = 2.0;
 
-// cosine based palette, 4 vec3 params
+// cosine based palette
 vec3 palette( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
 {
-    return a + b*cos( 6.283185*(c*t+d) );
+    return a + b*cos( TAU*(c*t+d) );
 }
 
 struct complex {
@@ -40,6 +43,7 @@ float fractal(complex c, complex z, float n) {
 
     float abs_z_2 = z.real * z.real + z.imaginary * z.imaginary;
     if (abs_z_2 > 4.0) {
+      // we smooth the transition to avoid jagged edges
       float c = float(iteration + 1) - log(log(abs_z_2)) / log(n);
       return c / float(MAX_ITERATIONS);
     }
@@ -66,7 +70,7 @@ vec2 fragCoordToXY(vec2 fragCoord) {
   vec2 relativePosition = fragCoord.xy / iResolution.xy;
   float aspectRatio = iResolution.x / iResolution.y;
 
-  vec2 cartesianPosition = (relativePosition - 0.5) * 2.0 * 2.0;
+  vec2 cartesianPosition = (relativePosition - 0.5) * 2.0 * Y_RANGE;
   cartesianPosition.x *= aspectRatio;
 
   return cartesianPosition;
@@ -88,6 +92,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   vec2 coordinate = fragCoordToXY(fragCoord);
   vec2 clickPosition = vec2(x, y);
 
+  // the zoom center for julia is relative to the click position
   vec2 j0 = vec2(-0.33, 0.0);
   vec2 j0t = j0;
   vec2 j1 = vec2(-0.77, 0.98);
@@ -100,18 +105,19 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     + vec2(x_j, y_j) * pow(1.4, -zoom_j);
   float juliaValue = julia(coordinate_j, clickPosition, n);
 
-  vec2 coordinate2 = coordinate - clickPosition;
-  coordinate2 = coordinate2 * pow(2.0, -zoom_m);
-  coordinate2 = coordinate2 + clickPosition;
-  float mandelbrotValue = mandelbrot(coordinate2, n);
+  // the zoom center for mandelbrot is the click position
+  vec2 coordinate_m = (coordinate - clickPosition) * pow(2.0, -zoom_m) + clickPosition;
+  float mandelbrotValue = mandelbrot(coordinate_m, n);
 
-  float clickPoint =
+  // a viewpoint
+  float clickValue =
       smoothstep(0.02 * 1.1, 0.02, length(clickPosition - coordinate));
 
+  // the output color
   fragColor = vec4(
     clamp(mandelbrotColor(mandelbrotValue), 0.0, 1.0)
     + clamp(juliaColor(juliaValue), 0.0, 1.0)
-    + clamp(clickPointColor(clickPoint), 0.0, 1.0)
+    + clamp(clickPointColor(clickValue), 0.0, 1.0)
     , 1.0);
 }
 
