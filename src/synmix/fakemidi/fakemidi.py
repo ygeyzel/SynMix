@@ -1,5 +1,5 @@
-import json
 import platform
+import tomllib
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from functools import partial, reduce
@@ -174,16 +174,10 @@ def get_key_code(key_name: str) -> int:
 
 def load_key_map(file_path: Path) -> dict[int, Callable]:
     """
-    Example JSON structure:
-    {
-        "BUTTON_NAME_0": {
-            "keys": ["key1", "key2"]
-        },
-        "BUTTON_NAME_1": {
-            "keys": ["key3"]
-        },
-        ...
-    }
+    Example TOML structure:
+    BUTTON_NAME_0 = ["key1", "key2"]
+    BUTTON_NAME_1 = ["key3"]
+
     Example of returned dictionary:
     {
         <key1>: (<method to generate message for key1 press>, None),
@@ -192,32 +186,28 @@ def load_key_map(file_path: Path) -> dict[int, Callable]:
         ...
     }.
     """
-    with file_path.open() as f:
-        config = json.load(f)
+    with file_path.open("rb") as f:
+        config = tomllib.load(f)
     key_map = {}
-    for button_name, mapping in config.items():
+    for button_name, keys in config.items():
         button = Button[button_name]
         interface = interface_factory(button)
         keys_messages_methods = interface.keys_messages_methods()
-        if len(mapping["keys"]) != len(keys_messages_methods):
+        if len(keys) != len(keys_messages_methods):
             raise ValueError(
                 f"Number of keys does not match number of message methods for button '{button_name}'"
             )
 
-        for key, methods in zip(mapping["keys"], keys_messages_methods, strict=True):
+        for key, methods in zip(keys, keys_messages_methods, strict=True):
             key_code = get_key_code(key)
             key_map[key_code] = methods
 
     return key_map
 
 
-def load_key_dict(file_path: Path) -> dict[str, tuple[str, ...]]:
-    with file_path.open() as f:
-        config = json.load(f)
-    return {
-        button_name: tuple(button_params["keys"])
-        for button_name, button_params in config.items()
-    }
+def load_key_dict(file_path: Path) -> dict[str, list[str]]:
+    with file_path.open("rb") as f:
+        return tomllib.load(f)
 
 
 class FakeMidi:

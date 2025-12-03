@@ -70,13 +70,13 @@ def get_textures_dir() -> Path:
 
 
 def get_scenes_order_file() -> Path:
-    """Get path to scenes_order.json."""
-    return get_resources_path() / "scenes_order.json"
+    """Get path to scenes_order.toml."""
+    return get_resources_path() / "scenes_order.toml"
 
 
 def get_fake_midi_key_map_file() -> Path:
-    """Get path to fake_midi_key_map.json."""
-    return get_resources_path() / "fake_midi_key_map.json"
+    """Get path to fake_midi_key_map.toml."""
+    return get_resources_path() / "fake_midi_key_map.toml"
 
 
 def get_post_processing_params_file() -> Path:

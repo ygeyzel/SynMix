@@ -1,4 +1,3 @@
-import json
 import random
 import tomllib
 
@@ -242,10 +241,10 @@ class ScenesManager:
         return [self._generate_param_from_file_data(p) for p in params_data]
 
     def _reorder_scenes(self) -> None:
-        """Reorder scenes according to the order specified in scenes_order.json."""
+        """Reorder scenes according to the order specified in scenes_order.toml."""
         try:
-            with SCENES_ORDER_FILE.open() as f:
-                config = json.load(f)
+            with SCENES_ORDER_FILE.open("rb") as f:
+                config = tomllib.load(f)
 
             scene_order = config.get("scene_order", [])
             if not scene_order:
@@ -266,11 +265,11 @@ class ScenesManager:
                     ordered_scenes.append(scene)
 
             self.scenes = ordered_scenes
-            print("Scenes reordered according to scenes_order.json")
+            print("Scenes reordered according to scenes_order.toml")
 
         except FileNotFoundError:
             print(f"Warning: {SCENES_ORDER_FILE} not found. Using default order.")
-        except (json.JSONDecodeError, KeyError) as e:
+        except (tomllib.TOMLDecodeError, KeyError) as e:
             print(
                 f"Warning: Error parsing {SCENES_ORDER_FILE}: {e}. Using default order."
             )

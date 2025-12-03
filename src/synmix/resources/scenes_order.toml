@@ -1,11 +1,10 @@
-{
-  "scene_order": [
+# Scene loading order
+scene_order = [
     "UFO Blanket",
     "MengerFall",
     "DesertDunes",
     "CBSGalaxy",
     "QuaternionFractal",
     "KeplerPlanet",
-    "WingsFractal"
-  ]
-}
+    "WingsFractal",
+]
