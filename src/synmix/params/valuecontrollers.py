@@ -1,8 +1,9 @@
 import time
 from abc import ABC, abstractmethod
+from collections.abc import Callable, Iterable
 from random import uniform
 from threading import Timer
-from typing import Any, Callable, Iterable
+from typing import Any
 
 from synmix.inputs.buttons import ButtonType
 from synmix.inputs.midi import (

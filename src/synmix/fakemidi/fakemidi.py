@@ -1,8 +1,9 @@
 import json
 import platform
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from functools import partial, reduce
-from typing import Callable, NamedTuple
+from typing import NamedTuple
 
 import mido
 from pyglet.window import key as pyglet_key

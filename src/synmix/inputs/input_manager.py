@@ -1,5 +1,6 @@
 import platform
-from typing import Callable, Union
+from collections.abc import Callable
+from typing import Union
 
 import mido
 
