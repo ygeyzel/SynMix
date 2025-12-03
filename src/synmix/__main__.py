@@ -43,7 +43,7 @@ def main():
     # Setup input manager
     fake_midi = global_ctx.fake_midi
     input_subname = fake_midi.output_name if fake_midi else MIDI_INPUT_SUBNAME
-    input_manager = MidiInputManager(input_subname)
+    _input_manager = MidiInputManager(input_subname)
 
     # Update sys.argv to remove our custom arguments so moderngl_window can parse its own
     sys.argv = [sys.argv[0]] + remaining
