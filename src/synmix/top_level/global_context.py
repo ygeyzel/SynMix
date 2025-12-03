@@ -1,4 +1,4 @@
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 
 from synmix.fakemidi.fakemidi import FakeMidi
 from synmix.inputs.midi import MIDI_BUTTEN_CLICK, MIDI_DEC_VALUE, MIDI_INC_VALUE
@@ -33,8 +33,8 @@ class GlobalCtx:
     def __init__(self):
         # Only initialize if it's the first time
         if not GlobalCtx._initialized:
-            self.fake_midi: Optional[FakeMidi] = None
-            self.starting_scene_name: Optional[str] = None
+            self.fake_midi: FakeMidi | None = None
+            self.starting_scene_name: str | None = None
             self.time_params: TimeParams = DEFAULT_TIME_PARAMS
             self.shared_values: dict = {}
 
