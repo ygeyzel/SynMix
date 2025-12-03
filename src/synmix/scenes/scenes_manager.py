@@ -230,7 +230,6 @@ class ScenesManager:
                 ]
                 ascene = Scene(**data)
                 self.scenes.append(ascene)
-                print(f"Scene {ascene.name} loaded")
 
         # Reorder scenes according to scenes_order.json
         self._reorder_scenes()
