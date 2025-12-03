@@ -2,14 +2,9 @@
 Resource loading utilities for SynMix package resources
 """
 
-import sys
-from pathlib import Path
-
 # Python 3.9+ has importlib.resources with files()
-if sys.version_info >= (3, 9):
-    from importlib.resources import files
-else:
-    from importlib_resources import files
+from importlib.resources import files
+from pathlib import Path
 
 
 def get_resources_path() -> Path:
