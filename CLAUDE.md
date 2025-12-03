@@ -9,6 +9,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 uv sync                    # Install dependencies and sync environment
 ```
 
+### WSL (Windows Subsystem for Linux) Notes
+**Important**: On WSL, MIDI/audio drivers are not available in the Linux environment. To work around this, use the Windows executable `uv.exe` instead of `uv` to install dependencies and run the application. This ensures the code runs in a Windows context with access to the necessary drivers.
+
+```bash
+# On WSL, use uv.exe instead of uv:
+uv.exe sync                           # Install dependencies
+uv.exe run synmix --fakemidi          # Run application
+uv.exe add <package>                  # Add new dependency
+```
+
 ### Running the Application
 ```bash
 uv run synmix                              # Run with real MIDI controller
