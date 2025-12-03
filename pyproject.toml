@@ -43,6 +43,9 @@ select = [
   "ALL",
 ]
 ignore = [
+  # temporary
+  "ANN",
+  "D",
   # needed only in large codebases
   "TD002",    # flake8-todos/missing-todo-author
   "TD003",    # flake8-todos/missing-todo-link
