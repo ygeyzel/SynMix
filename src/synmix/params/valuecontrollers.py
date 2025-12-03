@@ -60,7 +60,7 @@ class ValueController(ABC):
         self.value = value
 
     def reset(self) -> None:
-        """Reset the controller to its initial value"""
+        """Reset the controller to its initial value."""
         self.value = self.initial_value
 
     @abstractmethod

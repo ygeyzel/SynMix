@@ -6,7 +6,7 @@ SHADERS_DIR = get_shaders_dir()
 
 def _values_changed(org_value, new_value):
     """
-    Check if two values are significantly different
+    Check if two values are significantly different.
 
     Args:
         org_value: Original value
@@ -14,6 +14,7 @@ def _values_changed(org_value, new_value):
 
     Returns:
         True if values have changed, False otherwise
+
     """
     values_changed = False
     try:
@@ -43,11 +44,12 @@ def _values_changed(org_value, new_value):
 
 def update_shader_params_from_list(shader_program, params) -> None:
     """
-    Update shader uniforms with current parameter values from a list of params
+    Update shader uniforms with current parameter values from a list of params.
 
     Args:
         shader_program: The shader program to update
         params: List of Param objects to update
+
     """
     if shader_program is None:
         return
@@ -64,7 +66,7 @@ def update_shader_params_from_list(shader_program, params) -> None:
 
 
 class Scene:
-    """A class for common shader based visual scene functionality"""
+    """A class for common shader based visual scene functionality."""
 
     def __init__(
         self,
@@ -88,10 +90,11 @@ class Scene:
 
     def get_shaders(self) -> tuple[str, str]:
         """
-        Load and return shader source code from files
+        Load and return shader source code from files.
 
         Returns:
             Tuple of (vertex_shader_source, fragment_shader_source)
+
         """
         vertex_path = SHADERS_DIR / self.vertex_shader_filename
         fragment_path = SHADERS_DIR / self.fragment_shader_filename
@@ -112,9 +115,10 @@ class Scene:
 
     def update_shader_params(self, shader_program) -> None:
         """
-        Update shader uniforms with current parameter values
+        Update shader uniforms with current parameter values.
 
         Args:
             shader_program: The shader program to update
+
         """
         update_shader_params_from_list(shader_program, self.params)

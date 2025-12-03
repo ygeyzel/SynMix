@@ -1,1 +1,1 @@
-"""Tests for SynMix package"""
+"""Tests for SynMix package."""

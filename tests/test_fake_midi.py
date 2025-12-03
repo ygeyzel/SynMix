@@ -9,7 +9,7 @@ from synmix.fakemidi.fakemidi import FakeMidi
 
 
 class MidiMonitor(threading.Thread):
-    """Monitors MIDI output from the virtual controller and prints messages"""
+    """Monitors MIDI output from the virtual controller and prints messages."""
 
     def __init__(self, port_name: str) -> None:
         super().__init__(daemon=True)
@@ -18,7 +18,7 @@ class MidiMonitor(threading.Thread):
         self.input_port = None
 
     def run(self) -> None:
-        """Main thread loop - listens for and prints MIDI messages"""
+        """Main thread loop - listens for and prints MIDI messages."""
         # Wait a moment for the virtual output port to be created
         time.sleep(0.5)
 
@@ -43,12 +43,12 @@ class MidiMonitor(threading.Thread):
                 self.input_port.close()
 
     def stop(self) -> None:
-        """Stop the monitoring thread"""
+        """Stop the monitoring thread."""
         self.running = False
 
 
 class TestWindow(mglw.WindowConfig):
-    """Simple moderngl window for testing the fake controller"""
+    """Simple moderngl window for testing the fake controller."""
 
     gl_version = (3, 3)
     title = "Fake MIDI Controller Test"
@@ -71,7 +71,7 @@ class TestWindow(mglw.WindowConfig):
         self.frame_count = 0
 
     def on_render(self, time: float, frame_time: float) -> None:
-        """Render loop - just clear to a dark background"""
+        """Render loop - just clear to a dark background."""
         self.ctx.clear(0.1, 0.1, 0.15)
 
         # Process any pending key inputs periodically
@@ -80,7 +80,7 @@ class TestWindow(mglw.WindowConfig):
             self.fake_controller.handle_keys_input()
 
     def on_key_event(self, key, action, modifiers) -> None:
-        """Handle keyboard events and forward to fake controller"""
+        """Handle keyboard events and forward to fake controller."""
         if key == pyglet_key.ESCAPE and action == self.wnd.keys.ACTION_PRESS:
             self.wnd.close()
             return
@@ -91,7 +91,7 @@ class TestWindow(mglw.WindowConfig):
             self.fake_controller.on_key_release(key)
 
     def on_close(self) -> None:
-        """Cleanup when window closes"""
+        """Cleanup when window closes."""
         print("\nShutting down...")
         self.midi_monitor.stop()
         if self.fake_controller.output:

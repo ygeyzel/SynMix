@@ -1,6 +1,4 @@
-"""
-Resource loading utilities for SynMix package resources
-"""
+"""Resource loading utilities for SynMix package resources."""
 
 # Python 3.9+ has importlib.resources with files()
 from importlib.resources import files
@@ -15,6 +13,7 @@ def get_resources_path() -> Path:
 
     Returns:
         Path to resources directory
+
     """
     try:
         # Try package resources first (works when installed)
@@ -56,30 +55,30 @@ def get_resources_path() -> Path:
 
 # Convenience accessors for common resource paths
 def get_scenes_dir() -> Path:
-    """Get path to scenes directory"""
+    """Get path to scenes directory."""
     return get_resources_path() / "scenes"
 
 
 def get_shaders_dir() -> Path:
-    """Get path to shaders directory"""
+    """Get path to shaders directory."""
     return get_resources_path() / "shaders"
 
 
 def get_textures_dir() -> Path:
-    """Get path to textures directory"""
+    """Get path to textures directory."""
     return get_resources_path() / "textures"
 
 
 def get_scenes_order_file() -> Path:
-    """Get path to scenes_order.json"""
+    """Get path to scenes_order.json."""
     return get_resources_path() / "scenes_order.json"
 
 
 def get_fake_midi_key_map_file() -> Path:
-    """Get path to fake_midi_key_map.json"""
+    """Get path to fake_midi_key_map.json."""
     return get_resources_path() / "fake_midi_key_map.json"
 
 
 def get_post_processing_params_file() -> Path:
-    """Get path to post_processing_params.toml"""
+    """Get path to post_processing_params.toml."""
     return get_scenes_dir() / "post_processing_params.toml"

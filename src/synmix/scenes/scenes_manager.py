@@ -84,7 +84,7 @@ class ScenesManager:
             self.input_manager.bind_general_funcs(control_selector, afunc)
 
     def _load_textures(self) -> None:
-        """Load all images from resources/textures directory as textures"""
+        """Load all images from resources/textures directory as textures."""
         if not PIL_AVAILABLE:
             print("Warning: PIL/Pillow not available. Textures will not be loaded.")
             print("Install Pillow with: pip install Pillow")
@@ -124,7 +124,7 @@ class ScenesManager:
                     print(f"Error loading texture {texture_file.name}: {e}")
 
     def init_post_processing(self) -> None:
-        """Initialize post-processing shader and FBO"""
+        """Initialize post-processing shader and FBO."""
         # Load textures first
         self._load_textures()
 
@@ -152,7 +152,8 @@ class ScenesManager:
             self.input_manager.bind_secondary_param(param)
 
     def _bind_textures_to_shader(self) -> None:
-        """Bind loaded textures to post-processing shader uniforms.
+        """
+        Bind loaded textures to post-processing shader uniforms.
 
         Textures are bound to uniforms that are manually declared in the shader.
         The method tries to match texture names to uniform names using common conventions:
@@ -244,7 +245,7 @@ class ScenesManager:
         return [self._generate_param_from_file_data(p) for p in params_data]
 
     def _reorder_scenes(self) -> None:
-        """Reorder scenes according to the order specified in scenes_order.json"""
+        """Reorder scenes according to the order specified in scenes_order.json."""
         try:
             with open(SCENES_ORDER_FILE) as f:
                 config = json.load(f)
@@ -279,12 +280,13 @@ class ScenesManager:
 
     def render(self, time, frame_time, resolution) -> None:
         """
-        Render the current scene with 2-pass rendering
+        Render the current scene with 2-pass rendering.
 
         Args:
             time: Current time for animations
             frame_time: Time since last frame
             resolution: Screen resolution as (width, height, aspect_ratio)
+
         """
         if self._new_scene_index is not None:
             self.load_new_scene()
@@ -343,12 +345,13 @@ class ScenesManager:
         self, time: float, frame_time: float, resolution: tuple[float, float, float]
     ) -> None:
         """
-        Update shader uniforms with current parameter values for first pass
+        Update shader uniforms with current parameter values for first pass.
 
         Args:
             time: Current time for animations
             frame_time: Time since last frame
             resolution: Screen resolution as (width, height, aspect_ratio)
+
         """
         if self.current_prog is None:
             return
@@ -369,12 +372,13 @@ class ScenesManager:
         self, time: float, frame_time: float, resolution: tuple[float, float, float]
     ) -> None:
         """
-        Update shader uniforms with current parameter values for second pass
+        Update shader uniforms with current parameter values for second pass.
 
         Args:
             time: Current time for animations
             frame_time: Time since last frame
             resolution: Screen resolution as (width, height, aspect_ratio)
+
         """
         if self.post_prog is None:
             return

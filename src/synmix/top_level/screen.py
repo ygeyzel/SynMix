@@ -7,7 +7,7 @@ from synmix.top_level.global_context import GlobalCtx
 
 
 class Screen(mglw.WindowConfig):
-    """Main application window - handles core window management and delegates rendering to scenes"""
+    """Main application window - handles core window management and delegates rendering to scenes."""
 
     # OpenGL configuration
     gl_version = (3, 3)
@@ -28,8 +28,7 @@ class Screen(mglw.WindowConfig):
         self.input_manager = MidiInputManager()
 
     def on_render(self, time: float, frame_time: float) -> None:
-        """Main render loop - called every frame by moderngl-window"""
-
+        """Main render loop - called every frame by moderngl-window."""
         if self.fake_midi:
             self.fake_midi.handle_keys_input()
             # Process pending messages on Windows

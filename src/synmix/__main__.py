@@ -1,6 +1,4 @@
-"""
-SynMix entry point - allows running as 'python -m synmix' or 'uv run synmix'
-"""
+"""SynMix entry point - allows running as 'python -m synmix' or 'uv run synmix'."""
 
 import argparse
 import sys
@@ -18,7 +16,7 @@ MIDI_INPUT_SUBNAME = "Mixage"
 
 
 def main() -> None:
-    """Main entry point for SynMix application"""
+    """Main entry point for SynMix application."""
     # Parse command line arguments (use parse_known_args to allow moderngl_window's args to pass through)
     parser = argparse.ArgumentParser(
         description="SynMix - Audio visualizer with MIDI control", add_help=False

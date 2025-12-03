@@ -189,7 +189,7 @@ def load_key_map(file_path: str) -> dict[int, Callable]:
         <key2>: (<method to generate message for key2 press>, None),
         <key3>: (<method to generate message for key3 press>, <method to generate message for key3 release>),
         ...
-    }
+    }.
     """
     with open(file_path) as f:
         config = json.load(f)
@@ -301,7 +301,7 @@ class FakeMidi:
         self.modifiers = {}
 
     def get_pending_messages(self):
-        """Get and clear pending MIDI messages (Windows compatibility)"""
+        """Get and clear pending MIDI messages (Windows compatibility)."""
         if hasattr(self, "pending_messages"):
             messages = self.pending_messages.copy()
             self.pending_messages.clear()

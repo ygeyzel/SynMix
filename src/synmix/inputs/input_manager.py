@@ -99,7 +99,7 @@ class MidiInputManager:
             print(f"Invalid MIDI event: {event_msg}")
 
     def process_fake_midi_messages(self) -> None:
-        """Process pending fake MIDI messages (Windows compatibility)"""
+        """Process pending fake MIDI messages (Windows compatibility)."""
         if self.fake_midi:
             pending_messages = self.fake_midi.get_pending_messages()
             for message in pending_messages:

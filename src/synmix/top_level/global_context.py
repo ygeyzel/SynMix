@@ -20,9 +20,7 @@ TIME_SPEED_HOLD_INTERVAL = 0.15
 
 
 class GlobalCtx:
-    """
-    Singleton object that holds global context shared across the application
-    """
+    """Singleton object that holds global context shared across the application."""
 
     _instance = None
     _initialized = False
@@ -55,11 +53,11 @@ class GlobalCtx:
         self.time_params = DEFAULT_TIME_PARAMS
 
     def update_last_time(self, time: float) -> None:
-        """Update the last time value for time adjustments"""
+        """Update the last time value for time adjustments."""
         self._last_time = time
 
     def adjust_time_offset(self, value: int | None) -> None:
-        """Adjust time offset based on MIDI input"""
+        """Adjust time offset based on MIDI input."""
         if value == MIDI_INC_VALUE:
             delta = self.time_offset_step
         elif value == MIDI_DEC_VALUE:
@@ -72,7 +70,7 @@ class GlobalCtx:
         self._set_time_params(TimeParams(current.offset + delta, current.speed))
 
     def handle_increase_speed_button(self, value: int | None) -> None:
-        """Handle increase speed button press/release"""
+        """Handle increase speed button press/release."""
         is_pressed = value == MIDI_BUTTEN_CLICK
         self._increase_speed_active = is_pressed
         if not is_pressed:
@@ -83,7 +81,7 @@ class GlobalCtx:
             self._update_time_speed(self.time_speed_step)
 
     def handle_decrease_speed_button(self, value: int | None) -> None:
-        """Handle decrease speed button press/release"""
+        """Handle decrease speed button press/release."""
         is_pressed = value == MIDI_BUTTEN_CLICK
         self._decrease_speed_active = is_pressed
         if not is_pressed:
@@ -93,7 +91,7 @@ class GlobalCtx:
         self._update_time_speed(-self.time_speed_step)
 
     def _update_time_speed(self, delta: float) -> None:
-        """Update time speed with delta change"""
+        """Update time speed with delta change."""
         if delta == 0:
             return
 
@@ -109,16 +107,16 @@ class GlobalCtx:
         self._set_time_params(TimeParams(new_offset, new_speed))
 
     def _set_time_params(self, new_params: TimeParams) -> None:
-        """Set new time parameters"""
+        """Set new time parameters."""
         self.time_params = new_params
 
     def get_adjusted_time(self, base_time: float) -> float:
-        """Get adjusted time based on current time parameters"""
+        """Get adjusted time based on current time parameters."""
         params = self.time_params or DEFAULT_TIME_PARAMS
         return params.offset + (base_time * params.speed)
 
     def apply_speed_hold(self, frame_time: float) -> None:
-        """Apply speed hold logic for continuous speed adjustment"""
+        """Apply speed hold logic for continuous speed adjustment."""
         if frame_time <= 0:
             return
 
