@@ -17,7 +17,7 @@ from synmix.top_level.screen import Screen
 MIDI_INPUT_SUBNAME = "Mixage"
 
 
-def main():
+def main() -> None:
     """Main entry point for SynMix application"""
     # Parse command line arguments (use parse_known_args to allow moderngl_window's args to pass through)
     parser = argparse.ArgumentParser(

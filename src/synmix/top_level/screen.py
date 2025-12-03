@@ -17,7 +17,7 @@ class Screen(mglw.WindowConfig):
     resizable = True
     resource_dir = str(get_shaders_dir())  # Directory containing GLSL shader files
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
         global_ctx = GlobalCtx()
@@ -27,7 +27,7 @@ class Screen(mglw.WindowConfig):
         )
         self.input_manager = MidiInputManager()
 
-    def on_render(self, time: float, frame_time: float):
+    def on_render(self, time: float, frame_time: float) -> None:
         """Main render loop - called every frame by moderngl-window"""
 
         if self.fake_midi:
@@ -40,7 +40,7 @@ class Screen(mglw.WindowConfig):
         # self.scene.render(time, frame_time, resolution)
         self.sm.render(time, frame_time, resolution)
 
-    def on_key_event(self, key, action, modifiers):
+    def on_key_event(self, key, action, modifiers) -> None:
         if self.fake_midi:
             if action == self.wnd.keys.ACTION_PRESS:
                 self.fake_midi.on_key_press(key, modifiers)

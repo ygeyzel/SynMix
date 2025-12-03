@@ -41,7 +41,7 @@ def _values_changed(org_value, new_value):
     return values_changed
 
 
-def update_shader_params_from_list(shader_program, params):
+def update_shader_params_from_list(shader_program, params) -> None:
     """
     Update shader uniforms with current parameter values from a list of params
 
@@ -73,17 +73,17 @@ class Scene:
         fragment_shader_filename: str,
         vertex_shader_filename: str = "vertex.glsl",
         res_factor: float | None = None,
-    ):
+    ) -> None:
         self.name = name
         self.params = params
         self.fragment_shader_filename = fragment_shader_filename
         self.vertex_shader_filename = vertex_shader_filename
         self.res_factor = res_factor
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Scene({self.name}: shaders=[{self.fragment_shader_filename},{self.vertex_shader_filename}], params:{list(self.params)})"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__repr__()
 
     def get_shaders(self) -> tuple[str, str]:
@@ -110,7 +110,7 @@ class Scene:
                 f"Error: {e}"
             ) from e
 
-    def update_shader_params(self, shader_program):
+    def update_shader_params(self, shader_program) -> None:
         """
         Update shader uniforms with current parameter values
 

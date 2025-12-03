@@ -37,7 +37,7 @@ POST_PROCESSING_PARAMS_FILE = get_post_processing_params_file()
 
 
 class ScenesManager:
-    def __init__(self, screen_ctx, starting_scene_name: str | None = None):
+    def __init__(self, screen_ctx, starting_scene_name: str | None = None) -> None:
         self.scenes = []
         self.input_manager = MidiInputManager()
         self.screen_ctx = screen_ctx
@@ -68,7 +68,7 @@ class ScenesManager:
         )  # triggers self.load_new_scene()
         self.start_time = None
 
-    def init_general_funcs_bindings(self):
+    def init_general_funcs_bindings(self) -> None:
         binds = (
             (Button.RIGHT_LOAD, self.change_to_next_scene),
             (Button.LEFT_LOAD, self.change_to_previous_scene),
@@ -83,7 +83,7 @@ class ScenesManager:
         for control_selector, afunc in binds:
             self.input_manager.bind_general_funcs(control_selector, afunc)
 
-    def _load_textures(self):
+    def _load_textures(self) -> None:
         """Load all images from resources/textures directory as textures"""
         if not PIL_AVAILABLE:
             print("Warning: PIL/Pillow not available. Textures will not be loaded.")
@@ -123,7 +123,7 @@ class ScenesManager:
                 except Exception as e:
                     print(f"Error loading texture {texture_file.name}: {e}")
 
-    def init_post_processing(self):
+    def init_post_processing(self) -> None:
         """Initialize post-processing shader and FBO"""
         # Load textures first
         self._load_textures()
@@ -151,7 +151,7 @@ class ScenesManager:
         for param in self.post_params:
             self.input_manager.bind_secondary_param(param)
 
-    def _bind_textures_to_shader(self):
+    def _bind_textures_to_shader(self) -> None:
         """Bind loaded textures to post-processing shader uniforms.
 
         Textures are bound to uniforms that are manually declared in the shader.
@@ -216,7 +216,7 @@ class ScenesManager:
         acontroller = controller_cls(**data["controller"].get("args", {}))
         return Param(name=data["name"], button=abuttom, controller=acontroller)
 
-    def _load_scens_from_toml_files(self):
+    def _load_scens_from_toml_files(self) -> None:
         for scene_file in SCENES_DIR.iterdir():
             if scene_file.name == POST_PROCESSING_PARAMS_FILE.name:
                 continue
@@ -243,7 +243,7 @@ class ScenesManager:
         params_data = data.get("params", [])
         return [self._generate_param_from_file_data(p) for p in params_data]
 
-    def _reorder_scenes(self):
+    def _reorder_scenes(self) -> None:
         """Reorder scenes according to the order specified in scenes_order.json"""
         try:
             with open(SCENES_ORDER_FILE) as f:
@@ -277,7 +277,7 @@ class ScenesManager:
                 f"Warning: Error parsing {SCENES_ORDER_FILE}: {e}. Using default order."
             )
 
-    def render(self, time, frame_time, resolution):
+    def render(self, time, frame_time, resolution) -> None:
         """
         Render the current scene with 2-pass rendering
 
@@ -341,7 +341,7 @@ class ScenesManager:
 
     def _update_params(
         self, time: float, frame_time: float, resolution: tuple[float, float, float]
-    ):
+    ) -> None:
         """
         Update shader uniforms with current parameter values for first pass
 
@@ -367,7 +367,7 @@ class ScenesManager:
 
     def _update_post_params(
         self, time: float, frame_time: float, resolution: tuple[float, float, float]
-    ):
+    ) -> None:
         """
         Update shader uniforms with current parameter values for second pass
 
@@ -388,17 +388,17 @@ class ScenesManager:
         # Update post-processing shader parameters
         update_shader_params_from_list(self.post_prog, self.post_params)
 
-    def change_to_next_scene(self, value: int | None = None):
+    def change_to_next_scene(self, value: int | None = None) -> None:
         if value is not None and value != MIDI_BUTTEN_CLICK:
             return
         self._new_scene_index = (self.current_scene_index + 1) % len(self.scenes)
 
-    def change_to_previous_scene(self, value: int | None = None):
+    def change_to_previous_scene(self, value: int | None = None) -> None:
         if value is not None and value != MIDI_BUTTEN_CLICK:
             return
         self._new_scene_index = (self.current_scene_index - 1) % len(self.scenes)
 
-    def change_to_random_scene(self, value: int | None = None):
+    def change_to_random_scene(self, value: int | None = None) -> None:
         if value is not None and value != MIDI_BUTTEN_CLICK:
             return
         available_scenes = [
@@ -407,7 +407,7 @@ class ScenesManager:
         if available_scenes:
             self._new_scene_index = random.choice(available_scenes)
 
-    def load_new_scene(self):
+    def load_new_scene(self) -> None:
         self.current_scene_index = self._new_scene_index
         new_scene = self.current_scene
         print("=" * 80)

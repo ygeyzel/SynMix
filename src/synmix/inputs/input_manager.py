@@ -17,7 +17,7 @@ class MidiInputManager:
 
         return cls._instance
 
-    def __init__(self, input_subname: str = ""):
+    def __init__(self, input_subname: str = "") -> None:
         if not hasattr(self, "_initialized"):
             self.scenes_change_funcs = None
             self.param_bindings: dict[MidiGetter, Param] = {}
@@ -52,18 +52,18 @@ class MidiInputManager:
 
             self._initialized = True
 
-    def bind_param(self, param: Param):
+    def bind_param(self, param: Param) -> None:
         self.param_bindings[param.button.midi_getter] = param
 
-    def bind_secondary_param(self, param: Param):
+    def bind_secondary_param(self, param: Param) -> None:
         self.secondary_param_bindings[param.button.midi_getter] = param
 
-    def unbind_params(self):
+    def unbind_params(self) -> None:
         self.param_bindings = {}
 
     def bind_general_funcs(
         self, event_selector: Button | MidiGetter, afunc: Callable[[int], None]
-    ):
+    ) -> None:
         midi_getter = (
             event_selector.midi_getter
             if isinstance(event_selector, Button)
@@ -71,7 +71,7 @@ class MidiInputManager:
         )
         self.general_funcs_bindings[midi_getter] = afunc
 
-    def _handle_midi_input(self, event_msg: mido.Message):
+    def _handle_midi_input(self, event_msg: mido.Message) -> None:
         try:
             event_type = MidiEventType(event_msg.type)
             descriptor = get_midi_event_descriptor(event_type)
@@ -98,7 +98,7 @@ class MidiInputManager:
         except KeyError:
             print(f"Invalid MIDI event: {event_msg}")
 
-    def process_fake_midi_messages(self):
+    def process_fake_midi_messages(self) -> None:
         """Process pending fake MIDI messages (Windows compatibility)"""
         if self.fake_midi:
             pending_messages = self.fake_midi.get_pending_messages()

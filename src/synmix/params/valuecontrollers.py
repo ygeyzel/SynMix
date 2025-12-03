@@ -47,19 +47,19 @@ def register_controller(
 
 
 class ValueController(ABC):
-    def __init__(self, initial_value=0.0, is_persistent=False):
+    def __init__(self, initial_value=0.0, is_persistent=False) -> None:
         super().__init__()
         self.initial_value = initial_value
         self.value = self.initial_value
         self.is_persistent = is_persistent
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self.__dict__})"
 
-    def set_value(self, value: Any):
+    def set_value(self, value: Any) -> None:
         self.value = value
 
-    def reset(self):
+    def reset(self) -> None:
         """Reset the controller to its initial value"""
         self.value = self.initial_value
 
@@ -69,7 +69,7 @@ class ValueController(ABC):
 
 
 class SharedValueController(ValueController):
-    def __init__(self, shared_key: str, initial_value=0.0):
+    def __init__(self, shared_key: str, initial_value=0.0) -> None:
         super().__init__(initial_value=initial_value)
         self.shared_key = shared_key
         self.global_ctx = GlobalCtx()
@@ -82,7 +82,7 @@ class SharedValueController(ValueController):
         return self.global_ctx.shared_values[self.shared_key]
 
     @value.setter
-    def value(self, new_value: Any):
+    def value(self, new_value: Any) -> None:
         self.global_ctx.shared_values[self.shared_key] = new_value
 
 
@@ -90,7 +90,7 @@ class SharedValueController(ValueController):
 class NormalizedController(ValueController):
     def __init__(
         self, min_value, max_value, is_pitch=False, initial_value=0.0, *args, **kwargs
-    ):
+    ) -> None:
         is_persistent = kwargs.pop("is_persistent", True)
         super().__init__(initial_value=initial_value, is_persistent=is_persistent)
         self.min_value = min_value
@@ -99,7 +99,7 @@ class NormalizedController(ValueController):
         self.max_input_value = MAX_PITCH if is_pitch else MIDI_MAX_VALUE
         self.min_input_value = MIN_PITCH if is_pitch else MIDI_MIN_VALUE
 
-    def control_value(self, in_value: int):
+    def control_value(self, in_value: int) -> None:
         normalized_value = self.min_value + (in_value - self.min_input_value) * (
             self.max_value - self.min_value
         ) / (self.max_input_value - self.min_input_value)
@@ -110,12 +110,12 @@ class NormalizedController(ValueController):
 class LinearSegmentedController(ValueController):
     def __init__(
         self, segments_points: Iterable[tuple[float, float]], initial_value=0.0
-    ):
+    ) -> None:
         super().__init__(initial_value=initial_value, is_persistent=True)
         self.segments_points = sorted(segments_points, key=lambda point: point[0])
         self.num_segments = len(self.segments_points) - 1
 
-    def control_value(self, in_value: int):
+    def control_value(self, in_value: int) -> None:
         segment_index = (
             next(
                 (
@@ -144,7 +144,7 @@ class IncDecController(ValueController):
         inc_value: int = MIDI_INC_VALUE,
         dec_value: int = MIDI_DEC_VALUE,
         initial_value=0.0,
-    ):
+    ) -> None:
         super().__init__(initial_value=initial_value)
         self.min_value = min_value
         self.max_value = max_value
@@ -160,7 +160,7 @@ class IncDecController(ValueController):
     def decrease(self):
         pass
 
-    def control_value(self, in_value: int):
+    def control_value(self, in_value: int) -> None:
         if in_value == self.inc_value:
             self.increase()
         elif in_value == self.dec_value:
@@ -169,23 +169,23 @@ class IncDecController(ValueController):
 
 @register_controller("RangedController", ButtonType.SCROLLER)
 class RangedController(IncDecController):
-    def increase(self):
+    def increase(self) -> None:
         self.value = max(min(self.value + self.step, self.max_value), self.min_value)
 
-    def decrease(self):
+    def decrease(self) -> None:
         self.value = min(max(self.value - self.step, self.min_value), self.max_value)
 
 
 @register_controller("CyclicController", ButtonType.SCROLLER)
 class CyclicController(IncDecController):
-    def increase(self):
+    def increase(self) -> None:
         self.value += self.step
         if self.value > self.max_value:
             self.value = self.min_value + (self.value - self.max_value)
         if self.value < self.min_value:
             self.value = self.max_value - (self.min_value - self.value)
 
-    def decrease(self):
+    def decrease(self) -> None:
         self.value -= self.step
         if self.value > self.max_value:
             self.value = self.min_value + (self.value - self.max_value)
@@ -195,20 +195,20 @@ class CyclicController(IncDecController):
 
 @register_controller("ToggleController", ButtonType.CLICKABLE)
 class ToggleController(ValueController):
-    def __init__(self, initial_value=False):
+    def __init__(self, initial_value=False) -> None:
         super().__init__(initial_value=initial_value)
 
-    def control_value(self, in_value: int):
+    def control_value(self, in_value: int) -> None:
         if in_value == MIDI_MAX_VALUE:
             self.set_value(not self.value)
 
 
 @register_controller("IsPressedController", ButtonType.CLICKABLE)
 class IsPressedController(ValueController):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(initial_value=False)
 
-    def control_value(self, in_value: int):
+    def control_value(self, in_value: int) -> None:
         self.set_value(in_value == MIDI_MAX_VALUE)
 
 
@@ -216,13 +216,13 @@ class IsPressedController(ValueController):
 class TimerToggleController(ValueController):
     def __init__(
         self, min_time_to_reset=10.0, max_time_to_reset=600.0, is_persistent=True
-    ):
+    ) -> None:
         super().__init__(initial_value=False, is_persistent=is_persistent)
 
         self.min_time_to_reset = min_time_to_reset
         self.max_time_to_reset = max_time_to_reset
 
-    def control_value(self, in_value: int):
+    def control_value(self, in_value: int) -> None:
         if in_value == MIDI_MAX_VALUE and not self.value:
             self.set_value(True)
             time_to_reset = uniform(self.min_time_to_reset, self.max_time_to_reset)
@@ -231,11 +231,11 @@ class TimerToggleController(ValueController):
 
 @register_controller("StartTimeController", ButtonType.CLICKABLE)
 class StartTimeController(ValueController):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.click_start_time = None
 
-    def control_value(self, in_value: int):
+    def control_value(self, in_value: int) -> None:
         if in_value == MIDI_MAX_VALUE:
             self.click_start_time = time.time()
 
@@ -249,5 +249,5 @@ class StartTimeController(ValueController):
         return -1.0
 
     @value.setter
-    def value(self, new_value: Any):
+    def value(self, new_value: Any) -> None:
         pass

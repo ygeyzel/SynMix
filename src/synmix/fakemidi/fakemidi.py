@@ -29,7 +29,7 @@ class KeyMessageParams(NamedTuple):
 
 
 class ButtonInterface(ABC):
-    def __init__(self, button: Button):
+    def __init__(self, button: Button) -> None:
         midi_getter = button.midi_getter
         self.event_type = midi_getter.event_type
 
@@ -68,7 +68,7 @@ class ButtonInterface(ABC):
 
 
 class KnobInterface(ButtonInterface):
-    def __init__(self, button: Button):
+    def __init__(self, button: Button) -> None:
         super().__init__(button)
         event_type = button.midi_getter.event_type
         if event_type is MidiEventType.PITCH:
@@ -82,7 +82,7 @@ class KnobInterface(ButtonInterface):
             self.max_value = MIDI_MAX_VALUE
             self.step_factor = 1
 
-    def _step_value(self, step: int):
+    def _step_value(self, step: int) -> None:
         new_value = self.current_value + step
         self.current_value = max(self.min_value, min(self.max_value, new_value))
 
@@ -128,7 +128,7 @@ class ScrollerInterface(ButtonInterface):
 
 
 class ClickableInterface(ButtonInterface):
-    def __init__(self, button: Button):
+    def __init__(self, button: Button) -> None:
         super().__init__(button)
         self.is_on = False
 
@@ -231,7 +231,7 @@ class FakeMidi:
         self,
         output_name="Fake MIDI Controller",
         key_map_file=None,
-    ):
+    ) -> None:
         # Only initialize if it's the first time
         if not hasattr(self, "_initialized"):
             # Load default key map file if none provided
@@ -254,7 +254,7 @@ class FakeMidi:
             self.key_dict = load_key_dict(key_map_file)
             self._initialized = True
 
-    def handle_keys_input(self):
+    def handle_keys_input(self) -> None:
         amp = reduce(lambda s, m: s * (2 if m else 1), self.modifiers.values(), 1)
 
         kwargs = {"step": amp, "is_on": True, "repeats": amp}
@@ -287,14 +287,14 @@ class FakeMidi:
             self.held_keys.remove(key)
         self.relesed_keys.clear()
 
-    def on_key_press(self, key, modifiers):
+    def on_key_press(self, key, modifiers) -> None:
         if key in self.held_keys:
             return
 
         self.held_keys.add(key)
         self.modifiers = modifiers.__dict__
 
-    def on_key_release(self, key):
+    def on_key_release(self, key) -> None:
         if key in self.held_keys:
             self.relesed_keys.add(key)
 
