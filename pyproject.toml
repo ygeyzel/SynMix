@@ -31,3 +31,67 @@ packages = ["src/synmix"]
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
+
+[tool.ruff.format]
+docstring-code-format = true
+
+
+[tool.ruff.lint]
+# Use google-style conventions for docstrings
+pydocstyle.convention = "pep257"
+select = [
+  "ALL",
+]
+ignore = [
+  # needed only in large codebases
+  "TD002",    # flake8-todos/missing-todo-author
+  "TD003",    # flake8-todos/missing-todo-link
+  # incompatible with other rules
+  "COM812",   # flake8-commas/missing-trailing-comma (incompatible with black)
+  # disagree:
+  "PD010",    # pandas-vet/pandas-use-of-dot-pivot-or-unstack
+  "PD013",    # pandas-vet/pandas-use-of-dot-stack
+  # annoying:
+  "EM10",     # flake8-errmsg/*-in-exception
+  "RET504",   # flake8-return/unnecessary-assign
+  # ban something useful for a possibly good reason
+  "C901",     # mccabe/complex-structure
+  "S101",     # flake8-bandit/assert
+  "FIX00",    # flake8-fixme/line-contains-*
+  "ERA001",   # eradicate/commented-out-code
+  "PLR091",   # PyLint-Refactor/too-many-*
+  "TRY003",   # tryceratops/raise-vanilla-args
+  # printing
+  "T20",      # flake8-print
+]
+# objects that should be treated equivalently to a logging.Logger object.
+logger-objects = ["loguru.logger"]
+# allow the omission of a return type hint for __init__
+flake8-annotations.mypy-init-return = true
+# allow `dict(a=1, b=2)`
+flake8-comprehensions.allow-dict-calls-with-keyword-arguments = true
+
+# flag modules or module members that may not be imported or accessed
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"collections.namedtuple".msg = "Use typing.NamedTuple or @dataclasses.dataclass(frozen=True, slots=True)"
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/**.py" = [
+  "T20",      # flake8-print
+  "INP001",   # implicit-namespace-package
+]
+"!tests/test_*.py" = [
+  "PT",       # flake8-pytest-style
+]
+"tests/**.py" = [
+  "INP001",   # flake8-no-pep420/implicit-namespace-package
+]
+"tests/test_*.py" = [
+  "PLR2004",  # PyLint-Refactor/magic-value-comparison
+  "S101",     # flake8-bandit/assert
+  "D1",       # pydocstyle/undocumented-*
+  "TC001",    # flake8-type-checking/typing-only-*-import
+  "TC002",    # flake8-type-checking/typing-only-*-import
+  "TC003",    # flake8-type-checking/typing-only-*-import
+]
+
