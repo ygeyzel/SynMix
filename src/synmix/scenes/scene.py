@@ -1,15 +1,12 @@
-from typing import List, Tuple
-from pathlib import Path
+from synmix.params.params import Param
+from synmix.resource_loader import get_shaders_dir
 
-from params.params import Param
-
-
-SHADERS_DIR = Path("resources") / "shaders"
+SHADERS_DIR = get_shaders_dir()
 
 
 def _values_changed(org_value, new_value):
     """
-    Check if two values are significantly different
+    Check if two values are significantly different.
 
     Args:
         org_value: Original value
@@ -17,6 +14,7 @@ def _values_changed(org_value, new_value):
 
     Returns:
         True if values have changed, False otherwise
+
     """
     values_changed = False
     try:
@@ -28,7 +26,7 @@ def _values_changed(org_value, new_value):
         elif hasattr(org_value, "__len__") and hasattr(new_value, "__len__"):
             if len(org_value) == len(new_value):
                 values_changed = any(
-                    abs(a - b) > 1e-6 for a, b in zip(org_value, new_value)
+                    abs(a - b) > 1e-6 for a, b in zip(org_value, new_value, strict=True)
                 )
             else:
                 values_changed = True
@@ -44,13 +42,14 @@ def _values_changed(org_value, new_value):
     return values_changed
 
 
-def update_shader_params_from_list(shader_program, params):
+def update_shader_params_from_list(shader_program, params) -> None:
     """
-    Update shader uniforms with current parameter values from a list of params
+    Update shader uniforms with current parameter values from a list of params.
 
     Args:
         shader_program: The shader program to update
         params: List of Param objects to update
+
     """
     if shader_program is None:
         return
@@ -67,40 +66,41 @@ def update_shader_params_from_list(shader_program, params):
 
 
 class Scene:
-    """A class for common shader based visual scene functionality"""
+    """A class for common shader based visual scene functionality."""
 
     def __init__(
         self,
         name: str,
-        params: List[Param],
+        params: list[Param],
         fragment_shader_filename: str,
         vertex_shader_filename: str = "vertex.glsl",
-        res_factor: float = None,
-    ):
+        res_factor: float | None = None,
+    ) -> None:
         self.name = name
         self.params = params
         self.fragment_shader_filename = fragment_shader_filename
         self.vertex_shader_filename = vertex_shader_filename
         self.res_factor = res_factor
 
-    def __repr__(self):
-        return f"Scene({self.name}: shaders=[{self.fragment_shader_filename},{self.vertex_shader_filename}], params:{[p for p in self.params]})"
+    def __repr__(self) -> str:
+        return f"Scene({self.name}: shaders=[{self.fragment_shader_filename},{self.vertex_shader_filename}], params:{list(self.params)})"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__repr__()
 
-    def get_shaders(self) -> Tuple[str, str]:
+    def get_shaders(self) -> tuple[str, str]:
         """
-        Load and return shader source code from files
+        Load and return shader source code from files.
 
         Returns:
             Tuple of (vertex_shader_source, fragment_shader_source)
+
         """
         vertex_path = SHADERS_DIR / self.vertex_shader_filename
         fragment_path = SHADERS_DIR / self.fragment_shader_filename
 
         try:
-            with open(vertex_path, "r") as vf, open(fragment_path, "r") as ff:
+            with vertex_path.open() as vf, fragment_path.open() as ff:
                 vertex_source = vf.read()
                 fragment_source = ff.read()
                 return vertex_source, fragment_source
@@ -113,11 +113,12 @@ class Scene:
                 f"Error: {e}"
             ) from e
 
-    def update_shader_params(self, shader_program):
+    def update_shader_params(self, shader_program) -> None:
         """
-        Update shader uniforms with current parameter values
+        Update shader uniforms with current parameter values.
 
         Args:
             shader_program: The shader program to update
+
         """
         update_shader_params_from_list(shader_program, self.params)

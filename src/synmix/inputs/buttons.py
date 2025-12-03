@@ -1,6 +1,6 @@
 from enum import Enum
 
-from inputs.midi import MidiEventType, MidiGetter
+from synmix.inputs.midi import MidiEventType, MidiGetter
 
 
 class ButtonType(Enum):

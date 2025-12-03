@@ -1,0 +1,17 @@
+# Scene loading order
+scene_order = [
+    "UFO Blanket",
+    "MengerFall",
+    "DesertDunes",
+    "CBSGalaxy",
+    "QuaternionFractal",
+    "KeplerPlanet",
+    "WingsFractal",
+    "FlappyBird",
+    "FlowerMandala",
+    "Julia",
+    "LaserBeam",
+    "NeonKaleidoscope",
+    "Triskelion",
+    "worm_mandala",
+]
