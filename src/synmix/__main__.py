@@ -9,11 +9,10 @@ import moderngl_window as mglw
 
 mglw.settings.WINDOW["class"] = "moderngl_window.context.glfw.Window"
 
+from synmix.fakemidi.fakemidi import FakeMidi
 from synmix.inputs.input_manager import MidiInputManager
 from synmix.top_level.global_context import GlobalCtx
 from synmix.top_level.screen import Screen
-from synmix.fakemidi.fakemidi import FakeMidi
-
 
 MIDI_INPUT_SUBNAME = "Mixage"
 

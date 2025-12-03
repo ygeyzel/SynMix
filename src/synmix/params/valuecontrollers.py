@@ -6,15 +6,14 @@ from typing import Any, Callable, Dict, Iterable, Tuple
 
 from synmix.inputs.buttons import ButtonType
 from synmix.inputs.midi import (
+    MAX_PITCH,
     MIDI_DEC_VALUE,
     MIDI_INC_VALUE,
     MIDI_MAX_VALUE,
     MIDI_MIN_VALUE,
-    MAX_PITCH,
     MIN_PITCH,
 )
 from synmix.top_level.global_context import GlobalCtx
-
 
 controllers_registry: Dict[
     str, Tuple[type["ValueController"], frozenset[ButtonType]]

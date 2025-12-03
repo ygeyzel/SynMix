@@ -1,9 +1,8 @@
-from typing import List, Tuple
 from pathlib import Path
+from typing import List, Tuple
 
 from synmix.params.params import Param
 from synmix.resource_loader import get_shaders_dir
-
 
 SHADERS_DIR = get_shaders_dir()
 

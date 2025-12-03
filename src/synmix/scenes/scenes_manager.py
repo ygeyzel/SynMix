@@ -1,29 +1,30 @@
-import tomllib
 import json
-from typing import Tuple, Dict
 import random
+import tomllib
+from pathlib import Path
 from pprint import pprint
+from typing import Dict, Tuple
 
 import moderngl_window as mglw
-from pathlib import Path
+
 from synmix.inputs.buttons import Button
 from synmix.inputs.input_manager import MidiInputManager
 from synmix.inputs.midi import MIDI_BUTTEN_CLICK
 from synmix.params.params import Param
 from synmix.params.valuecontrollers import controllers_registry
-from synmix.scenes.scene import Scene, update_shader_params_from_list
-from synmix.top_level.global_context import GlobalCtx
 from synmix.resource_loader import (
+    get_post_processing_params_file,
     get_scenes_dir,
+    get_scenes_order_file,
     get_shaders_dir,
     get_textures_dir,
-    get_scenes_order_file,
-    get_post_processing_params_file,
 )
+from synmix.scenes.scene import Scene, update_shader_params_from_list
+from synmix.top_level.global_context import GlobalCtx
 
 try:
-    from PIL import Image
     import numpy as np
+    from PIL import Image
 
     PIL_AVAILABLE = True
 except ImportError:

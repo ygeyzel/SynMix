@@ -1,8 +1,9 @@
 import moderngl_window as mglw
-from synmix.top_level.global_context import GlobalCtx
-from synmix.scenes.scenes_manager import ScenesManager
+
 from synmix.inputs.input_manager import MidiInputManager
 from synmix.resource_loader import get_shaders_dir
+from synmix.scenes.scenes_manager import ScenesManager
+from synmix.top_level.global_context import GlobalCtx
 
 
 class Screen(mglw.WindowConfig):

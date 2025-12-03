@@ -1,11 +1,11 @@
 import sys
-from pathlib import Path
-
 import threading
 import time
-from pyglet.window import key as pyglet_key
-import moderngl_window as mglw
+from pathlib import Path
+
 import mido
+import moderngl_window as mglw
+from pyglet.window import key as pyglet_key
 
 from synmix.fakemidi.fakemidi import FakeMidi
 

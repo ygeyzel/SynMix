@@ -1,5 +1,5 @@
-from synmix.params.valuecontrollers import ValueController
 from synmix.inputs.buttons import Button
+from synmix.params.valuecontrollers import ValueController
 
 
 class Param:

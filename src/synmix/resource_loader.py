@@ -31,8 +31,8 @@ def get_resources_path() -> Path:
             # For older Python versions or when resources are in a zip
             # We need to extract to a temporary location
             # This is handled automatically by importlib.resources
-            import tempfile
             import shutil
+            import tempfile
 
             temp_dir = Path(tempfile.mkdtemp())
             # Copy resources to temp location
