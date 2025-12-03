@@ -1,6 +1,5 @@
 import platform
 from collections.abc import Callable
-from typing import Union
 
 import mido
 
@@ -63,7 +62,7 @@ class MidiInputManager:
         self.param_bindings = {}
 
     def bind_general_funcs(
-        self, event_selector: Union[Button, MidiGetter], afunc: Callable[[int], None]
+        self, event_selector: Button | MidiGetter, afunc: Callable[[int], None]
     ):
         midi_getter = (
             event_selector.midi_getter
