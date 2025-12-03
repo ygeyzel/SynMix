@@ -2,8 +2,6 @@
 
 import moderngl_window as mglw
 
-mglw.settings.WINDOW["class"] = "moderngl_window.context.glfw.Window"
-
 from synmix.top_level.screen import Screen
 
 
