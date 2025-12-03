@@ -97,7 +97,7 @@ class Scene:
         fragment_path = SHADERS_DIR / self.fragment_shader_filename
 
         try:
-            with open(vertex_path, "r") as vf, open(fragment_path, "r") as ff:
+            with open(vertex_path) as vf, open(fragment_path) as ff:
                 vertex_source = vf.read()
                 fragment_source = ff.read()
                 return vertex_source, fragment_source

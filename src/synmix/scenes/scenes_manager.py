@@ -132,7 +132,7 @@ class ScenesManager:
         vertex_path = SHADERS_DIR / "vertex.glsl"
         fragment_path = SHADERS_DIR / "post_processing.glsl"
 
-        with open(vertex_path, "r") as vf, open(fragment_path, "r") as ff:
+        with open(vertex_path) as vf, open(fragment_path) as ff:
             vertex_source = vf.read()
             fragment_source = ff.read()
 
@@ -246,7 +246,7 @@ class ScenesManager:
     def _reorder_scenes(self):
         """Reorder scenes according to the order specified in scenes_order.json"""
         try:
-            with open(SCENES_ORDER_FILE, "r") as f:
+            with open(SCENES_ORDER_FILE) as f:
                 config = json.load(f)
 
             scene_order = config.get("scene_order", [])
