@@ -1,7 +1,5 @@
-import sys
 import threading
 import time
-from pathlib import Path
 
 import mido
 import moderngl_window as mglw

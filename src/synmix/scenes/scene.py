@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import List, Tuple
 
 from synmix.params.params import Param
