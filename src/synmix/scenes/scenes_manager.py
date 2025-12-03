@@ -1,7 +1,6 @@
 import json
 import random
 import tomllib
-from pprint import pprint
 
 import moderngl_window as mglw
 
@@ -62,7 +61,6 @@ class ScenesManager:
                 )
             )
         )
-        pprint(self.scenes)
         self._new_scene_index = (
             self.current_scene_index
         )  # triggers self.load_new_scene()
