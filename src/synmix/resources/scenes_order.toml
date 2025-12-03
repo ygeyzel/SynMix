@@ -7,4 +7,11 @@ scene_order = [
     "QuaternionFractal",
     "KeplerPlanet",
     "WingsFractal",
+    "FlappyBird",
+    "FlowerMandala",
+    "Julia",
+    "LaserBeam",
+    "NeonKaleidoscope",
+    "Triskelion",
+    "worm_mandala",
 ]
