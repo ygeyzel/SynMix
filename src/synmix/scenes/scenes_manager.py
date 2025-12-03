@@ -268,7 +268,7 @@ class ScenesManager:
                     ordered_scenes.append(scene)
 
             self.scenes = ordered_scenes
-            print(f"Scenes reordered according to scenes_order.json")
+            print("Scenes reordered according to scenes_order.json")
 
         except FileNotFoundError:
             print(f"Warning: {SCENES_ORDER_FILE} not found. Using default order.")
