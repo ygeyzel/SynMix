@@ -1,7 +1,9 @@
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
-from synmix.fakemidi.fakemidi import FakeMidi
 from synmix.inputs.midi import MIDI_BUTTEN_CLICK, MIDI_DEC_VALUE, MIDI_INC_VALUE
+
+if TYPE_CHECKING:
+    from synmix.fakemidi.fakemidi import FakeMidi
 
 
 class TimeParams(NamedTuple):
