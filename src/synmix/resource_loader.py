@@ -1,6 +1,7 @@
 """
 Resource loading utilities for SynMix package resources
 """
+
 import sys
 from pathlib import Path
 

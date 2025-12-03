@@ -88,7 +88,9 @@ class SharedValueController(ValueController):
 
 @register_controller("NormalizedController", ButtonType.KNOB)
 class NormalizedController(ValueController):
-    def __init__(self, min_value, max_value, is_pitch=False, initial_value=0.0, *args, **kwargs):
+    def __init__(
+        self, min_value, max_value, is_pitch=False, initial_value=0.0, *args, **kwargs
+    ):
         is_persistent = kwargs.pop("is_persistent", True)
         super().__init__(initial_value=initial_value, is_persistent=is_persistent)
         self.min_value = min_value
@@ -106,7 +108,9 @@ class NormalizedController(ValueController):
 
 @register_controller("LinearSegmentedController", ButtonType.KNOB)
 class LinearSegmentedController(ValueController):
-    def __init__(self, segments_points: Iterable[Tuple[float, float]], initial_value=0.0):
+    def __init__(
+        self, segments_points: Iterable[Tuple[float, float]], initial_value=0.0
+    ):
         super().__init__(initial_value=initial_value, is_persistent=True)
         self.segments_points = sorted(segments_points, key=lambda point: point[0])
         self.num_segments = len(self.segments_points) - 1
@@ -202,7 +206,7 @@ class ToggleController(ValueController):
 @register_controller("IsPressedController", ButtonType.CLICKABLE)
 class IsPressedController(ValueController):
     def __init__(self):
-        super().__init__(initial_value = False)
+        super().__init__(initial_value=False)
 
     def control_value(self, in_value: int):
         self.set_value(in_value == MIDI_MAX_VALUE)
@@ -210,7 +214,9 @@ class IsPressedController(ValueController):
 
 @register_controller("TimerToggleController", ButtonType.CLICKABLE)
 class TimerToggleController(ValueController):
-    def __init__(self, min_time_to_reset=10.0, max_time_to_reset=600.0, is_persistent=True):
+    def __init__(
+        self, min_time_to_reset=10.0, max_time_to_reset=600.0, is_persistent=True
+    ):
         super().__init__(initial_value=False, is_persistent=is_persistent)
 
         self.min_time_to_reset = min_time_to_reset
@@ -235,7 +241,7 @@ class StartTimeController(ValueController):
 
         elif in_value == MIDI_MIN_VALUE:
             self.click_start_time = None
-            
+
     @property
     def value(self) -> float:
         if self.click_start_time is not None:

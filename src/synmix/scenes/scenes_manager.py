@@ -24,6 +24,7 @@ from synmix.resource_loader import (
 try:
     from PIL import Image
     import numpy as np
+
     PIL_AVAILABLE = True
 except ImportError:
     PIL_AVAILABLE = False
@@ -63,7 +64,9 @@ class ScenesManager:
             )
         )
         pprint(self.scenes)
-        self._new_scene_index = self.current_scene_index  # triggers self.load_new_scene()
+        self._new_scene_index = (
+            self.current_scene_index
+        )  # triggers self.load_new_scene()
         self.start_time = None
 
     def init_general_funcs_bindings(self):
@@ -102,7 +105,9 @@ class ScenesManager:
                     if not PIL_AVAILABLE:
                         continue
                     # Type checker: Image and np are available when PIL_AVAILABLE is True
-                    assert Image is not None and np is not None, "PIL modules should be available"  # type: ignore
+                    assert Image is not None and np is not None, (
+                        "PIL modules should be available"
+                    )  # type: ignore
                     img = Image.open(texture_file).convert("RGB")  # type: ignore
                     img_data = np.array(img)  # type: ignore
 
@@ -149,7 +154,7 @@ class ScenesManager:
 
     def _bind_textures_to_shader(self):
         """Bind loaded textures to post-processing shader uniforms.
-        
+
         Textures are bound to uniforms that are manually declared in the shader.
         The method tries to match texture names to uniform names using common conventions:
         - uTexture_<texture_name>
@@ -163,13 +168,13 @@ class ScenesManager:
         for texture_name, texture in self.textures.items():
             # Clean the texture name for uniform matching
             clean_name = texture_name.replace("-", "_").replace(" ", "_")
-            
+
             # Try different uniform name conventions
             uniform_candidates = [
                 f"uTexture_{clean_name}",  # uTexture_tv_error
                 clean_name,  # tv_error
             ]
-            
+
             bound = False
             for uniform_name in uniform_candidates:
                 if uniform_name in self.post_prog:
@@ -178,10 +183,12 @@ class ScenesManager:
                     texture_unit += 1
                     bound = True
                     break
-            
+
             if not bound:
-                print(f"Warning: Texture '{texture_name}' loaded but no matching uniform found in shader. "
-                      f"Declare a uniform like 'uniform sampler2D uTexture_{clean_name};' in the shader.")
+                print(
+                    f"Warning: Texture '{texture_name}' loaded but no matching uniform found in shader. "
+                    f"Declare a uniform like 'uniform sampler2D uTexture_{clean_name};' in the shader."
+                )
 
     @property
     def current_scene(self):
@@ -434,9 +441,8 @@ class ScenesManager:
             self.input_manager.bind_param(param)
             print(
                 f"{param.name:20} {param.button.name:16}",
-                ' '.join(
-                    self.global_ctx.fake_midi.key_dict[param.button.name]
-                ) if self.global_ctx.fake_midi else ''
+                " ".join(self.global_ctx.fake_midi.key_dict[param.button.name])
+                if self.global_ctx.fake_midi
+                else "",
             )
         print("=" * 80)
-        

@@ -37,7 +37,7 @@ class GlobalCtx:
             self.starting_scene_name: Optional[str] = None
             self.time_params: TimeParams = DEFAULT_TIME_PARAMS
             self.shared_values: dict = {}
-            
+
             # Time adjustment state
             self.time_offset_step = TIME_OFFSET_STEP
             self.time_speed_step = TIME_SPEED_STEP
@@ -46,7 +46,7 @@ class GlobalCtx:
             self._decrease_speed_active = False
             self._increase_hold_accumulator = 0.0
             self._decrease_hold_accumulator = 0.0
-            
+
             GlobalCtx._initialized = True
 
     def reset_time_params(self):

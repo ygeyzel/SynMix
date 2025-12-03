@@ -1,6 +1,7 @@
 """
 SynMix entry point - allows running as 'python -m synmix' or 'uv run synmix'
 """
+
 import argparse
 import sys
 

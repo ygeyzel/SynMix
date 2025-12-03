@@ -210,10 +210,14 @@ def load_key_map(file_path: str) -> Dict[int, Callable]:
 
     return key_map
 
+
 def load_key_dict(file_path: str) -> Dict[str, tuple[str, ...]]:
     with open(file_path, "r") as f:
         config = json.load(f)
-    return {button_name: tuple(button_params["keys"]) for button_name, button_params in config.items()}
+    return {
+        button_name: tuple(button_params["keys"])
+        for button_name, button_params in config.items()
+    }
 
 
 class FakeMidi:
@@ -234,6 +238,7 @@ class FakeMidi:
             # Load default key map file if none provided
             if key_map_file is None:
                 from synmix.resource_loader import get_fake_midi_key_map_file
+
                 key_map_file = str(get_fake_midi_key_map_file())
 
             self.output_name = output_name
