@@ -1,9 +1,12 @@
 import moderngl_window as mglw
 
+from synmix.fakemidi.fakemidi import FakeMidi
 from synmix.inputs.input_manager import MidiInputManager
 from synmix.resource_loader import get_shaders_dir
 from synmix.scenes.scenes_manager import ScenesManager
 from synmix.top_level.global_context import GlobalCtx
+
+MIDI_INPUT_SUBNAME = "Mixage"
 
 
 class Screen(mglw.WindowConfig):
@@ -21,7 +24,19 @@ class Screen(mglw.WindowConfig):
         super().__init__(**kwargs)
 
         global_ctx = GlobalCtx()
+
+        if self.argv.fakemidi:
+            global_ctx.fake_midi = FakeMidi()
+
+        if self.argv.start_scene:
+            global_ctx.starting_scene_name = self.argv.start_scene
+
         self.fake_midi = global_ctx.fake_midi
+        input_subname = (
+            self.fake_midi.output_name if self.fake_midi else MIDI_INPUT_SUBNAME
+        )
+        _input_manager = MidiInputManager(input_subname)
+
         self.sm = ScenesManager(
             self.ctx, starting_scene_name=global_ctx.starting_scene_name
         )
@@ -46,3 +61,15 @@ class Screen(mglw.WindowConfig):
 
             elif action == self.wnd.keys.ACTION_RELEASE:
                 self.fake_midi.on_key_release(key)
+
+    @classmethod
+    def add_arguments(cls, parser):
+        parser.description = "SynMix - Audio visualizer with MIDI control"
+        parser.add_argument(
+            "--fakemidi",
+            action="store_true",
+            help="Use fake MIDI controller with keyboard input instead of real MIDI device",
+        )
+        parser.add_argument(
+            "--start-scene", type=str, default=None, help="Name of the starting scene"
+        )
