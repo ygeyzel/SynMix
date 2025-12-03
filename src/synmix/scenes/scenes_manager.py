@@ -132,7 +132,7 @@ class ScenesManager:
         vertex_path = SHADERS_DIR / "vertex.glsl"
         fragment_path = SHADERS_DIR / "post_processing.glsl"
 
-        with open(vertex_path) as vf, open(fragment_path) as ff:
+        with vertex_path.open() as vf, fragment_path.open() as ff:
             vertex_source = vf.read()
             fragment_source = ff.read()
 
@@ -223,7 +223,7 @@ class ScenesManager:
                 continue
             if scene_file.suffix == ".toml":
                 print(f"Loading scene from file: {scene_file.name}")
-                with open(scene_file, "rb") as f:
+                with scene_file.open("rb") as f:
                     data = tomllib.load(f)
 
                 data["params"] = [
@@ -238,7 +238,7 @@ class ScenesManager:
         self._reorder_scenes()
 
     def _load_post_processing_params(self):
-        with open(POST_PROCESSING_PARAMS_FILE, "rb") as f:
+        with POST_PROCESSING_PARAMS_FILE.open("rb") as f:
             data = tomllib.load(f)
 
         params_data = data.get("params", [])
@@ -247,7 +247,7 @@ class ScenesManager:
     def _reorder_scenes(self) -> None:
         """Reorder scenes according to the order specified in scenes_order.json."""
         try:
-            with open(SCENES_ORDER_FILE) as f:
+            with SCENES_ORDER_FILE.open() as f:
                 config = json.load(f)
 
             scene_order = config.get("scene_order", [])

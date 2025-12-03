@@ -3,6 +3,7 @@ import platform
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from functools import partial, reduce
+from pathlib import Path
 from typing import NamedTuple
 
 import mido
@@ -171,7 +172,7 @@ def get_key_code(key_name: str) -> int:
     return getattr(pyglet_key, key_name)
 
 
-def load_key_map(file_path: str) -> dict[int, Callable]:
+def load_key_map(file_path: Path) -> dict[int, Callable]:
     """
     Example JSON structure:
     {
@@ -191,7 +192,7 @@ def load_key_map(file_path: str) -> dict[int, Callable]:
         ...
     }.
     """
-    with open(file_path) as f:
+    with file_path.open() as f:
         config = json.load(f)
     key_map = {}
     for button_name, mapping in config.items():
@@ -210,8 +211,8 @@ def load_key_map(file_path: str) -> dict[int, Callable]:
     return key_map
 
 
-def load_key_dict(file_path: str) -> dict[str, tuple[str, ...]]:
-    with open(file_path) as f:
+def load_key_dict(file_path: Path) -> dict[str, tuple[str, ...]]:
+    with file_path.open() as f:
         config = json.load(f)
     return {
         button_name: tuple(button_params["keys"])
@@ -238,7 +239,7 @@ class FakeMidi:
             if key_map_file is None:
                 from synmix.resource_loader import get_fake_midi_key_map_file
 
-                key_map_file = str(get_fake_midi_key_map_file())
+                key_map_file = get_fake_midi_key_map_file()
 
             self.output_name = output_name
             # Windows doesn't support virtual MIDI ports, so we'll store messages instead
