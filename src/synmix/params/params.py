@@ -19,5 +19,5 @@ class Param:
     def is_reset_on_scene_change(self) -> bool:
         return not self.controller.is_persistent
 
-    def control_param(self, value: int | float):
+    def control_param(self, value: float):
         self.controller.control_value(value)
