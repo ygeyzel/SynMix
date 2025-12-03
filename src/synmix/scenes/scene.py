@@ -25,7 +25,7 @@ def _values_changed(org_value, new_value):
         elif hasattr(org_value, "__len__") and hasattr(new_value, "__len__"):
             if len(org_value) == len(new_value):
                 values_changed = any(
-                    abs(a - b) > 1e-6 for a, b in zip(org_value, new_value)
+                    abs(a - b) > 1e-6 for a, b in zip(org_value, new_value, strict=True)
                 )
             else:
                 values_changed = True

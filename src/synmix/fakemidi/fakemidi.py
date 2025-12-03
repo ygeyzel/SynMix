@@ -203,7 +203,7 @@ def load_key_map(file_path: str) -> dict[int, Callable]:
                 f"Number of keys does not match number of message methods for button '{button_name}'"
             )
 
-        for key, methods in zip(mapping["keys"], keys_messages_methods):
+        for key, methods in zip(mapping["keys"], keys_messages_methods, strict=True):
             key_code = get_key_code(key)
             key_map[key_code] = methods
 
