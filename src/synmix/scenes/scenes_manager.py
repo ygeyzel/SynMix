@@ -37,7 +37,7 @@ POST_PROCESSING_PARAMS_FILE = get_post_processing_params_file()
 
 
 class ScenesManager:
-    def __init__(self, screen_ctx, starting_scene_name: str = None):
+    def __init__(self, screen_ctx, starting_scene_name: str | None = None):
         self.scenes = []
         self.input_manager = MidiInputManager()
         self.screen_ctx = screen_ctx

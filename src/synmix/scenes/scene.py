@@ -72,7 +72,7 @@ class Scene:
         params: list[Param],
         fragment_shader_filename: str,
         vertex_shader_filename: str = "vertex.glsl",
-        res_factor: float = None,
+        res_factor: float | None = None,
     ):
         self.name = name
         self.params = params
