@@ -51,15 +51,24 @@ class ScenesManager:
 
         self.init_general_funcs_bindings()
         self.init_post_processing()
-        self.current_scene_index = (
-            0
-            if starting_scene_name is None
-            else self.scenes.index(
-                next(
-                    scene for scene in self.scenes if scene.name == starting_scene_name
-                )
+
+        # Find starting scene index
+        if starting_scene_name is None:
+            self.current_scene_index = 0
+        else:
+            # Try to find the scene by name
+            matching_scene = next(
+                (scene for scene in self.scenes if scene.name == starting_scene_name),
+                None,
             )
-        )
+            if matching_scene is None:
+                available_scenes = [scene.name for scene in self.scenes]
+                print(f"Error: Scene '{starting_scene_name}' not found.")
+                print(f"Available scenes: {', '.join(available_scenes)}")
+                print("Starting with first scene instead.")
+                self.current_scene_index = 0
+            else:
+                self.current_scene_index = self.scenes.index(matching_scene)
         self._new_scene_index = (
             self.current_scene_index
         )  # triggers self.load_new_scene()
