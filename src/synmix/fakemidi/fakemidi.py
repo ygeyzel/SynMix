@@ -2,7 +2,7 @@ import json
 import platform
 from abc import ABC, abstractmethod
 from functools import partial, reduce
-from typing import Callable, Dict, List, NamedTuple, Tuple
+from typing import Callable, NamedTuple
 
 import mido
 from pyglet.window import key as pyglet_key
@@ -46,15 +46,15 @@ class ButtonInterface(ABC):
         return message_dict
 
     @abstractmethod
-    def generate_messages(self, *args, **kwargs) -> List[mido.Message]:
+    def generate_messages(self, *args, **kwargs) -> list[mido.Message]:
         pass
 
     @property
     @abstractmethod
-    def key_messages_params(self) -> List[KeyMessageParams]:
+    def key_messages_params(self) -> list[KeyMessageParams]:
         pass
 
-    def keys_messages_methods(self) -> List[Tuple[Callable, Callable | None]]:
+    def keys_messages_methods(self) -> list[tuple[Callable, Callable | None]]:
         return [
             (
                 partial(self.generate_messages, **params.pressed_params),
@@ -87,7 +87,7 @@ class KnobInterface(ButtonInterface):
 
     def generate_messages(
         self, step: int, is_inc_dir: bool, **kwargs
-    ) -> List[mido.Message]:
+    ) -> list[mido.Message]:
         message_dict = self._generate_base_message_dict()
 
         dir_factor = 1 if is_inc_dir else -1
@@ -97,7 +97,7 @@ class KnobInterface(ButtonInterface):
         return [mido.Message(**message_dict)]
 
     @property
-    def key_messages_params(self) -> List[KeyMessageParams]:
+    def key_messages_params(self) -> list[KeyMessageParams]:
         return [
             KeyMessageParams(pressed_params={"is_inc_dir": True}, released_params=None),
             KeyMessageParams(
@@ -109,7 +109,7 @@ class KnobInterface(ButtonInterface):
 class ScrollerInterface(ButtonInterface):
     def generate_messages(
         self, is_inc_dir: bool, repeats: int, **kwargs
-    ) -> List[mido.Message]:
+    ) -> list[mido.Message]:
         message_dict = self._generate_base_message_dict()
         message_dict[self.value_field] = (
             MIDI_INC_VALUE if is_inc_dir else MIDI_DEC_VALUE
@@ -117,7 +117,7 @@ class ScrollerInterface(ButtonInterface):
         return [mido.Message(**message_dict)] * repeats
 
     @property
-    def key_messages_params(self) -> List[KeyMessageParams]:
+    def key_messages_params(self) -> list[KeyMessageParams]:
         return [
             KeyMessageParams(pressed_params={"is_inc_dir": True}, released_params=None),
             KeyMessageParams(
@@ -131,7 +131,7 @@ class ClickableInterface(ButtonInterface):
         super().__init__(button)
         self.is_on = False
 
-    def generate_messages(self, is_on, **kwargs) -> List[mido.Message]:
+    def generate_messages(self, is_on, **kwargs) -> list[mido.Message]:
         if is_on == self.is_on:
             return []
 
@@ -142,7 +142,7 @@ class ClickableInterface(ButtonInterface):
         return [mido.Message(**message_dict)]
 
     @property
-    def key_messages_params(self) -> List[KeyMessageParams]:
+    def key_messages_params(self) -> list[KeyMessageParams]:
         return [
             KeyMessageParams(
                 pressed_params={"is_on": True}, released_params={"is_on": False}
@@ -170,7 +170,7 @@ def get_key_code(key_name: str) -> int:
     return getattr(pyglet_key, key_name)
 
 
-def load_key_map(file_path: str) -> Dict[int, Callable]:
+def load_key_map(file_path: str) -> dict[int, Callable]:
     """
     Example JSON structure:
     {
@@ -209,7 +209,7 @@ def load_key_map(file_path: str) -> Dict[int, Callable]:
     return key_map
 
 
-def load_key_dict(file_path: str) -> Dict[str, tuple[str, ...]]:
+def load_key_dict(file_path: str) -> dict[str, tuple[str, ...]]:
     with open(file_path, "r") as f:
         config = json.load(f)
     return {

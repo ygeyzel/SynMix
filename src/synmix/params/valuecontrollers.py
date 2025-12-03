@@ -2,7 +2,7 @@ import time
 from abc import ABC, abstractmethod
 from random import uniform
 from threading import Timer
-from typing import Any, Callable, Dict, Iterable, Tuple
+from typing import Any, Callable, Iterable
 
 from synmix.inputs.buttons import ButtonType
 from synmix.inputs.midi import (
@@ -15,8 +15,8 @@ from synmix.inputs.midi import (
 )
 from synmix.top_level.global_context import GlobalCtx
 
-controllers_registry: Dict[
-    str, Tuple[type["ValueController"], frozenset[ButtonType]]
+controllers_registry: dict[
+    str, tuple[type["ValueController"], frozenset[ButtonType]]
 ] = {}
 
 
@@ -108,7 +108,7 @@ class NormalizedController(ValueController):
 @register_controller("LinearSegmentedController", ButtonType.KNOB)
 class LinearSegmentedController(ValueController):
     def __init__(
-        self, segments_points: Iterable[Tuple[float, float]], initial_value=0.0
+        self, segments_points: Iterable[tuple[float, float]], initial_value=0.0
     ):
         super().__init__(initial_value=initial_value, is_persistent=True)
         self.segments_points = sorted(segments_points, key=lambda point: point[0])

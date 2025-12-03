@@ -2,7 +2,6 @@ import json
 import random
 import tomllib
 from pprint import pprint
-from typing import Dict, Tuple
 
 import moderngl_window as mglw
 
@@ -48,7 +47,7 @@ class ScenesManager:
         self.fbo = None
         self.fbo_texture = None
         self.global_ctx = GlobalCtx()
-        self.textures: Dict[str, any] = {}  # Store loaded textures
+        self.textures: dict[str, any] = {}  # Store loaded textures
         self._load_scens_from_toml_files()
         assert len(self.scenes) > 0, "No scenes are loaded."
 
@@ -341,7 +340,7 @@ class ScenesManager:
         self.quad.render(self.post_prog)
 
     def _update_params(
-        self, time: float, frame_time: float, resolution: Tuple[float, float, float]
+        self, time: float, frame_time: float, resolution: tuple[float, float, float]
     ):
         """
         Update shader uniforms with current parameter values for first pass
@@ -367,7 +366,7 @@ class ScenesManager:
         self.current_scene.update_shader_params(self.current_prog)
 
     def _update_post_params(
-        self, time: float, frame_time: float, resolution: Tuple[float, float, float]
+        self, time: float, frame_time: float, resolution: tuple[float, float, float]
     ):
         """
         Update shader uniforms with current parameter values for second pass
