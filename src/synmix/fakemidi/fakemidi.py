@@ -8,8 +8,8 @@ from typing import Callable, Dict, List, NamedTuple, Tuple
 import mido
 from pyglet.window import key as pyglet_key
 
-from inputs.buttons import Button, ButtonType
-from inputs.midi import (
+from synmix.inputs.buttons import Button, ButtonType
+from synmix.inputs.midi import (
     get_midi_event_descriptor,
     MIDI_DEC_VALUE,
     MidiEventType,
@@ -227,10 +227,15 @@ class FakeMidi:
     def __init__(
         self,
         output_name="Fake MIDI Controller",
-        key_map_file="resources/fake_midi_key_map.json",
+        key_map_file=None,
     ):
         # Only initialize if it's the first time
         if not hasattr(self, "_initialized"):
+            # Load default key map file if none provided
+            if key_map_file is None:
+                from synmix.resource_loader import get_fake_midi_key_map_file
+                key_map_file = str(get_fake_midi_key_map_file())
+
             self.output_name = output_name
             # Windows doesn't support virtual MIDI ports, so we'll store messages instead
             if platform.system() == "Windows":

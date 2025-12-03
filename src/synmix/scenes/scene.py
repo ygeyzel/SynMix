@@ -1,10 +1,11 @@
 from typing import List, Tuple
 from pathlib import Path
 
-from params.params import Param
+from synmix.params.params import Param
+from synmix.resource_loader import get_shaders_dir
 
 
-SHADERS_DIR = Path("resources") / "shaders"
+SHADERS_DIR = get_shaders_dir()
 
 
 def _values_changed(org_value, new_value):

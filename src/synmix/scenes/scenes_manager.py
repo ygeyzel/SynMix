@@ -6,13 +6,20 @@ from pprint import pprint
 
 import moderngl_window as mglw
 from pathlib import Path
-from inputs.buttons import Button
-from inputs.input_manager import MidiInputManager
-from inputs.midi import MIDI_BUTTEN_CLICK
-from params.params import Param
-from params.valuecontrollers import controllers_registry
-from scenes.scene import Scene, update_shader_params_from_list
-from top_level.global_context import GlobalCtx
+from synmix.inputs.buttons import Button
+from synmix.inputs.input_manager import MidiInputManager
+from synmix.inputs.midi import MIDI_BUTTEN_CLICK
+from synmix.params.params import Param
+from synmix.params.valuecontrollers import controllers_registry
+from synmix.scenes.scene import Scene, update_shader_params_from_list
+from synmix.top_level.global_context import GlobalCtx
+from synmix.resource_loader import (
+    get_scenes_dir,
+    get_shaders_dir,
+    get_textures_dir,
+    get_scenes_order_file,
+    get_post_processing_params_file,
+)
 
 try:
     from PIL import Image
@@ -22,12 +29,11 @@ except ImportError:
     PIL_AVAILABLE = False
 
 
-RESOURCES_DIR = Path("resources")
-SCENES_DIR = RESOURCES_DIR / "scenes"
-SHADERS_DIR = RESOURCES_DIR / "shaders"
-TEXTURES_DIR = RESOURCES_DIR / "textures"
-SCENES_ORDER_FILE = RESOURCES_DIR / "scenes_order.json"
-POST_PROCESSING_PARAMS_FILE = SCENES_DIR / "post_processing_params.toml"
+SCENES_DIR = get_scenes_dir()
+SHADERS_DIR = get_shaders_dir()
+TEXTURES_DIR = get_textures_dir()
+SCENES_ORDER_FILE = get_scenes_order_file()
+POST_PROCESSING_PARAMS_FILE = get_post_processing_params_file()
 
 
 class ScenesManager:

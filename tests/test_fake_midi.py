@@ -7,12 +7,7 @@ from pyglet.window import key as pyglet_key
 import moderngl_window as mglw
 import mido
 
-# Add parent directory to path so we can import from utils, inputs, etc.
-script_dir = Path(__file__).resolve().parent
-project_root = script_dir.parent
-sys.path.insert(0, str(project_root))
-
-from fakemidi.fakemidi import FakeMidi
+from synmix.fakemidi.fakemidi import FakeMidi
 
 
 class MidiMonitor(threading.Thread):

@@ -3,9 +3,9 @@ from typing import Callable, Union
 
 import mido
 
-from inputs.buttons import Button
-from inputs.midi import MidiEventType, MidiGetter, get_midi_event_descriptor
-from params.params import Param
+from synmix.inputs.buttons import Button
+from synmix.inputs.midi import MidiEventType, MidiGetter, get_midi_event_descriptor
+from synmix.params.params import Param
 
 
 class MidiInputManager:
@@ -32,7 +32,7 @@ class MidiInputManager:
                 and platform.system() == "Windows"
             ):
                 # Import here to avoid circular import
-                from top_level.global_context import GlobalCtx
+                from synmix.top_level.global_context import GlobalCtx
 
                 global_ctx = GlobalCtx()
                 self.fake_midi = global_ctx.fake_midi

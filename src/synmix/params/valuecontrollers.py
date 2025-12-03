@@ -4,8 +4,8 @@ from random import uniform
 from threading import Timer
 from typing import Any, Callable, Dict, Iterable, Tuple
 
-from inputs.buttons import ButtonType
-from inputs.midi import (
+from synmix.inputs.buttons import ButtonType
+from synmix.inputs.midi import (
     MIDI_DEC_VALUE,
     MIDI_INC_VALUE,
     MIDI_MAX_VALUE,
@@ -13,7 +13,7 @@ from inputs.midi import (
     MAX_PITCH,
     MIN_PITCH,
 )
-from top_level.global_context import GlobalCtx
+from synmix.top_level.global_context import GlobalCtx
 
 
 controllers_registry: Dict[

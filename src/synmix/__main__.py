@@ -1,3 +1,6 @@
+"""
+SynMix entry point - allows running as 'python -m synmix' or 'uv run synmix'
+"""
 import argparse
 import sys
 
@@ -5,16 +8,17 @@ import moderngl_window as mglw
 
 mglw.settings.WINDOW["class"] = "moderngl_window.context.glfw.Window"
 
-from inputs.input_manager import MidiInputManager
-from top_level.global_context import GlobalCtx
-from top_level.screen import Screen
-from fakemidi.fakemidi import FakeMidi
+from synmix.inputs.input_manager import MidiInputManager
+from synmix.top_level.global_context import GlobalCtx
+from synmix.top_level.screen import Screen
+from synmix.fakemidi.fakemidi import FakeMidi
 
 
 MIDI_INPUT_SUBNAME = "Mixage"
 
 
-if __name__ == "__main__":
+def main():
+    """Main entry point for SynMix application"""
     # Parse command line arguments (use parse_known_args to allow moderngl_window's args to pass through)
     parser = argparse.ArgumentParser(
         description="SynMix - Audio visualizer with MIDI control", add_help=False
@@ -46,3 +50,7 @@ if __name__ == "__main__":
 
     # Entry point: Create window and start the main rendering loop
     mglw.run_window_config(Screen)
+
+
+if __name__ == "__main__":
+    main()

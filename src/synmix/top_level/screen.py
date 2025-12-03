@@ -1,7 +1,8 @@
 import moderngl_window as mglw
-from top_level.global_context import GlobalCtx
-from scenes.scenes_manager import ScenesManager
-from inputs.input_manager import MidiInputManager
+from synmix.top_level.global_context import GlobalCtx
+from synmix.scenes.scenes_manager import ScenesManager
+from synmix.inputs.input_manager import MidiInputManager
+from synmix.resource_loader import get_shaders_dir
 
 
 class Screen(mglw.WindowConfig):
@@ -13,7 +14,7 @@ class Screen(mglw.WindowConfig):
     window_size = (800, 800)
     aspect_ratio = None
     resizable = True
-    resource_dir = "resources/shaders"  # Directory containing GLSL shader files
+    resource_dir = str(get_shaders_dir())  # Directory containing GLSL shader files
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
