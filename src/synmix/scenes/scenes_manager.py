@@ -1,37 +1,41 @@
-import tomllib
-import json
-from typing import Tuple, Dict
 import random
-from pprint import pprint
+import tomllib
 
 import moderngl_window as mglw
-from pathlib import Path
-from inputs.buttons import Button
-from inputs.input_manager import MidiInputManager
-from inputs.midi import MIDI_BUTTEN_CLICK
-from params.params import Param
-from params.valuecontrollers import controllers_registry
-from scenes.scene import Scene, update_shader_params_from_list
-from top_level.global_context import GlobalCtx
+
+from synmix.inputs.buttons import Button
+from synmix.inputs.input_manager import MidiInputManager
+from synmix.inputs.midi import MIDI_BUTTEN_CLICK
+from synmix.params.params import Param
+from synmix.params.valuecontrollers import controllers_registry
+from synmix.resource_loader import (
+    get_post_processing_params_file,
+    get_scenes_dir,
+    get_scenes_order_file,
+    get_shaders_dir,
+    get_textures_dir,
+)
+from synmix.scenes.scene import Scene, update_shader_params_from_list
+from synmix.top_level.global_context import GlobalCtx
 
 try:
-    from PIL import Image
     import numpy as np
+    from PIL import Image
+
     PIL_AVAILABLE = True
 except ImportError:
     PIL_AVAILABLE = False
 
 
-RESOURCES_DIR = Path("resources")
-SCENES_DIR = RESOURCES_DIR / "scenes"
-SHADERS_DIR = RESOURCES_DIR / "shaders"
-TEXTURES_DIR = RESOURCES_DIR / "textures"
-SCENES_ORDER_FILE = RESOURCES_DIR / "scenes_order.json"
-POST_PROCESSING_PARAMS_FILE = SCENES_DIR / "post_processing_params.toml"
+SCENES_DIR = get_scenes_dir()
+SHADERS_DIR = get_shaders_dir()
+TEXTURES_DIR = get_textures_dir()
+SCENES_ORDER_FILE = get_scenes_order_file()
+POST_PROCESSING_PARAMS_FILE = get_post_processing_params_file()
 
 
 class ScenesManager:
-    def __init__(self, screen_ctx, starting_scene_name: str = None):
+    def __init__(self, screen_ctx, starting_scene_name: str | None = None) -> None:
         self.scenes = []
         self.input_manager = MidiInputManager()
         self.screen_ctx = screen_ctx
@@ -41,26 +45,36 @@ class ScenesManager:
         self.fbo = None
         self.fbo_texture = None
         self.global_ctx = GlobalCtx()
-        self.textures: Dict[str, any] = {}  # Store loaded textures
+        self.textures: dict[str, any] = {}  # Store loaded textures
         self._load_scens_from_toml_files()
         assert len(self.scenes) > 0, "No scenes are loaded."
 
         self.init_general_funcs_bindings()
         self.init_post_processing()
-        self.current_scene_index = (
-            0
-            if starting_scene_name is None
-            else self.scenes.index(
-                next(
-                    scene for scene in self.scenes if scene.name == starting_scene_name
-                )
+
+        # Find starting scene index
+        if starting_scene_name is None:
+            self.current_scene_index = 0
+        else:
+            # Try to find the scene by name
+            matching_scene = next(
+                (scene for scene in self.scenes if scene.name == starting_scene_name),
+                None,
             )
-        )
-        pprint(self.scenes)
-        self._new_scene_index = self.current_scene_index  # triggers self.load_new_scene()
+            if matching_scene is None:
+                available_scenes = [scene.name for scene in self.scenes]
+                print(f"Error: Scene '{starting_scene_name}' not found.")
+                print(f"Available scenes: {', '.join(available_scenes)}")
+                print("Starting with first scene instead.")
+                self.current_scene_index = 0
+            else:
+                self.current_scene_index = self.scenes.index(matching_scene)
+        self._new_scene_index = (
+            self.current_scene_index
+        )  # triggers self.load_new_scene()
         self.start_time = None
 
-    def init_general_funcs_bindings(self):
+    def init_general_funcs_bindings(self) -> None:
         binds = (
             (Button.RIGHT_LOAD, self.change_to_next_scene),
             (Button.LEFT_LOAD, self.change_to_previous_scene),
@@ -75,8 +89,8 @@ class ScenesManager:
         for control_selector, afunc in binds:
             self.input_manager.bind_general_funcs(control_selector, afunc)
 
-    def _load_textures(self):
-        """Load all images from resources/textures directory as textures"""
+    def _load_textures(self) -> None:
+        """Load all images from resources/textures directory as textures."""
         if not PIL_AVAILABLE:
             print("Warning: PIL/Pillow not available. Textures will not be loaded.")
             print("Install Pillow with: pip install Pillow")
@@ -96,7 +110,9 @@ class ScenesManager:
                     if not PIL_AVAILABLE:
                         continue
                     # Type checker: Image and np are available when PIL_AVAILABLE is True
-                    assert Image is not None and np is not None, "PIL modules should be available"  # type: ignore
+                    assert Image is not None and np is not None, (
+                        "PIL modules should be available"
+                    )  # type: ignore
                     img = Image.open(texture_file).convert("RGB")  # type: ignore
                     img_data = np.array(img)  # type: ignore
 
@@ -113,8 +129,8 @@ class ScenesManager:
                 except Exception as e:
                     print(f"Error loading texture {texture_file.name}: {e}")
 
-    def init_post_processing(self):
-        """Initialize post-processing shader and FBO"""
+    def init_post_processing(self) -> None:
+        """Initialize post-processing shader and FBO."""
         # Load textures first
         self._load_textures()
 
@@ -122,7 +138,7 @@ class ScenesManager:
         vertex_path = SHADERS_DIR / "vertex.glsl"
         fragment_path = SHADERS_DIR / "post_processing.glsl"
 
-        with open(vertex_path, "r") as vf, open(fragment_path, "r") as ff:
+        with vertex_path.open() as vf, fragment_path.open() as ff:
             vertex_source = vf.read()
             fragment_source = ff.read()
 
@@ -141,9 +157,10 @@ class ScenesManager:
         for param in self.post_params:
             self.input_manager.bind_secondary_param(param)
 
-    def _bind_textures_to_shader(self):
-        """Bind loaded textures to post-processing shader uniforms.
-        
+    def _bind_textures_to_shader(self) -> None:
+        """
+        Bind loaded textures to post-processing shader uniforms.
+
         Textures are bound to uniforms that are manually declared in the shader.
         The method tries to match texture names to uniform names using common conventions:
         - uTexture_<texture_name>
@@ -157,13 +174,13 @@ class ScenesManager:
         for texture_name, texture in self.textures.items():
             # Clean the texture name for uniform matching
             clean_name = texture_name.replace("-", "_").replace(" ", "_")
-            
+
             # Try different uniform name conventions
             uniform_candidates = [
                 f"uTexture_{clean_name}",  # uTexture_tv_error
                 clean_name,  # tv_error
             ]
-            
+
             bound = False
             for uniform_name in uniform_candidates:
                 if uniform_name in self.post_prog:
@@ -172,10 +189,12 @@ class ScenesManager:
                     texture_unit += 1
                     bound = True
                     break
-            
+
             if not bound:
-                print(f"Warning: Texture '{texture_name}' loaded but no matching uniform found in shader. "
-                      f"Declare a uniform like 'uniform sampler2D uTexture_{clean_name};' in the shader.")
+                print(
+                    f"Warning: Texture '{texture_name}' loaded but no matching uniform found in shader. "
+                    f"Declare a uniform like 'uniform sampler2D uTexture_{clean_name};' in the shader."
+                )
 
     @property
     def current_scene(self):
@@ -204,13 +223,13 @@ class ScenesManager:
         acontroller = controller_cls(**data["controller"].get("args", {}))
         return Param(name=data["name"], button=abuttom, controller=acontroller)
 
-    def _load_scens_from_toml_files(self):
+    def _load_scens_from_toml_files(self) -> None:
         for scene_file in SCENES_DIR.iterdir():
             if scene_file.name == POST_PROCESSING_PARAMS_FILE.name:
                 continue
             if scene_file.suffix == ".toml":
                 print(f"Loading scene from file: {scene_file.name}")
-                with open(scene_file, "rb") as f:
+                with scene_file.open("rb") as f:
                     data = tomllib.load(f)
 
                 data["params"] = [
@@ -219,23 +238,22 @@ class ScenesManager:
                 ]
                 ascene = Scene(**data)
                 self.scenes.append(ascene)
-                print(f"Scene {ascene.name} loaded")
 
         # Reorder scenes according to scenes_order.json
         self._reorder_scenes()
 
     def _load_post_processing_params(self):
-        with open(POST_PROCESSING_PARAMS_FILE, "rb") as f:
+        with POST_PROCESSING_PARAMS_FILE.open("rb") as f:
             data = tomllib.load(f)
 
         params_data = data.get("params", [])
         return [self._generate_param_from_file_data(p) for p in params_data]
 
-    def _reorder_scenes(self):
-        """Reorder scenes according to the order specified in scenes_order.json"""
+    def _reorder_scenes(self) -> None:
+        """Reorder scenes according to the order specified in scenes_order.toml."""
         try:
-            with open(SCENES_ORDER_FILE, "r") as f:
-                config = json.load(f)
+            with SCENES_ORDER_FILE.open("rb") as f:
+                config = tomllib.load(f)
 
             scene_order = config.get("scene_order", [])
             if not scene_order:
@@ -256,23 +274,24 @@ class ScenesManager:
                     ordered_scenes.append(scene)
 
             self.scenes = ordered_scenes
-            print(f"Scenes reordered according to scenes_order.json")
+            print("Scenes reordered according to scenes_order.toml")
 
         except FileNotFoundError:
             print(f"Warning: {SCENES_ORDER_FILE} not found. Using default order.")
-        except (json.JSONDecodeError, KeyError) as e:
+        except (tomllib.TOMLDecodeError, KeyError) as e:
             print(
                 f"Warning: Error parsing {SCENES_ORDER_FILE}: {e}. Using default order."
             )
 
-    def render(self, time, frame_time, resolution):
+    def render(self, time, frame_time, resolution) -> None:
         """
-        Render the current scene with 2-pass rendering
+        Render the current scene with 2-pass rendering.
 
         Args:
             time: Current time for animations
             frame_time: Time since last frame
             resolution: Screen resolution as (width, height, aspect_ratio)
+
         """
         if self._new_scene_index is not None:
             self.load_new_scene()
@@ -328,15 +347,16 @@ class ScenesManager:
         self.quad.render(self.post_prog)
 
     def _update_params(
-        self, time: float, frame_time: float, resolution: Tuple[float, float, float]
-    ):
+        self, time: float, frame_time: float, resolution: tuple[float, float, float]
+    ) -> None:
         """
-        Update shader uniforms with current parameter values for first pass
+        Update shader uniforms with current parameter values for first pass.
 
         Args:
             time: Current time for animations
             frame_time: Time since last frame
             resolution: Screen resolution as (width, height, aspect_ratio)
+
         """
         if self.current_prog is None:
             return
@@ -354,15 +374,16 @@ class ScenesManager:
         self.current_scene.update_shader_params(self.current_prog)
 
     def _update_post_params(
-        self, time: float, frame_time: float, resolution: Tuple[float, float, float]
-    ):
+        self, time: float, frame_time: float, resolution: tuple[float, float, float]
+    ) -> None:
         """
-        Update shader uniforms with current parameter values for second pass
+        Update shader uniforms with current parameter values for second pass.
 
         Args:
             time: Current time for animations
             frame_time: Time since last frame
             resolution: Screen resolution as (width, height, aspect_ratio)
+
         """
         if self.post_prog is None:
             return
@@ -376,17 +397,17 @@ class ScenesManager:
         # Update post-processing shader parameters
         update_shader_params_from_list(self.post_prog, self.post_params)
 
-    def change_to_next_scene(self, value: int | None = None):
+    def change_to_next_scene(self, value: int | None = None) -> None:
         if value is not None and value != MIDI_BUTTEN_CLICK:
             return
         self._new_scene_index = (self.current_scene_index + 1) % len(self.scenes)
 
-    def change_to_previous_scene(self, value: int | None = None):
+    def change_to_previous_scene(self, value: int | None = None) -> None:
         if value is not None and value != MIDI_BUTTEN_CLICK:
             return
         self._new_scene_index = (self.current_scene_index - 1) % len(self.scenes)
 
-    def change_to_random_scene(self, value: int | None = None):
+    def change_to_random_scene(self, value: int | None = None) -> None:
         if value is not None and value != MIDI_BUTTEN_CLICK:
             return
         available_scenes = [
@@ -395,7 +416,7 @@ class ScenesManager:
         if available_scenes:
             self._new_scene_index = random.choice(available_scenes)
 
-    def load_new_scene(self):
+    def load_new_scene(self) -> None:
         self.current_scene_index = self._new_scene_index
         new_scene = self.current_scene
         print("=" * 80)
@@ -428,9 +449,8 @@ class ScenesManager:
             self.input_manager.bind_param(param)
             print(
                 f"{param.name:20} {param.button.name:16}",
-                ' '.join(
-                    self.global_ctx.fake_midi.key_dict[param.button.name]
-                ) if self.global_ctx.fake_midi else ''
+                " ".join(self.global_ctx.fake_midi.key_dict[param.button.name])
+                if self.global_ctx.fake_midi
+                else "",
             )
         print("=" * 80)
-        
