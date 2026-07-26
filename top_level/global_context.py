@@ -34,7 +34,7 @@ class GlobalCtx:
         # Only initialize if it's the first time
         if not GlobalCtx._initialized:
             self.fake_midi: Optional[FakeMidi] = None
-            self.starting_scene_name: Optional[str] = None
+            self.starting_scene_name: Optional[str] = "alice_in_wonderland"
             self.time_params: TimeParams = DEFAULT_TIME_PARAMS
             self.shared_values: dict = {}
             
