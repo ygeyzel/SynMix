@@ -1,0 +1,127 @@
+name = "alice_in_wonderland"
+fragment_shader_filename = "alice_in_wonderland.glsl"
+
+[[params]]
+name = "ALICE_SPIN_ANGEL"
+button = "LEFT_WHEEL"
+controller.type = "CyclicController"
+controller.args = {min_value = 0, max_value = 360, step = 0.1, initial_value = 180}
+# up down   
+
+[[params]]
+name = "ALICE_SIZE"
+button = "RIGHT_WHEEL"
+controller.type = "RangedController"
+controller.args = {min_value = 0.2, max_value = 9.0, step = 0.05, initial_value = 0.9}
+# left right
+
+
+[[params]]
+name = "BUNNY_SIZE"
+button = "LEFT_DRY_WET"
+controller.type = "RangedController"
+controller.args = {step = 0.1, min_value = 0.5, max_value = 20.0, initial_value = 1.2}
+# A S
+
+[[params]]
+name = "HAPPY_FLOWER_SIZE"
+button = "RIGHT_DRY_WET"
+controller.type = "RangedController"
+controller.args = {step = 0.1, min_value = 0.5, max_value = 20.0, initial_value = 1.2}
+# L ;
+
+[[params]]
+name = "MUSHROOM1_SIZE"
+button = "RIGHT_LENGTH"
+controller.type = "RangedController"
+controller.args = {step = 0.03, min_value = 0.2, max_value = 1.9, initial_value = 0.7}
+# O P
+
+
+[[params]]
+name = "MUSHROOM1_SPOT_DENSITY"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.01, max_value = 0.5, initial_value = 0.1}
+# J K
+
+
+[[params]]
+name = "MUSHROOM2_SIZE"
+button = "LEFT_LENGTH"
+controller.type = "RangedController"
+controller.args = {step = 0.03, min_value = 0.2, max_value = 1.9, initial_value = 0.7}
+# Q W
+
+
+[[params]]
+name = "MUSHROOM2_SPOT_DENSITY"
+button = "LEFT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.01, max_value = 0.5, initial_value = 0.1}
+# G H
+
+[[params]]
+name = "IS_MUSHROOM1_SPOT_SIZE_MOD"
+button = "RIGHT_IN"
+controller.type = "ToggleController"
+# #
+
+[[params]]
+name = "IS_MUSHROOM2_SPOT_SIZE_MOD"
+button = "LEFT_IN"
+controller.type = "ToggleController"
+# DELETE
+
+[[params]]
+name = "FLOWER_BED_SIZE"
+button = "LEFT_PITCH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.4, max_value = 1.8, initial_value = 1.0}
+# \ TAB
+
+
+[[params]]
+name = "BIFROST_LOOPS"
+button = "LEFT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.14, max_value = 4.8, initial_value = 0.56}
+# T Y
+
+
+[[params]]
+name = "TREE_SIZE"
+button = "LEFT_AMOUNT"
+controller.type = "NormalizedController"
+controller.args = {min_value = 3.0, max_value = 0.1, initial_value = 1.0}
+# D F
+
+[[params]]
+name = "CLOUD_ROTATION_ANGLE"
+button = "LEFT_LOW"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.2, max_value = 9.0, initial_value = 0.96}
+# V B
+
+
+# [[params]]
+# name = "FLOWER_BED_SIZE"
+# button = "LEFT_GAIN"
+# controller.type = "NormalizedController"
+# controller.args = {min_value = 0.4, max_value = 1.8, initial_value = 1.0}
+# # E R
+
+
+# [[params]]
+# name = "FLOWER_BED_SIZE"
+# button = "LEFT_GAIN"
+# controller.type = "NormalizedController"
+# controller.args = {min_value = 0.4, max_value = 1.8, initial_value = 1.0}
+# # E R
+
+
+
+
+
+
+
