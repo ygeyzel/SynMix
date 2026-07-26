@@ -80,7 +80,9 @@ uniform float BIFROST_LOOPS;
 uniform float TREE_SIZE;   // 1.0 = original size
 uniform float CLOUD_ROTATION_ANGLE;   // radians; static angle or drive with iTime for continuous spin
 uniform float BUNNY_EAR_TAIL_BALANCE;   // 1.0 = default; <1 = smaller ears/bigger tail; >1 = bigger ears/smaller tail
+uniform int FLOWER_PETAL_ROTATION_MOD;
 
+#define FLOWER_PETAL_ROTATION iTime * FLOWER_PETAL_ROTATION_MOD   // radians; static angle, or drive with iTime for continuous spin
 
 
 
@@ -1234,6 +1236,7 @@ vec3 worldToFlowerFace(vec3 p)
 }
 
 
+
 void sdTalkingFlowerPlant(vec3 p, inout vec2 res)
 {   
     p -= TALKING_FLOWER_POS;
@@ -1261,6 +1264,7 @@ void sdTalkingFlowerPlant(vec3 p, inout vec2 res)
         opMin(face, MAT_FLOWER_FACE);
         
         topP.z-=-.035;
+        topP.xy *= rot2d(FLOWER_PETAL_ROTATION);
         pModPolar(topP.xy, 10.);
         topP.x-=.145;
         float petals = sdEllipsoid( topP, vec3(.08,.045,.01));
