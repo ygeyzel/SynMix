@@ -78,8 +78,8 @@ uniform int IS_MUSHROOM2_SPOT_SIZE_MOD;
 uniform float FLOWER_BED_SIZE; // 1.0 = original size
 uniform float BIFROST_LOOPS;
 uniform float TREE_SIZE;   // 1.0 = original size
-
 uniform float CLOUD_ROTATION_ANGLE;   // radians; static angle or drive with iTime for continuous spin
+uniform float BUNNY_EAR_TAIL_BALANCE;   // 1.0 = default; <1 = smaller ears/bigger tail; >1 = bigger ears/smaller tail
 
 
 
@@ -142,7 +142,12 @@ uniform float CLOUD_ROTATION_ANGLE;   // radians; static angle or drive with iTi
 #define BUNNY_WORLD_CENTER_Y ((-0.265 + BUNNY_Y_OFFSET) / BUNNY_SIZE)
 #define BUNNY_WORLD_BOUND    (0.35 / BUNNY_SIZE)
 
-
+// --- derived from BUNNY_EAR_TAIL_BALANCE ---
+#define BUNNY_EAR_SCALE  BUNNY_EAR_TAIL_BALANCE
+#define BUNNY_TAIL_SCALE (2.0 - BUNNY_EAR_TAIL_BALANCE)   // inverse relationship, pinned so BALANCE=1.0 gives both =1.0
+#define BUNNY_EAR_EXTRA_REACH  (max(BUNNY_EAR_SCALE - 1.0, 0.0) * 0.4)   // extra ear reach beyond baseline, local space
+#define BUNNY_TAIL_EXTRA_REACH (max(BUNNY_TAIL_SCALE - 1.0, 0.0) * 0.08) // extra tail reach beyond baseline, local space
+#define BUNNY_HEAD_Y_MAX (1.0 + max(BUNNY_EAR_SCALE - 1.0, 0.0) * 0.36)
 
 // #define MUSHROOM1_SPOT_DENSITY  0.1   // bigger = fewer spots, smaller = more spots
 #define MUSHROOM1_SPOT_SIZE_MIN 0.01 * MUSHROOM1_SPOT_SIZE_MOD // minimum spot size
@@ -1316,7 +1321,7 @@ void sdBunny(vec3 p, inout vec2 res)
         bunny = smin(bunny, sdRoundCone(legsP,vec3(-.04,0.01,.01),vec3(.06,.07,-.1),.16,.09), .001);
         bunny = smin(bunny, sdRoundBox(legsP-vec3(0.045,-.057,-.1),vec3(.05,.038,.08),.038), .003);
         
-        bunny = min(bunny, sdSphere(bodyP-vec3(0,-.1,.2), .08));
+        bunny = min(bunny, sdSphere(bodyP-vec3(0,-.1,.2), .08 * BUNNY_TAIL_SCALE));        
         
         vec3 armsP = p-vec3(0,.25,0);
         armsP.x = abs(armsP.x)-.13;
@@ -1326,7 +1331,7 @@ void sdBunny(vec3 p, inout vec2 res)
         bunny = smin(bunny, sdCapsule(armsP,vec3(0),vec3(0,0,-armLength),.05), .003);
     }
     
-    if(p.y<1.&&p.y>.25)
+    if(p.y<BUNNY_HEAD_Y_MAX && p.y>.25)
     {
         vec3 headP = p-vec3(0,.48,-.13);
         float head = sdSphere(headP, .17);
@@ -1342,9 +1347,8 @@ void sdBunny(vec3 p, inout vec2 res)
         
         vec3 earsP = headP-vec3(0,.08,.05);
         earsP.x = abs(earsP.x)-.07;
-        float ears = smax(abs(sdVesicaSegment(earsP,vec3(0),vec3(.1,.36,0),.065)-.02)-.015, -earsP.z-.02, .02);
-        head = smin(head, ears, .005);
-        
+        float ears = smax(abs(sdVesicaSegment(earsP, vec3(0), vec3(.1,.36,0)*BUNNY_EAR_SCALE, .065*BUNNY_EAR_SCALE) - .02*BUNNY_EAR_SCALE) - .015*BUNNY_EAR_SCALE, -earsP.z-.02*BUNNY_EAR_SCALE, .02*BUNNY_EAR_SCALE);
+        head = smin(head, ears, .005);    
         bunny = smin(bunny, head, .007);
     }
     
@@ -1496,15 +1500,18 @@ uint getRayIntersectionFlags(vec3 ro, vec3 rd, float tmax)
     if (rayIntersectsBox(ro,rd,vec3(0,.47,1.),vec3(max(1.31, 0.35/ALICE_SCALE), .72, 2.35), tmax, tb))    
         riFlags |= RI_ALICE;
     
+    // if(rayIntersectsBox(ro,rd, vec3(-.73, BUNNY_Y_OFFSET+0.09, .31), 
+    //    vec3(max(1.21, 0.35/BUNNY_SCALE), max(1.1*BUNNY_SCALE, 1.1/BUNNY_SCALE), .21), tmax, tb))
+    //     riFlags |= RI_BUNNY;
+
+
     if(rayIntersectsBox(ro,rd, vec3(-.73, BUNNY_Y_OFFSET+0.09, .31), 
-       vec3(max(1.21, 0.35/BUNNY_SCALE), max(1.1*BUNNY_SCALE, 1.1/BUNNY_SCALE), .21), tmax, tb))
-        riFlags |= RI_BUNNY;
+        vec3(max(1.21, 0.35/BUNNY_SCALE) + BUNNY_TAIL_EXTRA_REACH/BUNNY_SCALE, 
+        max(1.1*BUNNY_SCALE, 1.1/BUNNY_SCALE) + BUNNY_EAR_EXTRA_REACH/BUNNY_SCALE, 
+        .21 + (BUNNY_EAR_EXTRA_REACH + BUNNY_TAIL_EXTRA_REACH)/BUNNY_SCALE), 
+        tmax, tb))
+                riFlags |= RI_BUNNY;
 
-
-
-    // if(rayIntersectsBox(ro,rd, vec3(.0,.05,-.8), vec3(.84,.15,.13), tmax, tb))
-    //     riFlags |= RI_MUSHROOM;
-        
     if(rayIntersectsBox(ro, rd, 
        vec3(-0.7, MUSHROOM1_POS.y + 0.4/MUSHROOM1_SCALE, -.8), 
        vec3(.45/MUSHROOM1_SCALE, .85/MUSHROOM1_SCALE, .45/MUSHROOM1_SCALE), tmax, tb))
