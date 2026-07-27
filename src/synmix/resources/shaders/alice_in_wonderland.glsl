@@ -81,10 +81,15 @@ uniform float TREE_SIZE;   // 1.0 = original size
 uniform float CLOUD_ROTATION_ANGLE;   // radians; static angle or drive with iTime for continuous spin
 uniform float BUNNY_EAR_TAIL_BALANCE;   // 1.0 = default; <1 = smaller ears/bigger tail; >1 = bigger ears/smaller tail
 uniform int FLOWER_PETAL_ROTATION_MOD;
+uniform bool IS_BUNNY_WAVE;
+
+
+
+#define BUNNY_WAVE_ANGLE (IS_BUNNY_WAVE ? sin(iTime * 4) : 0)   // radians; drive with sin(iTime*speed) for waving motion, or a static angle
+#define BUNNY_WAVE_RANGE_SCALE 0.1   // dampens the incoming angle; 1.0 = full range, lower = narrower swing
+
 
 #define FLOWER_PETAL_ROTATION iTime * FLOWER_PETAL_ROTATION_MOD   // radians; static angle, or drive with iTime for continuous spin
-
-
 
 #define  BIFROST_BOW_HEIGHT 0.0   // DO NOT TUCH.
 
@@ -1325,16 +1330,28 @@ void sdBunny(vec3 p, inout vec2 res)
         bunny = smin(bunny, sdRoundCone(legsP,vec3(-.04,0.01,.01),vec3(.06,.07,-.1),.16,.09), .001);
         bunny = smin(bunny, sdRoundBox(legsP-vec3(0.045,-.057,-.1),vec3(.05,.038,.08),.038), .003);
         
-        bunny = min(bunny, sdSphere(bodyP-vec3(0,-.1,.2), .08 * BUNNY_TAIL_SCALE));        
+        bunny = min(bunny, sdSphere(bodyP-vec3(0,-.1,.2), .08 * BUNNY_TAIL_SCALE));
         
-        vec3 armsP = p-vec3(0,.25,0);
-        armsP.x = abs(armsP.x)-.13;
+        vec3 armsBaseP = p - vec3(0,.25,0);
         float armLength = .2;
-        t = armsP.z/armLength +.5;
-        armsP.xy += t*t*vec2(.11,-.07);
-        bunny = smin(bunny, sdCapsule(armsP,vec3(0),vec3(0,0,-armLength),.05), .003);
+
+        // Right arm — static, unchanged pose
+        vec3 armsP_R = armsBaseP;
+        armsP_R.x -= .13;
+        t = armsP_R.z/armLength + .5;
+        armsP_R.xy += t*t*vec2(.11,-.07);
+        float armR = sdCapsule(armsP_R, vec3(0), vec3(0,0,-armLength), .05);
+
+        // Left arm — waving
+        vec3 armsP_L = armsBaseP;
+        armsP_L.x = -armsP_L.x - .13;
+        armsP_L.yz *= rot2d(BUNNY_WAVE_ANGLE * BUNNY_WAVE_RANGE_SCALE);
+        t = armsP_L.z/armLength + .5;
+        armsP_L.xy += t*t*vec2(.11,-.07);
+        float armL = sdCapsule(armsP_L, vec3(0), vec3(0,0,-armLength), .05);
+
+        bunny = smin(bunny, min(armR, armL), .003);
     }
-    
     if(p.y<BUNNY_HEAD_Y_MAX && p.y>.25)
     {
         vec3 headP = p-vec3(0,.48,-.13);

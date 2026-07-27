@@ -118,6 +118,13 @@ controller.type = "ToggleController"
 # insert
 
 
+[[params]]
+name = "IS_BUNNY_WAVE"
+button = "RIGHT_PLUS"
+controller.type = "ToggleController"
+# end
+
+
 
 # [[params]]
 # name = "FLOWER_BED_SIZE"
