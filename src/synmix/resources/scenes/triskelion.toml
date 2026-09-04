@@ -3,66 +3,66 @@ fragment_shader_filename = "triskelion.glsl"
 
 [[params]]
 name = "d_factor"
-button = "LEFT_WHEEL"
+button = ["scrollers", 0]
 controller.type = "CyclicController"
 controller.args = {min_value = -65.0, max_value = 65.0, initial_value = 5.0, step = 0.1}
 
 [[params]]
 name = "p_factor"
-button = "RIGHT_WHEEL"
+button = ["scrollers", 1]
 controller.type = "CyclicController"
 controller.args = {min_value = -65.0, max_value = 65.0, initial_value = 5.0, step = 0.1}
 
 [[params]]
 name = "mx"
-button = "LEFT_VOLUME"
+button = ["knobs", 12]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 3.0, initial_value = 1.0}
 
 [[params]]
 name = "my"
-button = "RIGHT_VOLUME"
+button = ["knobs", 13]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 3.0, initial_value = 1.0}
 
 [[params]]
 name = "mw"
-button = "LEFT_HIGH"
+button = ["knobs", 0]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.5, max_value = 1.5, initial_value = 1.0}
 
 [[params]]
 name = "tx"
-button = "LEFT_MID"
+button = ["knobs", 1]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.5, max_value = 1.5, initial_value = 1.0}
 
 [[params]]
 name = "ty"
-button = "LEFT_LOW"
+button = ["knobs", 2]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.5, max_value = 1.5, initial_value = 1.0}
 
 [[params]]
 name = "dp"
-button = "LEFT_GAIN"
+button = ["knobs", 8]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.75, max_value = 1.25, initial_value = 1.0}
 
 [[params]]
 name = "iMax"
-button = "CROSSFADER"
+button = ["knobs", 14]
 controller.type = "NormalizedController"
 controller.args = {min_value = 10.0, max_value = 30.0, initial_value = 24.0}
 
 [[params]]
 name = "t3_factor"
-button = "CUEMIX"
+button = ["knobs", 15]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 5.0, initial_value = 0.0}
 
 [[params]]
 name = "t_factor"
-button = "RIGHT_LOW"
+button = ["knobs", 5]
 controller.type = "NormalizedController"
 controller.args = {min_value = -10.0, max_value = 10.0, initial_value = 1.0}

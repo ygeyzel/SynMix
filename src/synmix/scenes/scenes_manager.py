@@ -4,7 +4,6 @@ import tomllib
 import moderngl
 import moderngl_window as mglw
 
-from synmix.inputs.buttons import Button
 from synmix.inputs.input_manager import MidiInputManager
 from synmix.inputs.midi import MIDI_BUTTEN_CLICK
 from synmix.params.params import Param
@@ -46,6 +45,8 @@ class ScenesManager:
         self.fbo = None
         self.fbo_texture = None
         self.global_ctx = GlobalCtx()
+        self.midi_config = self.global_ctx.midi_config
+        assert self.midi_config is not None, "No midi config is loaded."
         self.textures: dict[str, any] = {}  # Store loaded textures
         self._load_scens_from_toml_files()
         assert len(self.scenes) > 0, "No scenes are loaded."
@@ -76,19 +77,28 @@ class ScenesManager:
         self.start_time = None
 
     def init_general_funcs_bindings(self) -> None:
-        binds = (
-            (Button.RIGHT_LOAD, self.change_to_next_scene),
-            (Button.LEFT_LOAD, self.change_to_previous_scene),
-            (Button.SCROLL_CLICK, self.change_to_random_scene),
-            (Button.SCROLL, self.global_ctx.adjust_time_offset),
-            (Button.LEFT_MINUS, self.global_ctx.handle_decrease_speed_button),
-            (Button.RIGHT_MINUS, self.global_ctx.handle_decrease_speed_button),
-            (Button.RIGHT_PLUS, self.global_ctx.handle_increase_speed_button),
-            (Button.LEFT_PLUS, self.global_ctx.handle_increase_speed_button),
-        )
+        funcs_by_name = {
+            "next_scene": self.change_to_next_scene,
+            "previous_scene": self.change_to_previous_scene,
+            "random_scene": self.change_to_random_scene,
+            "time_offset": self.global_ctx.adjust_time_offset,
+            "decrease_speed": self.global_ctx.handle_decrease_speed_button,
+            "increase_speed": self.global_ctx.handle_increase_speed_button,
+        }
 
-        for control_selector, afunc in binds:
-            self.input_manager.bind_general_funcs(control_selector, afunc)
+        for func_name, buttons in self.midi_config.functions.items():
+            try:
+                afunc = funcs_by_name[func_name]
+            except KeyError as exc:
+                supported = ", ".join(funcs_by_name)
+                raise ValueError(
+                    f"Unknown function '{func_name}' in midi config "
+                    f"'{self.midi_config.config_name}'. "
+                    f"Supported functions: {supported}."
+                ) from exc
+
+            for abutton in buttons:
+                self.input_manager.bind_general_funcs(abutton, afunc)
 
     def _load_textures(self) -> None:
         """Load all images from resources/textures directory as textures."""
@@ -204,9 +214,8 @@ class ScenesManager:
     def current_scene(self):
         return self.scenes[self.current_scene_index]
 
-    @staticmethod
-    def _generate_param_from_file_data(data):
-        abuttom = Button.__members__[data["button"]]
+    def _generate_param_from_file_data(self, data):
+        abuttom = self.midi_config.get_button(*data["button"])
         controller_type = data["controller"]["type"]
         try:
             controller_cls, supported_button_types = controllers_registry[
@@ -222,7 +231,7 @@ class ScenesManager:
             raise ValueError(
                 f"Controller '{controller_type}' "
                 f"supports button types {{{supported_names}}}, "
-                f"but button '{abuttom.name}' is of type {abuttom.button_type.name}."
+                f"but button {abuttom} is of type {abuttom.button_type.name}."
             )
 
         acontroller = controller_cls(**data["controller"].get("args", {}))
@@ -452,9 +461,10 @@ class ScenesManager:
             if param.is_reset_on_scene_change:
                 param.controller.reset()
             self.input_manager.bind_param(param)
+            button_ref = (param.button.section, param.button.index)
             print(
-                f"{param.name:20} {param.button.name:16}",
-                " ".join(self.global_ctx.fake_midi.key_dict[param.button.name])
+                f"{param.name:20} {param.button!r:36}",
+                " ".join(self.global_ctx.fake_midi.key_dict.get(button_ref, []))
                 if self.global_ctx.fake_midi
                 else "",
             )

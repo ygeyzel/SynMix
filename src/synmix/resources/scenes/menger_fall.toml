@@ -3,78 +3,78 @@ fragment_shader_filename = "menger_fall.glsl"
 
 [[params]]
 name = "fieldOfView"
-button = "LEFT_WHEEL"
+button = ["scrollers", 0]
 controller.type = "CyclicController"
 controller.args = { step = 0.05, min_value = -10.0, max_value = 10.0, initial_value = 1.0 }
 
 [[params]]
 name = "nonLinearPerspective"
-button = "RIGHT_WHEEL"
+button = ["scrollers", 1]
 controller.type = "CyclicController"
 controller.args = { step = 0.1, min_value = -5.0, max_value = 5.0, initial_value = 2.0 }
 
 
 [[params]]
 name = "camPosX"
-button = "CROSSFADER"
+button = ["knobs", 14]
 controller.type = "NormalizedController"
 controller.args = { min_value = -3.0, max_value = 3.0, initial_value = 1.0 }
 
 [[params]]
 name = "camPosY"
-button = "LEFT_VOLUME"
+button = ["knobs", 12]
 controller.type = "NormalizedController"
 controller.args = { min_value = -1.0, max_value = 1.0, initial_value = 0.0 }
 
 [[params]]
 name = "camPosZ"
-button = "RIGHT_VOLUME"
+button = ["knobs", 13]
 controller.type = "NormalizedController"
 controller.args = { min_value = -1.0, max_value = 1.0, initial_value = 0.0 }
 
 [[params]]
 name = "zFactor0"
-button = "LEFT_AMOUNT"
+button = ["knobs", 9]
 controller.type = "NormalizedController"
 controller.args = { min_value = -1.0, max_value = 1.0, initial_value = -0.50 }
 
 [[params]]
 name = "fudgeFactor"
-button = "LEFT_HIGH"
+button = ["knobs", 0]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.15, max_value = 3.0, initial_value = 0.5 }
 
 [[params]]
 name = "ambient"
-button = "LEFT_MID"
+button = ["knobs", 1]
 controller.type = "NormalizedController"
 controller.args = { min_value = -5.0, max_value = 5.0, initial_value = 0.3 }
 
 [[params]]
 name = "diffuseFactor"
-button = "LEFT_LOW"
+button = ["knobs", 2]
 controller.type = "NormalizedController"
 controller.args = { min_value = -5.0, max_value = 5.0, initial_value = 0.5 }
 
 [[params]]
 name = "scale"
-button = "CUEMIX"
+button = ["knobs", 15]
 controller.type = "LinearSegmentedController"
 controller.args = { segments_points = [[0.0, 1.1], [64.0, 3.0], [127.0, 10.0]], initial_value = 3.0 }
 
 [[params]]
 name = "jitterMirror"
-button = "LEFT_FX_ON"
+button = ["clickables", 24]
 controller.type = "IsPressedController"
 
 [[params]]
 name = "normalDistanceFreq"
-button = "RIGHT_HIGH"
+button = ["knobs", 3]
 controller.type = "NormalizedController"
 controller.args = { min_value = -10.0, max_value = 10.0 }
 
 [[params]]
 name = "normalDistanceAmp"
-button = "RIGHT_MID"
+button = ["knobs", 4]
 controller.type = "NormalizedController"
 controller.args = { min_value = -1.0, max_value = 1.0 }

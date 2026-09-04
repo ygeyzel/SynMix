@@ -1,0 +1,291 @@
+{
+  "name": "Mixage",
+  "knobs": [
+    {
+      "label": "LEFT_HIGH",
+      "event_type": "control_change",
+      "value": 53
+    },
+    {
+      "label": "LEFT_MID",
+      "event_type": "control_change",
+      "value": 54
+    },
+    {
+      "label": "LEFT_LOW",
+      "event_type": "control_change",
+      "value": 55
+    },
+    {
+      "label": "RIGHT_HIGH",
+      "event_type": "control_change",
+      "value": 59
+    },
+    {
+      "label": "RIGHT_MID",
+      "event_type": "control_change",
+      "value": 60
+    },
+    {
+      "label": "RIGHT_LOW",
+      "event_type": "control_change",
+      "value": 61
+    },
+    {
+      "label": "LEFT_PITCH",
+      "event_type": "pitchwheel",
+      "value": 0
+    },
+    {
+      "label": "RIGHT_PITCH",
+      "event_type": "pitchwheel",
+      "value": 1
+    },
+    {
+      "label": "LEFT_GAIN",
+      "event_type": "control_change",
+      "value": 51
+    },
+    {
+      "label": "LEFT_AMOUNT",
+      "event_type": "control_change",
+      "value": 52
+    },
+    {
+      "label": "RIGHT_GAIN",
+      "event_type": "control_change",
+      "value": 57
+    },
+    {
+      "label": "RIGHT_AMOUNT",
+      "event_type": "control_change",
+      "value": 58
+    },
+    {
+      "label": "LEFT_VOLUME",
+      "event_type": "control_change",
+      "value": 56
+    },
+    {
+      "label": "RIGHT_VOLUME",
+      "event_type": "control_change",
+      "value": 62
+    },
+    {
+      "label": "CROSSFADER",
+      "event_type": "control_change",
+      "value": 49
+    },
+    {
+      "label": "CUEMIX",
+      "event_type": "control_change",
+      "value": 50
+    }
+  ],
+  "scrollers": [
+    {
+      "label": "LEFT_WHEEL",
+      "event_type": "control_change",
+      "value": 36
+    },
+    {
+      "label": "RIGHT_WHEEL",
+      "event_type": "control_change",
+      "value": 37
+    },
+    {
+      "label": "SCROLL",
+      "event_type": "control_change",
+      "value": 31
+    },
+    {
+      "label": "LEFT_LENGTH",
+      "event_type": "control_change",
+      "value": 32
+    },
+    {
+      "label": "LEFT_DRY_WET",
+      "event_type": "control_change",
+      "value": 33
+    },
+    {
+      "label": "RIGHT_LENGTH",
+      "event_type": "control_change",
+      "value": 34
+    },
+    {
+      "label": "RIGHT_DRY_WET",
+      "event_type": "control_change",
+      "value": 35
+    }
+  ],
+  "clickables": [
+    {
+      "label": "RIGHT_LOAD",
+      "event_type": "note_on",
+      "value": 13
+    },
+    {
+      "label": "LEFT_LOAD",
+      "event_type": "note_on",
+      "value": 27
+    },
+    {
+      "label": "SCROLL_CLICK",
+      "event_type": "note_on",
+      "value": 31
+    },
+    {
+      "label": "LEFT_CUE_1",
+      "event_type": "note_on",
+      "value": 9
+    },
+    {
+      "label": "LEFT_CUE_2",
+      "event_type": "note_on",
+      "value": 10
+    },
+    {
+      "label": "LEFT_CUE_3",
+      "event_type": "note_on",
+      "value": 11
+    },
+    {
+      "label": "LEFT_CUE_4",
+      "event_type": "note_on",
+      "value": 12
+    },
+    {
+      "label": "RIGHT_CUE_1",
+      "event_type": "note_on",
+      "value": 23
+    },
+    {
+      "label": "RIGHT_CUE_2",
+      "event_type": "note_on",
+      "value": 24
+    },
+    {
+      "label": "RIGHT_CUE_3",
+      "event_type": "note_on",
+      "value": 25
+    },
+    {
+      "label": "RIGHT_CUE_4",
+      "event_type": "note_on",
+      "value": 26
+    },
+    {
+      "label": "LEFT_SYNC",
+      "event_type": "note_on",
+      "value": 3
+    },
+    {
+      "label": "LEFT_RECORD",
+      "event_type": "note_on",
+      "value": 4
+    },
+    {
+      "label": "RIGHT_SYNC",
+      "event_type": "note_on",
+      "value": 17
+    },
+    {
+      "label": "RIGHT_RECORD",
+      "event_type": "note_on",
+      "value": 18
+    },
+    {
+      "label": "LEFT_MINUS",
+      "event_type": "note_on",
+      "value": 1
+    },
+    {
+      "label": "LEFT_PLUS",
+      "event_type": "note_on",
+      "value": 2
+    },
+    {
+      "label": "LEFT_SHIFT",
+      "event_type": "note_on",
+      "value": 42
+    },
+    {
+      "label": "RIGHT_MINUS",
+      "event_type": "note_on",
+      "value": 15
+    },
+    {
+      "label": "RIGHT_PLUS",
+      "event_type": "note_on",
+      "value": 16
+    },
+    {
+      "label": "RIGHT_SHIFT",
+      "event_type": "note_on",
+      "value": 43
+    },
+    {
+      "label": "LEFT_IN",
+      "event_type": "note_on",
+      "value": 5
+    },
+    {
+      "label": "LEFT_OUT",
+      "event_type": "note_on",
+      "value": 6
+    },
+    {
+      "label": "LEFT_FX_SEL",
+      "event_type": "note_on",
+      "value": 7
+    },
+    {
+      "label": "LEFT_FX_ON",
+      "event_type": "note_on",
+      "value": 8
+    },
+    {
+      "label": "RIGHT_IN",
+      "event_type": "note_on",
+      "value": 19
+    },
+    {
+      "label": "RIGHT_OUT",
+      "event_type": "note_on",
+      "value": 20
+    },
+    {
+      "label": "RIGHT_FX_SEL",
+      "event_type": "note_on",
+      "value": 21
+    },
+    {
+      "label": "RIGHT_FX_ON",
+      "event_type": "note_on",
+      "value": 22
+    }
+  ],
+  "functions": {
+    "next_scene": [
+      ["clickables", 0]
+    ],
+    "previous_scene": [
+      ["clickables", 1]
+    ],
+    "random_scene": [
+      ["clickables", 2]
+    ],
+    "time_offset": [
+      ["scrollers", 2]
+    ],
+    "decrease_speed": [
+      ["clickables", 15],
+      ["clickables", 18]
+    ],
+    "increase_speed": [
+      ["clickables", 16],
+      ["clickables", 19]
+    ]
+  }
+}

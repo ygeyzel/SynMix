@@ -4,96 +4,96 @@ res_factor = 0.5
 
 [[params]]
 name = "xOffset"
-button = "LEFT_WHEEL"
+button = ["scrollers", 0]
 controller.type = 'CyclicController'
 controller.args = { step = -0.001, min_value = -10.0, max_value = 10.0 }
 
 [[params]]
 name = "yOffset"
-button = "RIGHT_WHEEL"
+button = ["scrollers", 1]
 controller.type = "CyclicController"
 controller.args = { step = 0.001, min_value = -10.0, max_value = 10.0 }
 
 [[params]]
 name = "hueShift"
-button = "LEFT_HIGH"
+button = ["knobs", 0]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.5 }
 
 [[params]]
 name = "brightness"
-button = "LEFT_MID"
+button = ["knobs", 1]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 0.3 }
 
 [[params]]
 name = "saturation"
-button = "LEFT_LOW"
+button = ["knobs", 2]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 1.0 }
 
 [[params]]
 name = "hueRange"
-button = "RIGHT_HIGH"
+button = ["knobs", 3]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 1.0 }
 
 [[params]]
 name = "wingsFactor"
-button = "RIGHT_MID"
+button = ["knobs", 4]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 0.6, initial_value = 0.03 }
 
 [[params]]
 name = "flap"
-button = "RIGHT_LOW"
+button = ["knobs", 5]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.5 }
 
 [[params]]
 name = "rot0"
-button = "LEFT_VOLUME"
+button = ["knobs", 12]
 controller.type = "NormalizedController"
 controller.args = { min_value = -6.28, max_value = 6.28, initial_value = -5.0}
 
 [[params]]
 name = "rot1"
-button = "RIGHT_VOLUME"
+button = ["knobs", 13]
 controller.type = "NormalizedController"
 controller.args = { min_value = -6.28, max_value = 6.28, initial_value = 0.5}
 
 [[params]]
 name = "rotWeight"
-button = "CROSSFADER"
+button = ["knobs", 14]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 3.0, initial_value = 0.5 }
 
 [[params]]
 name = "scaleX0"
-button = "LEFT_GAIN"
+button = ["knobs", 8]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
 
 [[params]]
 name = "scaleX1"
-button = "RIGHT_GAIN"
+button = ["knobs", 10]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
 
 [[params]]
 name = "scaleY0"
-button = "LEFT_AMOUNT"
+button = ["knobs", 9]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
 
 [[params]]
 name = "scaleY1"
-button = "RIGHT_AMOUNT"
+button = ["knobs", 11]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
 
 [[params]]
 name = "scaleXY"
-button = "CUEMIX"
+button = ["knobs", 15]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
