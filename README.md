@@ -31,6 +31,11 @@ uv run synmix --fakemidi
 uv run synmix --start-scene "KeplerPlanet"
 ```
 
+**With a specific MIDI controller config:**
+```bash
+uv run synmix --midi Realop
+```
+
 **Full screen:**
 ```bash
 uv run synmix --window glfw --fullscreen
@@ -50,72 +55,114 @@ uv.exe run synmix --fakemidi
 
 ## Configuration
 
+### MIDI Controller
+
+The MIDI mapping is data driven: each supported controller has a JSON file in
+`src/synmix/resources/midi_config/`, selected with `--midi <name>` (defaults to `Realop`).
+
+```json
+{
+  "name": "Mixage",
+  "knobs": [
+    { "label": "LEFT_HIGH", "event_type": "control_change", "value": 53 }
+  ],
+  "scrollers": [
+    { "label": "LEFT_WHEEL", "event_type": "control_change", "value": 36 }
+  ],
+  "clickables": [
+    { "label": "RIGHT_LOAD", "event_type": "note_on", "value": 13 }
+  ],
+  "functions": {
+    "next_scene": [["clickables", 0]],
+    "decrease_speed": [["clickables", 15], ["clickables", 18]]
+  }
+}
+```
+
+- **`name`** is matched as a substring against the available MIDI input port names to find the device.
+  It is independent of the file name: `--midi Realop` loads `Realop.json`, whose `name` is `Mixage`.
+- **`knobs` / `scrollers` / `clickables`** list the controls of each `ButtonType`. `event_type` is one of
+  `control_change`, `note_on` or `pitchwheel`, and `value` is the selector for that event: the control
+  number, the note number, or the **channel** for `pitchwheel`.
+- **`label`** is optional and exists purely for readability - nothing looks a button up by it.
+- **`functions`** binds application actions to buttons. Each action takes a list of `[section, index]`
+  references, so an action can be reachable from more than one button. Supported actions:
+  `next_scene`, `previous_scene`, `random_scene`, `time_offset`, `decrease_speed`, `increase_speed`.
+
+Everything else - scene TOML files and the fake MIDI key map - addresses a button **positionally**, as
+`[section, index]`. Adding support for a new controller therefore means dropping a new JSON into
+`src/synmix/resources/midi_config/` that lists its controls in a comparable order; no scene file has to change.
+
 ### Fake MIDI Controller
 
 The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard inputs to MIDI messages
 
-- Key mappings are configured in `src/synmix/resources/fake_midi_key_map.toml`
-- Maps button names (from `src/synmix/inputs/buttons.py`) to keyboard keys
-- Button behaviour (knob, scroller, clickable) is derived from the `ButtonType` assigned in `buttons.py`
-- The fake MIDI controller creates a virtual MIDI port and translates keyboard events into MIDI messages
-- Modifiers (Shift, Ctrl, Alt) can be used to accelerate changes for knobs and scrollers
+- Key mappings are configured in `src/synmix/resources/fake_midi_key_map.json`. This JSON file mirrors the section
+  lists of the midi config, so entry `n` of `knobs` maps the keys for `["knobs", n]`:
+  ```json
+  { "knobs": [{ "label": "LEFT_HIGH", "keys": ["T", "Y"] }], "scrollers": [], "clickables": [] }
+  ```
+  - An entry may be `null` to leave that button unmapped, and `label` is optional readability only
+  - Button behaviour (knob, scroller, clickable) comes from the section the button is listed in
+- The fake MIDI controller creates a virtual MIDI port and translates keyboard events into the corresponding MIDI messages based on this configuration
+- Modifiers (Shift, Ctrl, Alt) can be used in combination with mapped keys to accelerate changes for knobs and scrollers (not relevant for clickables)
 
 #### Keyboard Mapping Table
 
-| Button | Button Type | Key 1 | Key 2 |
-|--------|-------------|-------|-------|
-| **LEFT_WHEEL** | Scroller | ↑ UP | ↓ DOWN |
-| **RIGHT_WHEEL** | Scroller | ← LEFT | → RIGHT |
-| **LEFT_PITCH** | Knob | PAGE UP | PAGE DOWN |
-| **RIGHT_PITCH** | Knob | BACKSPACE | \ (Backslash) |
-| **LEFT_LENGTH** | Scroller | Q | W |
-| **LEFT_DRY_WET** | Scroller | A | S |
-| **LEFT_GAIN** | Knob | E | R |
-| **LEFT_AMOUNT** | Knob | D | F |
-| **LEFT_HIGH** | Knob | T | Y |
-| **LEFT_MID** | Knob | G | H |
-| **LEFT_LOW** | Knob | B | N |
-| **RIGHT_HIGH** | Knob | U | I |
-| **RIGHT_MID** | Knob | J | K |
-| **RIGHT_LOW** | Knob | M | , (Comma) |
-| **RIGHT_LENGTH** | Scroller | O | P |
-| **RIGHT_DRY_WET** | Scroller | L | ; (Semicolon) |
-| **RIGHT_GAIN** | Knob | [ | ] |
-| **RIGHT_AMOUNT** | Knob | . (Period) | / (Slash) |
-| **LEFT_VOLUME** | Knob | 9 | 0 |
-| **RIGHT_VOLUME** | Knob | - (Minus) | = (Equals) |
-| **CROSSFADER** | Knob | C | V |
-| **CUEMIX** | Knob | Z | X |
-| **LEFT_CUE_1** | Clickable | 1 | — |
-| **LEFT_CUE_2** | Clickable | 2 | — |
-| **LEFT_CUE_3** | Clickable | 3 | — |
-| **LEFT_CUE_4** | Clickable | 4 | — |
-| **RIGHT_CUE_1** | Clickable | 5 | — |
-| **RIGHT_CUE_2** | Clickable | 6 | — |
-| **RIGHT_CUE_3** | Clickable | 7 | — |
-| **RIGHT_CUE_4** | Clickable | 8 | — |
-| **LEFT_SYNC** | Clickable | F6 | — |
-| **LEFT_RECORD** | Clickable | F7 | — |
-| **RIGHT_SYNC** | Clickable | F8 | — |
-| **RIGHT_RECORD** | Clickable | F9 | — |
-| **LEFT_MINUS** | Clickable | F10 | — |
-| **LEFT_PLUS** | Clickable | F11 | — |
-| **LEFT_SHIFT** | Clickable | F12 | — |
-| **RIGHT_MINUS** | Clickable | HOME | — |
-| **RIGHT_PLUS** | Clickable | END | — |
-| **RIGHT_SHIFT** | Clickable | INSERT | — |
-| **LEFT_IN** | Clickable | DELETE | — |
-| **LEFT_OUT** | Clickable | ~ (Tilde) | — |
-| **LEFT_FX_SEL** | Clickable | ! (Exclamation) | — |
-| **LEFT_FX_ON** | Clickable | @ (At) | — |
-| **RIGHT_IN** | Clickable | # (Pound) | — |
-| **RIGHT_OUT** | Clickable | $ (Dollar) | — |
-| **RIGHT_FX_SEL** | Clickable | % (Percent) | — |
-| **RIGHT_FX_ON** | Clickable | ^ (Caret) | — |
-| **RIGHT_LOAD** | Clickable | F1 | — |
-| **LEFT_LOAD** | Clickable | F2 | — |
-| **SCROLL** | Scroller | F3 | F4 |
-| **SCROLL_CLICK** | Clickable | F5 | — |
+| Button | Config Ref | Button Type | Key 1 | Key 2 |
+|--------|------------|-------------|-------|-------|
+| **LEFT_WHEEL** | `["scrollers", 0]` | Scroller | ↑ UP | ↓ DOWN |
+| **RIGHT_WHEEL** | `["scrollers", 1]` | Scroller | ← LEFT | → RIGHT |
+| **LEFT_PITCH** | `["knobs", 6]` | Knob | PAGE UP | PAGE DOWN |
+| **RIGHT_PITCH** | `["knobs", 7]` | Knob | BACKSPACE | \ (Backslash) |
+| **LEFT_LENGTH** | `["scrollers", 3]` | Scroller | Q | W |
+| **LEFT_DRY_WET** | `["scrollers", 4]` | Scroller | A | S |
+| **LEFT_GAIN** | `["knobs", 8]` | Knob | E | R |
+| **LEFT_AMOUNT** | `["knobs", 9]` | Knob | D | F |
+| **LEFT_HIGH** | `["knobs", 0]` | Knob | T | Y |
+| **LEFT_MID** | `["knobs", 1]` | Knob | G | H |
+| **LEFT_LOW** | `["knobs", 2]` | Knob | B | N |
+| **RIGHT_HIGH** | `["knobs", 3]` | Knob | U | I |
+| **RIGHT_MID** | `["knobs", 4]` | Knob | J | K |
+| **RIGHT_LOW** | `["knobs", 5]` | Knob | M | , (Comma) |
+| **RIGHT_LENGTH** | `["scrollers", 5]` | Scroller | O | P |
+| **RIGHT_DRY_WET** | `["scrollers", 6]` | Scroller | L | ; (Semicolon) |
+| **RIGHT_GAIN** | `["knobs", 10]` | Knob | [ | ] |
+| **RIGHT_AMOUNT** | `["knobs", 11]` | Knob | . (Period) | / (Slash) |
+| **LEFT_VOLUME** | `["knobs", 12]` | Knob | 9 | 0 |
+| **RIGHT_VOLUME** | `["knobs", 13]` | Knob | - (Minus) | = (Equals) |
+| **CROSSFADER** | `["knobs", 14]` | Knob | C | V |
+| **CUEMIX** | `["knobs", 15]` | Knob | Z | X |
+| **LEFT_CUE_1** | `["clickables", 3]` | Clickable | 1 | — |
+| **LEFT_CUE_2** | `["clickables", 4]` | Clickable | 2 | — |
+| **LEFT_CUE_3** | `["clickables", 5]` | Clickable | 3 | — |
+| **LEFT_CUE_4** | `["clickables", 6]` | Clickable | 4 | — |
+| **RIGHT_CUE_1** | `["clickables", 7]` | Clickable | 5 | — |
+| **RIGHT_CUE_2** | `["clickables", 8]` | Clickable | 6 | — |
+| **RIGHT_CUE_3** | `["clickables", 9]` | Clickable | 7 | — |
+| **RIGHT_CUE_4** | `["clickables", 10]` | Clickable | 8 | — |
+| **LEFT_SYNC** | `["clickables", 11]` | Clickable | F6 | — |
+| **LEFT_RECORD** | `["clickables", 12]` | Clickable | F7 | — |
+| **RIGHT_SYNC** | `["clickables", 13]` | Clickable | F8 | — |
+| **RIGHT_RECORD** | `["clickables", 14]` | Clickable | F9 | — |
+| **LEFT_MINUS** | `["clickables", 15]` | Clickable | F10 | — |
+| **LEFT_PLUS** | `["clickables", 16]` | Clickable | F11 | — |
+| **LEFT_SHIFT** | `["clickables", 17]` | Clickable | F12 | — |
+| **RIGHT_MINUS** | `["clickables", 18]` | Clickable | HOME | — |
+| **RIGHT_PLUS** | `["clickables", 19]` | Clickable | END | — |
+| **RIGHT_SHIFT** | `["clickables", 20]` | Clickable | INSERT | — |
+| **LEFT_IN** | `["clickables", 21]` | Clickable | DELETE | — |
+| **LEFT_OUT** | `["clickables", 22]` | Clickable | ~ (Tilde) | — |
+| **LEFT_FX_SEL** | `["clickables", 23]` | Clickable | ! (Exclamation) | — |
+| **LEFT_FX_ON** | `["clickables", 24]` | Clickable | @ (At) | — |
+| **RIGHT_IN** | `["clickables", 25]` | Clickable | # (Pound) | — |
+| **RIGHT_OUT** | `["clickables", 26]` | Clickable | $ (Dollar) | — |
+| **RIGHT_FX_SEL** | `["clickables", 27]` | Clickable | % (Percent) | — |
+| **RIGHT_FX_ON** | `["clickables", 28]` | Clickable | ^ (Caret) | — |
+| **RIGHT_LOAD** | `["clickables", 0]` | Clickable | F1 | — |
+| **LEFT_LOAD** | `["clickables", 1]` | Clickable | F2 | — |
+| **SCROLL** | `["scrollers", 2]` | Scroller | F3 | F4 |
+| **SCROLL_CLICK** | `["clickables", 2]` | Clickable | F5 | — |
 
 **Button Types:**
 - **Knob**: Press first key to increase, second key to decrease (hold with Shift/Ctrl/Alt to apply modifiers)
@@ -158,15 +205,18 @@ Add custom controllers by decorating with `@register_controller("Name", supporte
 │   ├── fakemidi/                  # Virtual MIDI utilities
 │   │   └── fakemidi.py            # Fake MIDI controller implementation
 │   ├── inputs/                    # Input handling system
-│   │   ├── buttons.py             # Button mapping definitions
+│   │   ├── buttons.py             # Button / ButtonType definitions
 │   │   ├── input_manager.py       # Input event processing
+│   │   ├── midi_config.py         # Loads a controller mapping from resources/midi_config
 │   │   └── midi.py                # MIDI event definitions
 │   ├── params/                    # Parameter control system
 │   │   ├── params.py              # Parameter definitions
 │   │   └── valuecontrollers.py    # Parameter value controllers
 │   ├── resources/                 # Data-driven content
-│   │   ├── fake_midi_key_map.toml # Keyboard to MIDI mapping
+│   │   ├── fake_midi_key_map.json # Keyboard to MIDI mapping
 │   │   ├── scenes_order.toml      # Scene loading order
+│   │   ├── midi_config/           # Per-controller MIDI mappings
+│   │   │   └── Realop.json
 │   │   ├── scenes/                # Scene parameter files (TOML)
 │   │   ├── shaders/               # GLSL shader files
 │   │   └── textures/              # Texture assets

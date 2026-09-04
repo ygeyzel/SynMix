@@ -3,96 +3,96 @@ fragment_shader_filename = "desert_dunes.glsl"
 
 [[params]]
 name = "timeSpeed"
-button = "LEFT_WHEEL"
+button = ["scrollers", 0]
 controller.type = "CyclicController"
 controller.args = { step = 0.01, min_value = 0.0, max_value = 2.0 }
 
 [[params]]
 name = "cameraSpeed"
-button = "RIGHT_WHEEL"
+button = ["scrollers", 1]
 controller.type = "CyclicController"
 controller.args = { step = 0.01, min_value = 0.0, max_value = 10.0 }
 
 [[params]]
 name = "cameraHeight"
-button = "LEFT_HIGH"
+button = ["knobs", 0]
 controller.type = "NormalizedController"
 controller.args = { min_value = -0.5, max_value = 1.0, initial_value = 0.05 }
 
 [[params]]
 name = "horizonShift"
-button = "LEFT_MID"
+button = ["knobs", 1]
 controller.type = "NormalizedController"
 controller.args = { min_value = -1.0, max_value = 1.0, initial_value = 0.2 }
 
 [[params]]
 name = "sunSize"
-button = "LEFT_LOW"
+button = ["knobs", 2]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.5, max_value = 3.0, initial_value = 1.0 }
 
 [[params]]
 name = "sunRotationSpeed"
-button = "LEFT_AMOUNT"
+button = ["knobs", 9]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 3.0, initial_value = 1.0 }
 
 [[params]]
 name = "sunOrbit"
-button = "RIGHT_GAIN"
+button = ["knobs", 10]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.4 }
 
 [[params]]
 name = "sunPulse"
-button = "CUEMIX"
+button = ["knobs", 15]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 3.0, initial_value = 1.0 }
 
 [[params]]
 name = "duneScale"
-button = "LEFT_VOLUME"
+button = ["knobs", 12]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 3.0, initial_value = 1.0 }
 
 [[params]]
 name = "duneHeight"
-button = "RIGHT_VOLUME"
+button = ["knobs", 13]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.3 }
 
 [[params]]
 name = "sphereDensity"
-button = "LEFT_GAIN"
+button = ["knobs", 8]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 0.1, initial_value = 0.025 }
 
 [[params]]
 name = "fogDensity"
-button = "RIGHT_AMOUNT"
+button = ["knobs", 11]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 0.5, initial_value = 0.05 }
 
 [[params]]
 name = "colorTint"
-button = "CROSSFADER"
+button = ["knobs", 14]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 1.0 }
 
 [[params]]
 name = "skyColorR"
-button = "RIGHT_HIGH"
+button = ["knobs", 3]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.25 }
 
 [[params]]
 name = "skyColorG"
-button = "RIGHT_MID"
+button = ["knobs", 4]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.8 }
 
 [[params]]
 name = "skyColorB"
-button = "RIGHT_LOW"
+button = ["knobs", 5]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.8 }

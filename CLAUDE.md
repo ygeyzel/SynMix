@@ -24,6 +24,7 @@ uv.exe add <package>                  # Add new dependency
 uv run synmix                              # Run with real MIDI controller
 uv run synmix --fakemidi                   # Run with keyboard input (fake MIDI)
 uv run synmix --start-scene "KeplerPlanet" # Start with specific scene
+uv run synmix --midi Realop                # Use a specific MIDI controller config
 # Alternative:
 python -m synmix                           # Run as Python module
 python -m synmix --fakemidi
@@ -42,6 +43,7 @@ uv run python scripts/fake_midi_monitor.py # Interactively test fake MIDI contro
 - **Scene System**: Data-driven scenes with TOML parameter files and corresponding GLSL shaders
 - **Parameter Control**: Value controllers that map MIDI input to shader uniforms with type safety
 - **Input Management**: MIDI input handling with optional fake MIDI for keyboard control
+- **MIDI Config**: Per-device button mappings loaded from JSON, selected with `--midi`
 
 ### Key Architectural Patterns
 
@@ -55,17 +57,29 @@ uv run python scripts/fake_midi_monitor.py # Interactively test fake MIDI contro
 - `valuecontrollers.py` defines controller types with `@register_controller` decorator
 - Controllers enforce compatibility with button types (KNOB, SCROLLER, CLICKABLE)
 - Scene TOML files reference controllers by registered name
+- Scene TOML `button` fields are `[section, index]` pairs resolved against the loaded `MidiConfig`
 - Type safety prevents incompatible button/controller pairings
 
 **Input Architecture (`src/synmix/inputs/`)**:
-- `buttons.py`: Button definitions and types
+- `buttons.py`: `Button` (a midi getter + type + index + optional label) and `ButtonType`
 - `midi.py`: MIDI event definitions
+- `midi_config.py`: Loads `src/synmix/resources/midi_config/<name>.json` into a `MidiConfig`
 - `input_manager.py`: MIDI event processing
 - `src/synmix/fakemidi/`: Virtual MIDI controller for keyboard input
 
+**MIDI Configuration (`src/synmix/resources/midi_config/*.json`)**:
+- One file per physical controller, chosen with `--midi` (default `Realop`)
+- `name` is matched as a substring against MIDI input port names to find the device
+- `knobs` / `scrollers` / `clickables` list controls with `event_type` + `value`
+  (control number, note number, or channel for `pitchwheel`); `label` is readability only
+- `functions` binds actions (`next_scene`, `previous_scene`, `random_scene`, `time_offset`,
+  `decrease_speed`, `increase_speed`) to lists of `[section, index]` button references
+- Buttons are addressed positionally everywhere else, so a new controller needs only a new JSON
+
 ### Scene Structure
 Each scene consists of:
-1. **TOML parameter file** (`src/synmix/resources/scenes/*.toml`) - defines parameters and their controllers
+1. **TOML parameter file** (`src/synmix/resources/scenes/*.toml`) - defines parameters and their controllers.
+   Each param binds to a button positionally, e.g. `button = ["knobs", 1]`
 2. **GLSL shader file** (`src/synmix/resources/shaders/*.glsl`) - implements visual effects
 3. **Entry in scenes_order.json** - controls loading sequence
 
@@ -78,18 +92,21 @@ Each scene consists of:
 
 ### Fake MIDI System
 - Keyboard-to-MIDI mapping in `src/synmix/resources/fake_midi_key_map.json`
-- Maps button names to keyboard keys with modifier support
+- Mirrors the midi config sections: entry `n` of `knobs` maps the keys for `["knobs", n]`
+  (an entry may be `null` to leave a button unmapped)
 - Creates virtual MIDI port for keyboard input translation
 - Button types determine interaction behavior (knob/scroller/clickable)
 
 ## Key File Locations
 
-- `src/synmix/__main__.py`: Application entry point with argument parsing
-- `src/synmix/top_level/screen.py`: Main rendering loop and OpenGL context
+- `src/synmix/__main__.py`: Application entry point
+- `src/synmix/top_level/screen.py`: Main rendering loop, OpenGL context and argument parsing
 - `src/synmix/scenes/scenes_manager.py`: Scene loading, switching, and management
 - `src/synmix/params/valuecontrollers.py`: Parameter controller registry and implementations
 - `src/synmix/inputs/input_manager.py`: MIDI input event handling
-- `src/synmix/resources/scenes_order.json`: Scene loading sequence configuration
+- `src/synmix/inputs/midi_config.py`: MIDI controller config loading
+- `src/synmix/resources/midi_config/`: Per-controller MIDI mappings (default `Realop.json`)
+- `src/synmix/resources/scenes_order.toml`: Scene loading sequence configuration
 - `src/synmix/resources/fake_midi_key_map.json`: Keyboard-to-MIDI mapping for fake controller
 - `src/synmix/resource_loader.py`: Resource path resolution for package resources
 
@@ -100,6 +117,14 @@ Each scene consists of:
 2. Create TOML parameter file in `src/synmix/resources/scenes/`
 3. Add scene name to `src/synmix/resources/scenes_order.json`
 4. Parameters must reference registered controller names from `valuecontrollers.py`
+5. Each param's `button` is a `[section, index]` pair into the midi config
+   (`src/synmix/resources/midi_config/Realop.json` lists the labels for each index)
+
+### Adding New MIDI Controllers
+1. Create `src/synmix/resources/midi_config/<Name>.json` with the device's controls, ordered comparably
+   to the existing configs so scene bindings keep their meaning
+2. Set `name` to a substring of the device's MIDI input port name
+3. Run with `--midi <Name>`
 
 ### Adding New Controllers
 1. Create controller class in `src/synmix/params/valuecontrollers.py`

@@ -68,14 +68,19 @@ def get_textures_dir() -> Path:
     return get_resources_path() / "textures"
 
 
+def get_midi_config_dir() -> Path:
+    """Get path to midi_config directory."""
+    return get_resources_path() / "midi_config"
+
+
 def get_scenes_order_file() -> Path:
     """Get path to scenes_order.toml."""
     return get_resources_path() / "scenes_order.toml"
 
 
 def get_fake_midi_key_map_file() -> Path:
-    """Get path to fake_midi_key_map.toml."""
-    return get_resources_path() / "fake_midi_key_map.toml"
+    """Get path to fake_midi_key_map.json."""
+    return get_resources_path() / "fake_midi_key_map.json"
 
 
 def get_post_processing_params_file() -> Path:

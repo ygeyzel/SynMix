@@ -14,12 +14,12 @@ SCENE_FILES = sorted(
 )
 
 
-def _params_by_button(path: Path) -> dict[str, list[str]]:
+def _params_by_button(path: Path) -> dict[tuple[str, int], list[str]]:
     with path.open("rb") as f:
         params = tomllib.load(f).get("params", [])
     by_button = defaultdict(list)
     for param in params:
-        by_button[param["button"]].append(param["name"])
+        by_button[tuple(param["button"])].append(param["name"])
     return by_button
 
 

@@ -2,11 +2,10 @@ import moderngl_window as mglw
 
 from synmix.fakemidi.fakemidi import FakeMidi
 from synmix.inputs.input_manager import MidiInputManager
+from synmix.inputs.midi_config import DEFAULT_MIDI_CONFIG, MidiConfig
 from synmix.resource_loader import get_shaders_dir
 from synmix.scenes.scenes_manager import ScenesManager
 from synmix.top_level.global_context import GlobalCtx
-
-MIDI_INPUT_SUBNAME = "Mixage"
 
 
 class Screen(mglw.WindowConfig):
@@ -27,16 +26,19 @@ class Screen(mglw.WindowConfig):
         super().__init__(**kwargs)
 
         global_ctx = GlobalCtx()
+        global_ctx.midi_config = MidiConfig.load(self.argv.midi)
 
         if self.argv.fakemidi:
-            global_ctx.fake_midi = FakeMidi()
+            global_ctx.fake_midi = FakeMidi(global_ctx.midi_config)
 
         if self.argv.start_scene:
             global_ctx.starting_scene_name = self.argv.start_scene
 
         self.fake_midi = global_ctx.fake_midi
         input_subname = (
-            self.fake_midi.output_name if self.fake_midi else MIDI_INPUT_SUBNAME
+            self.fake_midi.output_name
+            if self.fake_midi
+            else global_ctx.midi_config.name
         )
         _input_manager = MidiInputManager(input_subname)
 
@@ -78,4 +80,10 @@ class Screen(mglw.WindowConfig):
         )
         parser.add_argument(
             "--start-scene", type=str, default=None, help="Name of the starting scene"
+        )
+        parser.add_argument(
+            "--midi",
+            type=str,
+            default=DEFAULT_MIDI_CONFIG,
+            help="Name of the midi config file in resources/midi_config to load",
         )

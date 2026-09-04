@@ -4,6 +4,7 @@ from synmix.inputs.midi import MIDI_BUTTEN_CLICK, MIDI_DEC_VALUE, MIDI_INC_VALUE
 
 if TYPE_CHECKING:
     from synmix.fakemidi.fakemidi import FakeMidi
+    from synmix.inputs.midi_config import MidiConfig
 
 
 class TimeParams(NamedTuple):
@@ -34,6 +35,7 @@ class GlobalCtx:
         # Only initialize if it's the first time
         if not GlobalCtx._initialized:
             self.fake_midi: FakeMidi | None = None
+            self.midi_config: MidiConfig | None = None
             self.starting_scene_name: str | None = None
             self.time_params: TimeParams = DEFAULT_TIME_PARAMS
             self.shared_values: dict = {}

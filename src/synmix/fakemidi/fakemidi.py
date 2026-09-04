@@ -1,5 +1,5 @@
+import json
 import platform
-import tomllib
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from functools import partial, reduce
@@ -9,7 +9,7 @@ from typing import NamedTuple
 import mido
 from pyglet.window import key as pyglet_key
 
-from synmix.inputs.buttons import Button, ButtonType
+from synmix.inputs.buttons import BUTTON_TYPE_BY_SECTION, Button, ButtonType
 from synmix.inputs.midi import (
     MAX_PITCH,
     MIDI_DEC_VALUE,
@@ -20,6 +20,7 @@ from synmix.inputs.midi import (
     MidiEventType,
     get_midi_event_descriptor,
 )
+from synmix.inputs.midi_config import MidiConfig
 
 PITCH_STEP_FACTOR = 64
 
@@ -172,11 +173,21 @@ def get_key_code(key_name: str) -> int:
     return getattr(pyglet_key, key_name)
 
 
-def load_key_map(file_path: Path) -> dict[int, Callable]:
+def load_key_map(file_path: Path, midi_config: MidiConfig) -> dict[int, Callable]:
     """
-    Example TOML structure:
-    BUTTON_NAME_0 = ["key1", "key2"]
-    BUTTON_NAME_1 = ["key3"]
+    Buttons are addressed positionally, matching the midi config sections.
+    An entry may be null to leave that button unmapped.
+
+    Example JSON structure:
+    {
+        "knobs": [
+            {"label": "LEFT_HIGH", "keys": ["key1", "key2"]},
+            null,
+            ...
+        ],
+        "scrollers": [...],
+        "clickables": [{"label": "RIGHT_LOAD", "keys": ["key3"]}, ...]
+    }
 
     Example of returned dictionary:
     {
@@ -187,17 +198,15 @@ def load_key_map(file_path: Path) -> dict[int, Callable]:
         ...
     }.
     """
-    with file_path.open("rb") as f:
-        config = tomllib.load(f)
     key_map = {}
-    for button_name, keys in config.items():
-        button = Button[button_name]
+    for (section, index), keys in load_key_dict(file_path).items():
+        button = midi_config.get_button(section, index)
         interface = interface_factory(button)
         keys_messages_methods = interface.keys_messages_methods()
         if len(keys) != len(keys_messages_methods):
             raise ValueError(
                 "Number of keys does not match number of message methods "
-                f"for button '{button_name}'"
+                f"for button {button}"
             )
 
         for key, methods in zip(keys, keys_messages_methods, strict=True):
@@ -207,9 +216,17 @@ def load_key_map(file_path: Path) -> dict[int, Callable]:
     return key_map
 
 
-def load_key_dict(file_path: Path) -> dict[str, list[str]]:
-    with file_path.open("rb") as f:
-        return tomllib.load(f)
+def load_key_dict(file_path: Path) -> dict[tuple[str, int], list[str]]:
+    """Map each mapped (section, index) button to its keys."""
+    with file_path.open() as f:
+        config = json.load(f)
+
+    return {
+        (section, index): mapping["keys"]
+        for section in BUTTON_TYPE_BY_SECTION
+        for index, mapping in enumerate(config.get(section, []))
+        if mapping
+    }
 
 
 class FakeMidi:
@@ -222,6 +239,7 @@ class FakeMidi:
 
     def __init__(
         self,
+        midi_config: MidiConfig,
         output_name="Fake MIDI Controller",
         key_map_file=None,
     ) -> None:
@@ -244,7 +262,8 @@ class FakeMidi:
             self.held_keys = set()
             self.relesed_keys = set()
             self.modifiers = {}
-            self.key_map = load_key_map(key_map_file)
+            self.midi_config = midi_config
+            self.key_map = load_key_map(key_map_file, midi_config)
             self.key_dict = load_key_dict(key_map_file)
             self._initialized = True
 

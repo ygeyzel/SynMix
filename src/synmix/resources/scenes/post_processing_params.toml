@@ -2,76 +2,76 @@
 
 [[params]]
 name = "uInvertColors"
-button = "LEFT_CUE_1"
+button = ["clickables", 3]
 controller.type = "ToggleController"
 controller.args = {}
 
 [[params]]
 name = "uTvError"
-button = "LEFT_CUE_2"
+button = ["clickables", 4]
 controller.type = "TimerToggleController"
 controller.args = {min_time_to_reset = 3.0, max_time_to_reset = 5.0}
 
 [[params]]
 name = "uInvertRed"
-button = "LEFT_CUE_3"
+button = ["clickables", 5]
 controller.type = "ToggleController"
 controller.args = {}
 
 [[params]]
 name = "uInvertGreen"
-button = "LEFT_CUE_4"
+button = ["clickables", 6]
 controller.type = "ToggleController"
 controller.args = {}
 
 [[params]]
 name = "uInvertBlue"
-button = "RIGHT_CUE_1"
+button = ["clickables", 7]
 controller.type = "ToggleController"
 controller.args = {}
 
 [[params]]
 name = "uInvertHue"
-button = "RIGHT_CUE_2"
+button = ["clickables", 8]
 controller.type = "ToggleController"
 controller.args = {}
 
 [[params]]
 name = "uInvertSaturation"
-button = "RIGHT_CUE_3"
+button = ["clickables", 9]
 controller.type = "ToggleController"
 controller.args = {}
 
 [[params]]
 name = "uInvertValue"
-button = "RIGHT_CUE_4"
+button = ["clickables", 10]
 controller.type = "ToggleController"
 controller.args = {}
 
 [[params]]
 name = "uWavesX"
-button = "LEFT_PITCH"
+button = ["knobs", 6]
 controller.type = "NormalizedController"
 controller.args = {min_value = -50.0, max_value = 50.0, is_pitch = true, is_persistent = false}
 
 [[params]]
 name = "uWavesY"
-button = "RIGHT_PITCH"
+button = ["knobs", 7]
 controller.type = "NormalizedController"
 controller.args = {min_value = -50.0, max_value = 50.0, is_pitch = true, is_persistent = false}
 
 [[params]]
 name = "uIsDisplayDVDLogo"
-button = "LEFT_OUT"
+button = ["clickables", 22]
 controller.type = "TimerToggleController"
 controller.args = {is_persistent = true}
 
 [[params]]
 name = "uFractTime"
-button = "LEFT_RECORD"
+button = ["clickables", 12]
 controller.type = "StartTimeController"
 
 [[params]]
 name = "uFractStatic"
-button = "RIGHT_SYNC"
+button = ["clickables", 13]
 controller.type = "IsPressedController"
