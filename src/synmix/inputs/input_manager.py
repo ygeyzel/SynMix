@@ -72,6 +72,18 @@ class MidiInputManager:
         )
         self.general_funcs_bindings[midi_getter] = afunc
 
+    @staticmethod
+    def _resolve_binding(bindings: dict, event_selectors: tuple):
+        """Find a binding, preferring one bound to the event's specific channel."""
+        return next(
+            (
+                bindings[selector]
+                for selector in event_selectors
+                if selector in bindings
+            ),
+            None,
+        )
+
     def _handle_midi_input(self, event_msg: mido.Message) -> None:
         try:
             event_type = MidiEventType(event_msg.type)
@@ -79,12 +91,17 @@ class MidiInputManager:
 
             event_dict = event_msg.dict()
             selector_value = event_dict[descriptor.SELECTOR_FIELD]
-            event_selector = MidiGetter(event_type, selector_value)
+            event_selectors = (
+                MidiGetter(event_type, selector_value, event_dict["channel"]),
+                MidiGetter(event_type, selector_value),
+            )
 
-            binded_param = self.param_bindings.get(
-                event_selector
-            ) or self.secondary_param_bindings.get(event_selector)
-            binded_func = self.general_funcs_bindings.get(event_selector)
+            binded_param = self._resolve_binding(
+                self.param_bindings, event_selectors
+            ) or self._resolve_binding(self.secondary_param_bindings, event_selectors)
+            binded_func = self._resolve_binding(
+                self.general_funcs_bindings, event_selectors
+            )
 
             if not binded_param and not binded_func:
                 print(f"No binding found for event: {event_dict}")

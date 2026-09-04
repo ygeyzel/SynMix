@@ -72,6 +72,9 @@ uv run python scripts/fake_midi_monitor.py # Interactively test fake MIDI contro
 - `name` is matched as a substring against MIDI input port names to find the device
 - `knobs` / `scrollers` / `clickables` list controls with `event_type` + `value`
   (control number, note number, or channel for `pitchwheel`); `label` is readability only
+- `channel` is optional: omitted matches any channel, `0`-`15` pins the button to one, and a
+  channel-specific button wins over a channel-less one on the same number. Not allowed on
+  `pitchwheel` entries, whose `value` is already the channel
 - `functions` binds actions (`next_scene`, `previous_scene`, `random_scene`, `time_offset`,
   `decrease_speed`, `increase_speed`) to lists of `[section, index]` button references
 - Buttons are addressed positionally everywhere else, so a new controller needs only a new JSON

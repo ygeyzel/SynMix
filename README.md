@@ -64,7 +64,8 @@ The MIDI mapping is data driven: each supported controller has a JSON file in
 {
   "name": "Mixage",
   "knobs": [
-    { "label": "LEFT_HIGH", "event_type": "control_change", "value": 53 }
+    { "label": "LEFT_HIGH", "event_type": "control_change", "value": 53 },
+    { "label": "LEFT_MID", "event_type": "control_change", "value": 54, "channel": 2 }
   ],
   "scrollers": [
     { "label": "LEFT_WHEEL", "event_type": "control_change", "value": 36 }
@@ -84,6 +85,11 @@ The MIDI mapping is data driven: each supported controller has a JSON file in
 - **`knobs` / `scrollers` / `clickables`** list the controls of each `ButtonType`. `event_type` is one of
   `control_change`, `note_on` or `pitchwheel`, and `value` is the selector for that event: the control
   number, the note number, or the **channel** for `pitchwheel`.
+- **`channel`** is optional. Omitted, the button matches events on **any** channel; set to `0`-`15`,
+  it matches only that channel, so two controls may share a control/note number on different channels.
+  When both kinds are defined for the same number, the channel-specific one wins for its channel and
+  the channel-less one catches the rest. `pitchwheel` entries must not set it - their `value` *is* the
+  channel, which is how `LEFT_PITCH` and `RIGHT_PITCH` are told apart.
 - **`label`** is optional and exists purely for readability - nothing looks a button up by it.
 - **`functions`** binds application actions to buttons. Each action takes a list of `[section, index]`
   references, so an action can be reachable from more than one button. Supported actions:

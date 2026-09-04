@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from synmix.inputs.buttons import BUTTON_TYPE_BY_SECTION, Button
-from synmix.inputs.midi import MidiEventType, MidiGetter
+from synmix.inputs.midi import MAX_CHANNEL, MIN_CHANNEL, MidiEventType, MidiGetter
 from synmix.resource_loader import get_midi_config_dir
 
 MIDI_CONFIG_DIR = get_midi_config_dir()
@@ -50,12 +50,42 @@ class MidiConfig:
                 f"Supported event types: {supported}."
             ) from exc
 
+        channel = MidiConfig._read_channel(section, index, event_type, data)
+
         return Button(
-            midi_getter=MidiGetter(event_type, data["value"]),
+            midi_getter=MidiGetter(event_type, data["value"], channel),
             button_type=BUTTON_TYPE_BY_SECTION[section],
             index=index,
             label=data.get("label"),
         )
+
+    @staticmethod
+    def _read_channel(
+        section: str, index: int, event_type: MidiEventType, data: dict
+    ) -> int | None:
+        """
+        An omitted channel matches events on any channel.
+
+        pitchwheel events carry no selector other than their channel, so for them
+        'value' is the channel and an explicit 'channel' would be ambiguous.
+        """
+        channel = data.get("channel")
+        if channel is None:
+            return None
+
+        if event_type is MidiEventType.PITCH:
+            raise ValueError(
+                f"{section}[{index}] must not set 'channel' for "
+                f"'{MidiEventType.PITCH.value}' events, where 'value' is the channel."
+            )
+
+        if not MIN_CHANNEL <= channel <= MAX_CHANNEL:
+            raise ValueError(
+                f"Channel {channel} of {section}[{index}] is out of range "
+                f"({MIN_CHANNEL}-{MAX_CHANNEL})."
+            )
+
+        return channel
 
     def get_button(self, section: str, index: int) -> Button:
         try:

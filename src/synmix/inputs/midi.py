@@ -27,9 +27,14 @@ class MidiEventDesricptors(NamedTuple):
     VALUE_FIELD: str
 
 
+MIN_CHANNEL = 0
+MAX_CHANNEL = 15
+
+
 class MidiGetter(NamedTuple):
     event_type: MidiEventType
     selector_value: int
+    channel: int | None = None  # None matches events on any channel
 
 
 MIDI_EVENT_DESCRIPTORS = frozendict(
