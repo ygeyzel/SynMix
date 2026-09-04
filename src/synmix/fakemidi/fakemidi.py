@@ -39,12 +39,17 @@ class ButtonInterface(ABC):
         self.selector_field = event_descriptor.SELECTOR_FIELD
         self.value_field = event_descriptor.VALUE_FIELD
         self.selector_value = midi_getter.selector_value
+        self.channel = midi_getter.channel
 
     def _generate_base_message_dict(self) -> dict:
         message_dict = {
             "type": self.event_type.value,
             self.selector_field: self.selector_value,
         }
+
+        # A button bound to a specific channel only matches messages on that channel
+        if self.channel is not None:
+            message_dict["channel"] = self.channel
 
         return message_dict
 
