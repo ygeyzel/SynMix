@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, NamedTuple
 
-from synmix.inputs.midi import MIDI_BUTTEN_CLICK, MIDI_DEC_VALUE, MIDI_INC_VALUE
+from synmix.inputs.midi import MIDI_BUTTEN_CLICK
 
 if TYPE_CHECKING:
     from synmix.fakemidi.fakemidi import FakeMidi
@@ -51,6 +51,19 @@ class GlobalCtx:
 
             GlobalCtx._initialized = True
 
+    def get_midi_config(self) -> "MidiConfig":
+        """
+        Get the loaded midi config.
+
+        Screen sets it from --midi before anything reads it.
+        """
+        if self.midi_config is None:
+            raise ValueError(
+                "No midi config is loaded. It is loaded at startup from --midi."
+            )
+
+        return self.midi_config
+
     def reset_time_params(self) -> None:
         self.time_params = DEFAULT_TIME_PARAMS
 
@@ -60,9 +73,10 @@ class GlobalCtx:
 
     def adjust_time_offset(self, value: int | None) -> None:
         """Adjust time offset based on MIDI input."""
-        if value == MIDI_INC_VALUE:
+        midi_config = self.get_midi_config()
+        if value == midi_config.inc_scroll_value:
             delta = self.time_offset_step
-        elif value == MIDI_DEC_VALUE:
+        elif value == midi_config.dec_scroll_value:
             delta = -self.time_offset_step
         else:
             return

@@ -1,0 +1,349 @@
+{
+  "name": "PIONEER DDJ-T1",
+  "inc_scroll_value": 127,
+  "dec_scroll_value": 1,
+  "knobs": [
+    {
+      "label": "PLACEHOLDER_1",
+      "event_type": "control_change",
+      "value": 0,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_2",
+      "event_type": "control_change",
+      "value": 1,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_3",
+      "event_type": "control_change",
+      "value": 2,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_4",
+      "event_type": "control_change",
+      "value": 3,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_5",
+      "event_type": "control_change",
+      "value": 4,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_6",
+      "event_type": "control_change",
+      "value": 5,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_7",
+      "event_type": "control_change",
+      "value": 6,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_8",
+      "event_type": "control_change",
+      "value": 7,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_9",
+      "event_type": "control_change",
+      "value": 8,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_10",
+      "event_type": "control_change",
+      "value": 9,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_11",
+      "event_type": "control_change",
+      "value": 10,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_12",
+      "event_type": "control_change",
+      "value": 11,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_13",
+      "event_type": "control_change",
+      "value": 12,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_14",
+      "event_type": "control_change",
+      "value": 13,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_15",
+      "event_type": "control_change",
+      "value": 14,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_16",
+      "event_type": "control_change",
+      "value": 15,
+      "channel": 15
+    }
+  ],
+  "scrollers": [
+    {
+      "label": "SCROLL",
+      "event_type": "control_change",
+      "channel": 6,
+      "value": 64
+    },
+    {
+      "label": "LEFT_WHEEL",
+      "event_type": "control_change",
+      "value": 33,
+      "channel": 2
+    },
+    {
+      "label": "RIGHT_WHEEL",
+      "event_type": "control_change",
+      "value": 33,
+      "channel": 1
+    },
+    {
+      "label": "PLACEHOLDER_19",
+      "event_type": "control_change",
+      "value": 18,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_20",
+      "event_type": "control_change",
+      "value": 19,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_21",
+      "event_type": "control_change",
+      "value": 20,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_22",
+      "event_type": "control_change",
+      "value": 21,
+      "channel": 15
+    }
+  ],
+  "clickables": [
+    {
+      "label": "LEFT_LOAD",
+      "event_type": "note_on",
+      "value": 70,
+      "channel": 6
+    },
+    {
+      "label": "RIGHT_LOAD",
+      "event_type": "note_on",
+      "value": 71,
+      "channel": 6
+    },
+    {
+      "label": "SCROLL_CLICK",
+      "event_type": "note_on",
+      "value": 65,
+      "channel": 6
+    },
+    {
+      "label": "PLACEHOLDER_23",
+      "event_type": "note_on",
+      "value": 0,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_24",
+      "event_type": "note_on",
+      "value": 1,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_25",
+      "event_type": "note_on",
+      "value": 2,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_26",
+      "event_type": "note_on",
+      "value": 3,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_27",
+      "event_type": "note_on",
+      "value": 4,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_28",
+      "event_type": "note_on",
+      "value": 5,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_29",
+      "event_type": "note_on",
+      "value": 6,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_30",
+      "event_type": "note_on",
+      "value": 7,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_31",
+      "event_type": "note_on",
+      "value": 8,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_32",
+      "event_type": "note_on",
+      "value": 9,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_33",
+      "event_type": "note_on",
+      "value": 10,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_34",
+      "event_type": "note_on",
+      "value": 11,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_35",
+      "event_type": "note_on",
+      "value": 12,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_36",
+      "event_type": "note_on",
+      "value": 13,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_37",
+      "event_type": "note_on",
+      "value": 14,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_38",
+      "event_type": "note_on",
+      "value": 15,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_39",
+      "event_type": "note_on",
+      "value": 16,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_40",
+      "event_type": "note_on",
+      "value": 17,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_41",
+      "event_type": "note_on",
+      "value": 18,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_42",
+      "event_type": "note_on",
+      "value": 19,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_43",
+      "event_type": "note_on",
+      "value": 20,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_44",
+      "event_type": "note_on",
+      "value": 21,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_45",
+      "event_type": "note_on",
+      "value": 22,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_46",
+      "event_type": "note_on",
+      "value": 23,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_47",
+      "event_type": "note_on",
+      "value": 24,
+      "channel": 15
+    },
+    {
+      "label": "PLACEHOLDER_48",
+      "event_type": "note_on",
+      "value": 25,
+      "channel": 15
+    }
+  ],
+  "functions": {
+    "next_scene": [
+      [
+        "clickables",
+        0
+      ]
+    ],
+    "previous_scene": [
+      [
+        "clickables",
+        1
+      ]
+    ],
+    "random_scene": [
+      [
+        "clickables",
+        2
+      ]
+    ],
+    "time_offset": [
+      [
+        "scrollers",
+        0
+      ]
+    ]
+  }
+}
