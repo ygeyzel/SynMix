@@ -1,5 +1,7 @@
 {
   "name": "Mixage",
+  "inc_scroll_value": 65,
+  "dec_scroll_value": 63,
   "knobs": [
     {
       "label": "LEFT_HIGH",

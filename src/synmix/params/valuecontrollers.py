@@ -8,8 +8,6 @@ from typing import Any
 from synmix.inputs.buttons import ButtonType
 from synmix.inputs.midi import (
     MAX_PITCH,
-    MIDI_DEC_VALUE,
-    MIDI_INC_VALUE,
     MIDI_MAX_VALUE,
     MIDI_MIN_VALUE,
     MIN_PITCH,
@@ -142,15 +140,15 @@ class IncDecController(ValueController):
         min_value: float,
         max_value: float,
         step: float,
-        inc_value: int = MIDI_INC_VALUE,
-        dec_value: int = MIDI_DEC_VALUE,
         initial_value=0.0,
     ) -> None:
         super().__init__(initial_value=initial_value)
         self.min_value = min_value
         self.max_value = max_value
-        self.inc_value = inc_value
-        self.dec_value = dec_value
+        # The step values a scroller sends are device specific
+        midi_config = GlobalCtx().get_midi_config()
+        self.inc_scroll_value = midi_config.inc_scroll_value
+        self.dec_scroll_value = midi_config.dec_scroll_value
         self.step = step
 
     @abstractmethod
@@ -162,9 +160,9 @@ class IncDecController(ValueController):
         pass
 
     def control_value(self, in_value: int) -> None:
-        if in_value == self.inc_value:
+        if in_value == self.inc_scroll_value:
             self.increase()
-        elif in_value == self.dec_value:
+        elif in_value == self.dec_scroll_value:
             self.decrease()
 
 

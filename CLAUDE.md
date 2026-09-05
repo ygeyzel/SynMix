@@ -24,7 +24,7 @@ uv.exe add <package>                  # Add new dependency
 uv run synmix                              # Run with real MIDI controller
 uv run synmix --fakemidi                   # Run with keyboard input (fake MIDI)
 uv run synmix --start-scene "KeplerPlanet" # Start with specific scene
-uv run synmix --midi Realop                # Use a specific MIDI controller config
+uv run synmix --midi realop                # Use a specific MIDI controller config
 # Alternative:
 python -m synmix                           # Run as Python module
 python -m synmix --fakemidi
@@ -68,8 +68,11 @@ uv run python scripts/fake_midi_monitor.py # Interactively test fake MIDI contro
 - `src/synmix/fakemidi/`: Virtual MIDI controller for keyboard input
 
 **MIDI Configuration (`src/synmix/resources/midi_config/*.json`)**:
-- One file per physical controller, chosen with `--midi` (default `Realop`)
+- One file per physical controller, chosen with `--midi` (default `pioneer-ddj-t1`)
 - `name` is matched as a substring against MIDI input port names to find the device
+- `inc_scroll_value` / `dec_scroll_value` are required: the values this device's scrollers send
+  for a step up / down (realop `65`/`63`, Pioneer DDJ-T1 `127`/`0`). Consumed by
+  `IncDecController`, `ScrollerInterface` and `GlobalCtx.adjust_time_offset`
 - `knobs` / `scrollers` / `clickables` list controls with `event_type` + `value`
   (control number, note number, or channel for `pitchwheel`); `label` is readability only
 - `channel` is optional: omitted matches any channel, `0`-`15` pins the button to one, and a
@@ -108,7 +111,7 @@ Each scene consists of:
 - `src/synmix/params/valuecontrollers.py`: Parameter controller registry and implementations
 - `src/synmix/inputs/input_manager.py`: MIDI input event handling
 - `src/synmix/inputs/midi_config.py`: MIDI controller config loading
-- `src/synmix/resources/midi_config/`: Per-controller MIDI mappings (default `Realop.json`)
+- `src/synmix/resources/midi_config/`: Per-controller MIDI mappings (default `pioneer-ddj-t1.json`)
 - `src/synmix/resources/scenes_order.toml`: Scene loading sequence configuration
 - `src/synmix/resources/fake_midi_key_map.json`: Keyboard-to-MIDI mapping for fake controller
 - `src/synmix/resource_loader.py`: Resource path resolution for package resources
@@ -121,7 +124,7 @@ Each scene consists of:
 3. Add scene name to `src/synmix/resources/scenes_order.json`
 4. Parameters must reference registered controller names from `valuecontrollers.py`
 5. Each param's `button` is a `[section, index]` pair into the midi config
-   (`src/synmix/resources/midi_config/Realop.json` lists the labels for each index)
+   (`src/synmix/resources/midi_config/realop.json` lists the labels for each index)
 
 ### Adding New MIDI Controllers
 1. Create `src/synmix/resources/midi_config/<Name>.json` with the device's controls, ordered comparably

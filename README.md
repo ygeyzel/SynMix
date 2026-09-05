@@ -33,7 +33,7 @@ uv run synmix --start-scene "KeplerPlanet"
 
 **With a specific MIDI controller config:**
 ```bash
-uv run synmix --midi Realop
+uv run synmix --midi realop
 ```
 
 **Full screen:**
@@ -58,11 +58,13 @@ uv.exe run synmix --fakemidi
 ### MIDI Controller
 
 The MIDI mapping is data driven: each supported controller has a JSON file in
-`src/synmix/resources/midi_config/`, selected with `--midi <name>` (defaults to `Realop`).
+`src/synmix/resources/midi_config/`, selected with `--midi <name>` (defaults to `pioneer-ddj-t1`).
 
 ```json
 {
   "name": "Mixage",
+  "inc_scroll_value": 65,
+  "dec_scroll_value": 63,
   "knobs": [
     { "label": "LEFT_HIGH", "event_type": "control_change", "value": 53 },
     { "label": "LEFT_MID", "event_type": "control_change", "value": 54, "channel": 2 }
@@ -81,10 +83,13 @@ The MIDI mapping is data driven: each supported controller has a JSON file in
 ```
 
 - **`name`** is matched as a substring against the available MIDI input port names to find the device.
-  It is independent of the file name: `--midi Realop` loads `Realop.json`, whose `name` is `Mixage`.
+  It is independent of the file name: `--midi realop` loads `realop.json`, whose `name` is `Mixage`.
 - **`knobs` / `scrollers` / `clickables`** list the controls of each `ButtonType`. `event_type` is one of
   `control_change`, `note_on` or `pitchwheel`, and `value` is the selector for that event: the control
   number, the note number, or the **channel** for `pitchwheel`.
+- **`inc_scroll_value` / `dec_scroll_value`** are required: the values this device's scrollers send
+  for one step up and one step down. They must differ and sit in `0`-`127`. `realop` sends `65`/`63`,
+  the Pioneer DDJ-T1 sends `127`/`0`.
 - **`channel`** is optional. Omitted, the button matches events on **any** channel; set to `0`-`15`,
   it matches only that channel, so two controls may share a control/note number on different channels.
   When both kinds are defined for the same number, the channel-specific one wins for its channel and
@@ -222,7 +227,8 @@ Add custom controllers by decorating with `@register_controller("Name", supporte
 │   │   ├── fake_midi_key_map.json # Keyboard to MIDI mapping
 │   │   ├── scenes_order.toml      # Scene loading order
 │   │   ├── midi_config/           # Per-controller MIDI mappings
-│   │   │   └── Realop.json
+│   │   │   ├── pioneer-ddj-t1.json
+│   │   │   └── realop.json
 │   │   ├── scenes/                # Scene parameter files (TOML)
 │   │   ├── shaders/               # GLSL shader files
 │   │   └── textures/              # Texture assets

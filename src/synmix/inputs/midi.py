@@ -3,9 +3,6 @@ from typing import NamedTuple
 
 from frozendict import frozendict
 
-MIDI_INC_VALUE = 65
-MIDI_DEC_VALUE = 63
-
 MIDI_MIN_VALUE = 0
 MIDI_MAX_VALUE = 127
 

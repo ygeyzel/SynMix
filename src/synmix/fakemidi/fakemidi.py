@@ -12,8 +12,6 @@ from pyglet.window import key as pyglet_key
 from synmix.inputs.buttons import BUTTON_TYPE_BY_SECTION, Button, ButtonType
 from synmix.inputs.midi import (
     MAX_PITCH,
-    MIDI_DEC_VALUE,
-    MIDI_INC_VALUE,
     MIDI_MAX_VALUE,
     MIDI_MIN_VALUE,
     MIN_PITCH,
@@ -31,8 +29,9 @@ class KeyMessageParams(NamedTuple):
 
 
 class ButtonInterface(ABC):
-    def __init__(self, button: Button) -> None:
+    def __init__(self, button: Button, midi_config: MidiConfig) -> None:
         midi_getter = button.midi_getter
+        self.midi_config = midi_config
         self.event_type = midi_getter.event_type
 
         event_descriptor = get_midi_event_descriptor(self.event_type)
@@ -75,8 +74,8 @@ class ButtonInterface(ABC):
 
 
 class KnobInterface(ButtonInterface):
-    def __init__(self, button: Button) -> None:
-        super().__init__(button)
+    def __init__(self, button: Button, midi_config: MidiConfig) -> None:
+        super().__init__(button, midi_config)
         event_type = button.midi_getter.event_type
         if event_type is MidiEventType.PITCH:
             self.current_value = 0
@@ -120,7 +119,9 @@ class ScrollerInterface(ButtonInterface):
     ) -> list[mido.Message]:
         message_dict = self._generate_base_message_dict()
         message_dict[self.value_field] = (
-            MIDI_INC_VALUE if is_inc_dir else MIDI_DEC_VALUE
+            self.midi_config.inc_scroll_value
+            if is_inc_dir
+            else self.midi_config.dec_scroll_value
         )
         return [mido.Message(**message_dict)] * repeats
 
@@ -135,8 +136,8 @@ class ScrollerInterface(ButtonInterface):
 
 
 class ClickableInterface(ButtonInterface):
-    def __init__(self, button: Button) -> None:
-        super().__init__(button)
+    def __init__(self, button: Button, midi_config: MidiConfig) -> None:
+        super().__init__(button, midi_config)
         self.is_on = False
 
     def generate_messages(self, is_on, **kwargs) -> list[mido.Message]:
@@ -165,13 +166,13 @@ INTERFACE_BY_BUTTON_TYPE: dict[ButtonType, type[ButtonInterface]] = {
 }
 
 
-def interface_factory(button: Button) -> ButtonInterface:
+def interface_factory(button: Button, midi_config: MidiConfig) -> ButtonInterface:
     interface_cls = INTERFACE_BY_BUTTON_TYPE.get(button.button_type)
     if interface_cls is None:
         raise ValueError(
             f"No interface registered for button type {button.button_type}."
         )
-    return interface_cls(button)
+    return interface_cls(button, midi_config)
 
 
 def get_key_code(key_name: str) -> int:
@@ -206,7 +207,7 @@ def load_key_map(file_path: Path, midi_config: MidiConfig) -> dict[int, Callable
     key_map = {}
     for (section, index), keys in load_key_dict(file_path).items():
         button = midi_config.get_button(section, index)
-        interface = interface_factory(button)
+        interface = interface_factory(button, midi_config)
         keys_messages_methods = interface.keys_messages_methods()
         if len(keys) != len(keys_messages_methods):
             raise ValueError(

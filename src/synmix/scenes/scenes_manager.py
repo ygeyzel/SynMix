@@ -45,8 +45,7 @@ class ScenesManager:
         self.fbo = None
         self.fbo_texture = None
         self.global_ctx = GlobalCtx()
-        self.midi_config = self.global_ctx.midi_config
-        assert self.midi_config is not None, "No midi config is loaded."
+        self.midi_config = self.global_ctx.get_midi_config()
         self.textures: dict[str, any] = {}  # Store loaded textures
         self._load_scens_from_toml_files()
         assert len(self.scenes) > 0, "No scenes are loaded."

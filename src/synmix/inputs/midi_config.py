@@ -2,11 +2,18 @@ import json
 from pathlib import Path
 
 from synmix.inputs.buttons import BUTTON_TYPE_BY_SECTION, Button
-from synmix.inputs.midi import MAX_CHANNEL, MIN_CHANNEL, MidiEventType, MidiGetter
+from synmix.inputs.midi import (
+    MAX_CHANNEL,
+    MIDI_MAX_VALUE,
+    MIDI_MIN_VALUE,
+    MIN_CHANNEL,
+    MidiEventType,
+    MidiGetter,
+)
 from synmix.resource_loader import get_midi_config_dir
 
 MIDI_CONFIG_DIR = get_midi_config_dir()
-DEFAULT_MIDI_CONFIG = "Realop"
+DEFAULT_MIDI_CONFIG = "pioneer-ddj-t1"
 
 
 class MidiConfig:
@@ -21,6 +28,13 @@ class MidiConfig:
     def __init__(self, config_name: str, data: dict) -> None:
         self.config_name = config_name
         self.name = data["name"]
+        self.inc_scroll_value = self._read_scroll_value(data, "inc_scroll_value")
+        self.dec_scroll_value = self._read_scroll_value(data, "dec_scroll_value")
+        if self.inc_scroll_value == self.dec_scroll_value:
+            raise ValueError(
+                f"'inc_scroll_value' and 'dec_scroll_value' of midi config "
+                f"'{config_name}' must differ, both are {self.inc_scroll_value}."
+            )
         self.buttons: dict[str, list[Button]] = {
             section: [
                 self._generate_button(section, index, button_data)
@@ -38,6 +52,23 @@ class MidiConfig:
             f"{section}={len(buttons)}" for section, buttons in self.buttons.items()
         )
         return f"MidiConfig({self.name}: {sections})"
+
+    def _read_scroll_value(self, data: dict, field: str) -> int:
+        """The value a scroller sends for one step, which is device specific"""
+        try:
+            value = data[field]
+        except KeyError as exc:
+            raise ValueError(
+                f"Midi config '{self.config_name}' is missing '{field}'."
+            ) from exc
+
+        if not MIDI_MIN_VALUE <= value <= MIDI_MAX_VALUE:
+            raise ValueError(
+                f"'{field}' of midi config '{self.config_name}' is {value}, "
+                f"out of range ({MIDI_MIN_VALUE}-{MIDI_MAX_VALUE})."
+            )
+
+        return value
 
     @staticmethod
     def _generate_button(section: str, index: int, data: dict) -> Button:
