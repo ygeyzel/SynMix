@@ -22,6 +22,26 @@ from synmix.inputs.midi_config import MidiConfig
 
 PITCH_STEP_FACTOR = 64
 
+FAKE_MIDI_OUTPUT_NAME = "Fake MIDI Controller"
+
+FAKE_MIDI_CHANNEL = 0
+FAKE_INC_SCROLL_VALUE = 65
+FAKE_DEC_SCROLL_VALUE = 63
+# Mirrors the real devices, which put their pitch knobs here, so that params
+# declaring is_pitch keep their full range under the fake controller
+FAKE_PITCH_KNOB_INDICES = (6, 7)
+# The same positions the real devices bind their functions to, which is what the
+# documented keyboard mapping expects: F1/F2/F5 for scenes, F3/F4 for time offset
+# and F10/F11 or HOME/END for speed
+FAKE_MIDI_FUNCTIONS = {
+    "next_scene": [["clickables", 0]],
+    "previous_scene": [["clickables", 1]],
+    "random_scene": [["clickables", 2]],
+    "time_offset": [["scrollers", 2]],
+    "decrease_speed": [["clickables", 15], ["clickables", 18]],
+    "increase_speed": [["clickables", 16], ["clickables", 19]],
+}
+
 
 class KeyMessageParams(NamedTuple):
     pressed_params: dict
@@ -179,21 +199,86 @@ def get_key_code(key_name: str) -> int:
     return getattr(pyglet_key, key_name)
 
 
-def load_key_map(file_path: Path, midi_config: MidiConfig) -> dict[int, Callable]:
+def load_key_map_data(file_path: Path) -> dict:
     """
     Buttons are addressed positionally, matching the midi config sections.
-    An entry may be null to leave that button unmapped.
+    Knobs and scrollers take two keys, clickables a single one, and an entry
+    may be null to leave that button unmapped.
 
     Example JSON structure:
     {
-        "knobs": [
-            {"label": "LEFT_HIGH", "keys": ["key1", "key2"]},
-            null,
-            ...
-        ],
-        "scrollers": [...],
-        "clickables": [{"label": "RIGHT_LOAD", "keys": ["key3"]}, ...]
+        "knobs": [["key1", "key2"], null, ...],
+        "scrollers": [["key3", "key4"], ...],
+        "clickables": ["key5", ...]
     }
+    """
+    with file_path.open() as f:
+        return json.load(f)
+
+
+def generate_midi_config(key_map_data: dict) -> MidiConfig:
+    """
+    Build the fake controller's own device mapping, sized to the key map.
+
+    The fake controller is not tied to any physical device, so it invents
+    unused event selectors for each button rather than borrowing a real one.
+    """
+    sections = {}
+    control_value = 0
+
+    for section in BUTTON_TYPE_BY_SECTION:
+        entries = []
+        for index in range(len(key_map_data.get(section, []))):
+            if section == "clickables":
+                entries.append(
+                    {
+                        "event_type": MidiEventType.NOTE_ON.value,
+                        "value": index,
+                        "channel": FAKE_MIDI_CHANNEL,
+                    }
+                )
+            elif section == "knobs" and index in FAKE_PITCH_KNOB_INDICES:
+                # A pitchwheel is selected by its channel, so it takes no 'channel'
+                entries.append(
+                    {
+                        "event_type": MidiEventType.PITCH.value,
+                        "value": FAKE_PITCH_KNOB_INDICES.index(index),
+                    }
+                )
+            else:
+                entries.append(
+                    {
+                        "event_type": MidiEventType.CONTROL_CHANGE.value,
+                        "value": control_value,
+                        "channel": FAKE_MIDI_CHANNEL,
+                    }
+                )
+                control_value += 1
+
+        sections[section] = entries
+
+    functions = {
+        func_name: refs
+        for func_name, refs in FAKE_MIDI_FUNCTIONS.items()
+        if all(index < len(sections[section]) for section, index in refs)
+    }
+
+    return MidiConfig(
+        FAKE_MIDI_OUTPUT_NAME,
+        {
+            "name": FAKE_MIDI_OUTPUT_NAME,
+            "inc_scroll_value": FAKE_INC_SCROLL_VALUE,
+            "dec_scroll_value": FAKE_DEC_SCROLL_VALUE,
+            **sections,
+            "functions": functions,
+        },
+    )
+
+
+def load_key_map(key_map_data: dict, midi_config: MidiConfig) -> dict[int, Callable]:
+    """
+    Bind each mapped key to the methods generating its button's messages.
+
 
     Example of returned dictionary:
     {
@@ -205,7 +290,7 @@ def load_key_map(file_path: Path, midi_config: MidiConfig) -> dict[int, Callable
     }.
     """
     key_map = {}
-    for (section, index), keys in load_key_dict(file_path).items():
+    for (section, index), keys in get_key_dict(key_map_data).items():
         button = midi_config.get_button(section, index)
         interface = interface_factory(button, midi_config)
         keys_messages_methods = interface.keys_messages_methods()
@@ -222,16 +307,13 @@ def load_key_map(file_path: Path, midi_config: MidiConfig) -> dict[int, Callable
     return key_map
 
 
-def load_key_dict(file_path: Path) -> dict[tuple[str, int], list[str]]:
+def get_key_dict(key_map_data: dict) -> dict[tuple[str, int], list[str]]:
     """Map each mapped (section, index) button to its keys."""
-    with file_path.open() as f:
-        config = json.load(f)
-
     return {
-        (section, index): mapping["keys"]
+        (section, index): [keys] if isinstance(keys, str) else keys
         for section in BUTTON_TYPE_BY_SECTION
-        for index, mapping in enumerate(config.get(section, []))
-        if mapping
+        for index, keys in enumerate(key_map_data.get(section, []))
+        if keys
     }
 
 
@@ -245,10 +327,11 @@ class FakeMidi:
 
     def __init__(
         self,
-        midi_config: MidiConfig,
-        output_name="Fake MIDI Controller",
+        midi_config: MidiConfig | None = None,
+        output_name=FAKE_MIDI_OUTPUT_NAME,
         key_map_file=None,
     ) -> None:
+        """Emulate midi_config's device, or the fake controller's own without it."""
         # Only initialize if it's the first time
         if not hasattr(self, "_initialized"):
             # Load default key map file if none provided
@@ -268,9 +351,10 @@ class FakeMidi:
             self.held_keys = set()
             self.relesed_keys = set()
             self.modifiers = {}
-            self.midi_config = midi_config
-            self.key_map = load_key_map(key_map_file, midi_config)
-            self.key_dict = load_key_dict(key_map_file)
+            key_map_data = load_key_map_data(key_map_file)
+            self.midi_config = midi_config or generate_midi_config(key_map_data)
+            self.key_map = load_key_map(key_map_data, self.midi_config)
+            self.key_dict = get_key_dict(key_map_data)
             self._initialized = True
 
     def handle_keys_input(self) -> None:

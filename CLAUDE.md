@@ -21,10 +21,11 @@ uv.exe add <package>                  # Add new dependency
 
 ### Running the Application
 ```bash
-uv run synmix                              # Run with real MIDI controller
+uv run synmix                              # Auto-detect the connected MIDI controller
 uv run synmix --fakemidi                   # Run with keyboard input (fake MIDI)
 uv run synmix --start-scene "KeplerPlanet" # Start with specific scene
 uv run synmix --midi realop                # Use a specific MIDI controller config
+uv run synmix --fakemidi --midi realop     # Drive a specific device's mapping from the keyboard
 # Alternative:
 python -m synmix                           # Run as Python module
 python -m synmix --fakemidi
@@ -68,10 +69,12 @@ uv run python scripts/fake_midi_monitor.py # Interactively test fake MIDI contro
 - `src/synmix/fakemidi/`: Virtual MIDI controller for keyboard input
 
 **MIDI Configuration (`src/synmix/resources/midi_config/*.json`)**:
-- One file per physical controller, chosen with `--midi` (default `pioneer-ddj-t1`)
+- One file per physical controller. With no `--midi`, `MidiConfig.detect_connected()` picks the
+  first config whose `name` matches a connected MIDI input port, skipping configs that fail to
+  load; `--fakemidi` without `--midi` uses the fake controller's own generated mapping instead
 - `name` is matched as a substring against MIDI input port names to find the device
 - `inc_scroll_value` / `dec_scroll_value` are required: the values this device's scrollers send
-  for a step up / down (realop `65`/`63`, Pioneer DDJ-T1 `127`/`0`). Consumed by
+  for a step up / down (realop `65`/`63`, Pioneer DDJ-T1 `127`/`1`). Consumed by
   `IncDecController`, `ScrollerInterface` and `GlobalCtx.adjust_time_offset`
 - `knobs` / `scrollers` / `clickables` list controls with `event_type` + `value`
   (control number, note number, or channel for `pitchwheel`); `label` is readability only
@@ -98,8 +101,12 @@ Each scene consists of:
 
 ### Fake MIDI System
 - Keyboard-to-MIDI mapping in `src/synmix/resources/fake_midi_key_map.json`
-- Mirrors the midi config sections: entry `n` of `knobs` maps the keys for `["knobs", n]`
-  (an entry may be `null` to leave a button unmapped)
+- Mirrors the midi config sections: entry `n` of `knobs` maps the keys for `["knobs", n]`.
+  Knobs/scrollers take two keys (`["T", "Y"]`), clickables one (`"F1"`), `null` leaves it unmapped
+- Not tied to a device: `generate_midi_config` builds its own mapping sized to the key map,
+  with `pitchwheel` at knob indices 6 and 7 so `is_pitch` params keep their range
+- It also generates `functions` from `FAKE_MIDI_FUNCTIONS`, at the same positions the real
+  configs use, so F1/F2/F5 switch scenes, F3/F4 shift time and F10/F11 or HOME/END change speed
 - Creates virtual MIDI port for keyboard input translation
 - Button types determine interaction behavior (knob/scroller/clickable)
 

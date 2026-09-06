@@ -16,7 +16,7 @@ uv sync
 
 ## Run
 
-**With real MIDI controller:**
+**With real MIDI controller** (auto-detects which connected device matches a config):
 ```bash
 uv run synmix
 ```
@@ -31,7 +31,7 @@ uv run synmix --fakemidi
 uv run synmix --start-scene "KeplerPlanet"
 ```
 
-**With a specific MIDI controller config:**
+**With a specific MIDI controller config** (skips auto-detection):
 ```bash
 uv run synmix --midi realop
 ```
@@ -58,7 +58,19 @@ uv.exe run synmix --fakemidi
 ### MIDI Controller
 
 The MIDI mapping is data driven: each supported controller has a JSON file in
-`src/synmix/resources/midi_config/`, selected with `--midi <name>` (defaults to `pioneer-ddj-t1`).
+`src/synmix/resources/midi_config/`.
+
+Which config is used:
+
+| Invocation | Config |
+|---|---|
+| `synmix` | auto-detected: the first config in `src/synmix/resources/midi_config/` whose `name` matches a connected MIDI input port. Errors listing the configs and the available ports if none match |
+| `synmix --midi <name>` | that config, no detection |
+| `synmix --fakemidi` | the fake controller's own mapping, generated in code - no physical device needed |
+| `synmix --fakemidi --midi <name>` | that config, driven from the keyboard, to test a device you don't have on hand |
+
+A config that fails to load is skipped during auto-detection with a warning, so one bad file does not
+block startup; naming it explicitly with `--midi` still raises.
 
 ```json
 {
@@ -89,7 +101,7 @@ The MIDI mapping is data driven: each supported controller has a JSON file in
   number, the note number, or the **channel** for `pitchwheel`.
 - **`inc_scroll_value` / `dec_scroll_value`** are required: the values this device's scrollers send
   for one step up and one step down. They must differ and sit in `0`-`127`. `realop` sends `65`/`63`,
-  the Pioneer DDJ-T1 sends `127`/`0`.
+  the Pioneer DDJ-T1 sends `127`/`1`.
 - **`channel`** is optional. Omitted, the button matches events on **any** channel; set to `0`-`15`,
   it matches only that channel, so two controls may share a control/note number on different channels.
   When both kinds are defined for the same number, the channel-specific one wins for its channel and
@@ -106,14 +118,31 @@ Everything else - scene TOML files and the fake MIDI key map - addresses a butto
 
 ### Fake MIDI Controller
 
-The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard inputs to MIDI messages
+The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard inputs to MIDI messages.
+It is a device in its own right: with no `--midi` it generates its own mapping, sized to the key map,
+so it works with no controller plugged in. Its knobs at indices 6 and 7 are `pitchwheel`, mirroring the
+real devices, so params declaring `is_pitch` keep their full range, and it generates the same
+`functions` bindings the real configs use:
+
+| Key | Action |
+|-----|--------|
+| F1 / F2 | next / previous scene |
+| F5 | random scene |
+| F3 / F4 | time offset forward / back |
+| F11 or END | increase speed (hold to repeat) |
+| F10 or HOME | decrease speed (hold to repeat) |
 
 - Key mappings are configured in `src/synmix/resources/fake_midi_key_map.json`. This JSON file mirrors the section
   lists of the midi config, so entry `n` of `knobs` maps the keys for `["knobs", n]`:
   ```json
-  { "knobs": [{ "label": "LEFT_HIGH", "keys": ["T", "Y"] }], "scrollers": [], "clickables": [] }
+  {
+    "knobs":      [["T", "Y"], ["G", "H"]],
+    "scrollers":  [["UP", "DOWN"]],
+    "clickables": ["F1", "F2"]
+  }
   ```
-  - An entry may be `null` to leave that button unmapped, and `label` is optional readability only
+  - Knobs and scrollers take two keys (increase, decrease), clickables a single key
+  - An entry may be `null` to leave that button unmapped
   - Button behaviour (knob, scroller, clickable) comes from the section the button is listed in
 - The fake MIDI controller creates a virtual MIDI port and translates keyboard events into the corresponding MIDI messages based on this configuration
 - Modifiers (Shift, Ctrl, Alt) can be used in combination with mapped keys to accelerate changes for knobs and scrollers (not relevant for clickables)
