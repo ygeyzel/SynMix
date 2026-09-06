@@ -3,31 +3,31 @@ fragment_shader_filename = "neon_kaleidoscope.glsl"
 
 [[params]]
 name = "iMax"
-button = ["knobs", 3]
+button = ["knobs", 5]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.01, max_value = 14.0, initial_value = 6.0}
 
 [[params]]
 name = "w_d"
-button = ["knobs", 4]
+button = ["knobs", 6]
 controller.type = "NormalizedController"
 controller.args = {min_value = 2.0, max_value = 25.0, initial_value = 8.0}
 
 [[params]]
 name = "phase_r"
-button = ["knobs", 0]
+button = ["knobs", 2]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 3.14, initial_value = 0.263}
 
 [[params]]
 name = "phase_g"
-button = ["knobs", 1]
+button = ["knobs", 3]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 3.14, initial_value = 0.416}
 
 [[params]]
 name = "phase_b"
-button = ["knobs", 2]
+button = ["knobs", 4]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 3.14, initial_value = 0.557}
 

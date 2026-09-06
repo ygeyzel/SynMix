@@ -52,19 +52,19 @@ controller.args = {min_value = 1.0, max_value = 20.0, initial_value = 3.0}
 
 [[params]]
 name = "fieldOffsetZ"
-button = ["knobs", 14]
+button = ["knobs", 12]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = -1.6, initial_value = -0.8}
 
 [[params]]
 name = "animationAmplitude"
-button = ["knobs", 12]
+button = ["knobs", 0]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 10.0, initial_value = 0.2}
 
 [[params]]
 name = "animationPhase"
-button = ["knobs", 13]
+button = ["knobs", 1]
 controller.type = "NormalizedController"
 controller.args = {min_value = -10.0, max_value = 10.0, initial_value = 1.0}
 
@@ -76,25 +76,25 @@ controller.args = {min_value = 10.0, max_value = 80.0, initial_value = 40.0}
 
 [[params]]
 name = "colorIntensity"
-button = ["knobs", 0]
+button = ["knobs", 2]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.5, max_value = 3.0, initial_value = 1.0}
 
 [[params]]
 name = "starBrightness"
-button = ["knobs", 3]
+button = ["knobs", 5]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 1.0}
 
 [[params]]
 name = "strength"
-button = ["knobs", 1]
+button = ["knobs", 3]
 controller.type = "NormalizedController"
 controller.args = {min_value = 3.0, max_value = 20.0, initial_value = 8.0}
 
 [[params]]
 name = "pulseBPM"
-button = ["knobs", 4]
+button = ["knobs", 6]
 controller.type = "NormalizedController"
 controller.args = {min_value = 40.0, max_value = 300.0, initial_value = 40.0}
 

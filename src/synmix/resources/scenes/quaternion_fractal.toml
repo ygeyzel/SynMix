@@ -22,7 +22,7 @@ controller.args = {min_value = 0.0, max_value = 3.0, initial_value = 1.0}
 
 [[params]]
 name = "rotationFactor"
-button = ["knobs", 0]
+button = ["knobs", 2]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 2.0, initial_value = 1.0}
 
@@ -34,31 +34,31 @@ controller.args = {min_value = 0.1, max_value = 3.0, initial_value = 1.0}
 
 [[params]]
 name = "raycastSteps"
-button = ["knobs", 1]
+button = ["knobs", 3]
 controller.type = "NormalizedController"
 controller.args = {min_value = 20.0, max_value = 100.0, initial_value = 60.0}
 
 [[params]]
 name = "cameraZoom0"
-button = ["knobs", 2]
+button = ["knobs", 4]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 30.0, initial_value = 1.0}
 
 [[params]]
 name = "cameraZoom1"
-button = ["knobs", 5]
+button = ["knobs", 7]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 30.0, initial_value = 1.0}
 
 [[params]]
 name = "zoomFreq"
-button = ["knobs", 15]
+button = ["knobs", 13]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 10.0, initial_value = 0.5}
 
 [[params]]
 name = "detailLevel"
-button = ["knobs", 4]
+button = ["knobs", 6]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 5.0, initial_value = 0.5}
 

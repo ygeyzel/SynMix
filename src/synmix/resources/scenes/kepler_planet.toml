@@ -16,56 +16,56 @@ controller.args = {step = 0.002, min_value = -1.0, max_value = 1.0, initial_valu
 
 [[params]]
 name = "atmosphereIntensity"
-button = ["knobs", 1]
+button = ["knobs", 3]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.25}
 
 
 [[params]]
 name = "cloudDensity"
-button = ["knobs", 2]
+button = ["knobs", 4]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 8.0, initial_value = 0.05}
 
 
 [[params]]
 name = "landContrast"
-button = ["knobs", 3]
+button = ["knobs", 5]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 1.5, initial_value = 0.75}
 
 
 [[params]]
 name = "starBrightness"
-button = ["knobs", 4]
+button = ["knobs", 6]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 3.0, initial_value = 0.5}
 
 
 [[params]]
 name = "surfaceDetail"
-button = ["knobs", 5]
+button = ["knobs", 7]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 2.0}
 
 
 [[params]]
 name = "cameraRotX"
-button = ["knobs", 12]
+button = ["knobs", 0]
 controller.type = "NormalizedController"
 controller.args = {min_value = -3.14159, max_value = 3.14159, initial_value = 0.0}
 
 
 [[params]]
 name = "cameraRotY"
-button = ["knobs", 13]
+button = ["knobs", 1]
 controller.type = "NormalizedController"
 controller.args = {min_value = -1.4708, max_value = 1.4708, initial_value = 0.0}
 
 
 [[params]]
 name = "cameraDistance"
-button = ["knobs", 14]
+button = ["knobs", 12]
 controller.type = "NormalizedController"
 controller.args = {min_value = 150.0, max_value = 0.5, initial_value = 25.0}
 

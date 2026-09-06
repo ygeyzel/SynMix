@@ -29,7 +29,7 @@ FAKE_INC_SCROLL_VALUE = 65
 FAKE_DEC_SCROLL_VALUE = 63
 # Mirrors the real devices, which put their pitch knobs here, so that params
 # declaring is_pitch keep their full range under the fake controller
-FAKE_PITCH_KNOB_INDICES = (6, 7)
+FAKE_PITCH_KNOB_INDICES = (14, 15)
 # The same positions the real devices bind their functions to, which is what the
 # documented keyboard mapping expects: F1/F2/F5 for scenes, F3/F4 for time offset
 # and F10/F11 or HOME/END for speed

@@ -4,6 +4,16 @@
   "dec_scroll_value": 63,
   "knobs": [
     {
+      "label": "LEFT_VOLUME",
+      "event_type": "control_change",
+      "value": 56
+    },
+    {
+      "label": "RIGHT_VOLUME",
+      "event_type": "control_change",
+      "value": 62
+    },
+    {
       "label": "LEFT_HIGH",
       "event_type": "control_change",
       "value": 53
@@ -34,16 +44,6 @@
       "value": 61
     },
     {
-      "label": "LEFT_PITCH",
-      "event_type": "pitchwheel",
-      "value": 0
-    },
-    {
-      "label": "RIGHT_PITCH",
-      "event_type": "pitchwheel",
-      "value": 1
-    },
-    {
       "label": "LEFT_GAIN",
       "event_type": "control_change",
       "value": 51
@@ -64,16 +64,6 @@
       "value": 58
     },
     {
-      "label": "LEFT_VOLUME",
-      "event_type": "control_change",
-      "value": 56
-    },
-    {
-      "label": "RIGHT_VOLUME",
-      "event_type": "control_change",
-      "value": 62
-    },
-    {
       "label": "CROSSFADER",
       "event_type": "control_change",
       "value": 49
@@ -82,6 +72,16 @@
       "label": "CUEMIX",
       "event_type": "control_change",
       "value": 50
+    },
+    {
+      "label": "LEFT_PITCH",
+      "event_type": "pitchwheel",
+      "value": 0
+    },
+    {
+      "label": "RIGHT_PITCH",
+      "event_type": "pitchwheel",
+      "value": 1
     }
   ],
   "scrollers": [

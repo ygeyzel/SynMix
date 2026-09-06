@@ -107,7 +107,7 @@ Each scene consists of:
 - Mirrors the midi config sections: entry `n` of `knobs` maps the keys for `["knobs", n]`.
   Knobs/scrollers take two keys (`["T", "Y"]`), clickables one (`"F1"`), `null` leaves it unmapped
 - Not tied to a device: `generate_midi_config` builds its own mapping sized to the key map,
-  with `pitchwheel` at knob indices 6 and 7 so `is_pitch` params keep their range
+  with `pitchwheel` at knob indices 14 and 15 so `is_pitch` params keep their range
 - It also generates `functions` from `FAKE_MIDI_FUNCTIONS`, at the same positions the real
   configs use, so F1/F2/F5 switch scenes, F3/F4 shift time and F10/F11 or HOME/END change speed
 - Creates virtual MIDI port for keyboard input translation

@@ -67,7 +67,7 @@ controller.args = {min_value = 0, max_value = 20, initial_value = 20}
 
 [[params]]
 name = "floatLeafNumber"
-button = ["knobs", 0]
+button = ["knobs", 2]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0, max_value = 7, initial_value = 0}
 # T Y
@@ -75,7 +75,7 @@ controller.args = {min_value = 0, max_value = 7, initial_value = 0}
 
 [[params]]
 name = "anotherColorControler"
-button = ["knobs", 1]
+button = ["knobs", 3]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.2, max_value = 20.0, initial_value = 10.0}
 # G H
@@ -83,7 +83,7 @@ controller.args = {min_value = 0.2, max_value = 20.0, initial_value = 10.0}
 
 [[params]]
 name = "lineWidth"
-button = ["knobs", 2]
+button = ["knobs", 4]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 0.9, initial_value = 0.7}
 # V B
@@ -91,7 +91,7 @@ controller.args = {min_value = 0.0, max_value = 0.9, initial_value = 0.7}
 
 [[params]]
 name = "mouseX"
-button = ["knobs", 3]
+button = ["knobs", 5]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
 # U I
@@ -99,7 +99,7 @@ controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
 
 [[params]]
 name = "mouseY"
-button = ["knobs", 4]
+button = ["knobs", 6]
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.5}
 # J K

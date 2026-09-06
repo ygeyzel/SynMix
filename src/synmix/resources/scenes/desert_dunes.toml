@@ -15,19 +15,19 @@ controller.args = { step = 0.01, min_value = 0.0, max_value = 10.0 }
 
 [[params]]
 name = "cameraHeight"
-button = ["knobs", 0]
+button = ["knobs", 2]
 controller.type = "NormalizedController"
 controller.args = { min_value = -0.5, max_value = 1.0, initial_value = 0.05 }
 
 [[params]]
 name = "horizonShift"
-button = ["knobs", 1]
+button = ["knobs", 3]
 controller.type = "NormalizedController"
 controller.args = { min_value = -1.0, max_value = 1.0, initial_value = 0.2 }
 
 [[params]]
 name = "sunSize"
-button = ["knobs", 2]
+button = ["knobs", 4]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.5, max_value = 3.0, initial_value = 1.0 }
 
@@ -45,19 +45,19 @@ controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.4 }
 
 [[params]]
 name = "sunPulse"
-button = ["knobs", 15]
+button = ["knobs", 13]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 3.0, initial_value = 1.0 }
 
 [[params]]
 name = "duneScale"
-button = ["knobs", 12]
+button = ["knobs", 0]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 3.0, initial_value = 1.0 }
 
 [[params]]
 name = "duneHeight"
-button = ["knobs", 13]
+button = ["knobs", 1]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.3 }
 
@@ -75,24 +75,24 @@ controller.args = { min_value = 0.0, max_value = 0.5, initial_value = 0.05 }
 
 [[params]]
 name = "colorTint"
-button = ["knobs", 14]
+button = ["knobs", 12]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 1.0 }
 
 [[params]]
 name = "skyColorR"
-button = ["knobs", 3]
+button = ["knobs", 5]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.25 }
 
 [[params]]
 name = "skyColorG"
-button = ["knobs", 4]
+button = ["knobs", 6]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.8 }
 
 [[params]]
 name = "skyColorB"
-button = ["knobs", 5]
+button = ["knobs", 7]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.8 }
