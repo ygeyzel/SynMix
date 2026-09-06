@@ -84,6 +84,9 @@ uv run python scripts/fake_midi_monitor.py # Interactively test fake MIDI contro
 - `functions` binds actions (`next_scene`, `previous_scene`, `random_scene`, `time_offset`,
   `decrease_speed`, `increase_speed`) to lists of `[section, index]` button references
 - Buttons are addressed positionally everywhere else, so a new controller needs only a new JSON
+- `ScenesManager._report_unused_buttons` prints, at startup, the config's buttons that no scene
+  param, post param or function binds. A named (non-placeholder) button there means the config's
+  controls sit at different indices than the scenes expect and will silently do nothing
 
 ### Scene Structure
 Each scene consists of:

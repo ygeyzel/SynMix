@@ -33,6 +33,22 @@ TEXTURES_DIR = get_textures_dir()
 SCENES_ORDER_FILE = get_scenes_order_file()
 POST_PROCESSING_PARAMS_FILE = get_post_processing_params_file()
 
+MAX_REPORTED_BUTTON_LABELS = 4
+
+
+def _format_index_ranges(indices) -> str:
+    """Collapse sorted indices into compact ranges, e.g. '2, 5-9'."""
+    ranges = []
+    for index in sorted(indices):
+        if ranges and index == ranges[-1][1] + 1:
+            ranges[-1][1] = index
+        else:
+            ranges.append([index, index])
+
+    return ", ".join(
+        str(start) if start == end else f"{start}-{end}" for start, end in ranges
+    )
+
 
 class ScenesManager:
     def __init__(self, screen_ctx, starting_scene_name: str | None = None) -> None:
@@ -73,7 +89,52 @@ class ScenesManager:
         self._new_scene_index = (
             self.current_scene_index
         )  # triggers self.load_new_scene()
+        self._report_unused_buttons()
         self.start_time = None
+
+    def _report_unused_buttons(self) -> None:
+        """
+        Report buttons the config defines that nothing ever binds.
+
+        Buttons are addressed positionally, so a control mapped at an index no
+        scene or function uses is silently dead. That is expected for buttons
+        yet to be given a purpose, but it also catches a config whose controls
+        are ordered differently than the scenes expect.
+        """
+        params_lists = [scene.params for scene in self.scenes] + [self.post_params]
+        used = {
+            (param.button.section, param.button.index)
+            for params in params_lists
+            for param in params
+        }
+        used |= {
+            (button.section, button.index)
+            for buttons in self.midi_config.functions.values()
+            for button in buttons
+        }
+
+        unused_report = []
+        for section, buttons in self.midi_config.buttons.items():
+            unused = [b for b in buttons if (section, b.index) not in used]
+            if not unused:
+                continue
+
+            labels = [b.label for b in unused if b.label]
+            shown = ", ".join(labels[:MAX_REPORTED_BUTTON_LABELS])
+            if len(labels) > MAX_REPORTED_BUTTON_LABELS:
+                shown += f", (+{len(labels) - MAX_REPORTED_BUTTON_LABELS} more)"
+
+            indexes = _format_index_ranges(b.index for b in unused)
+            unused_report.append(
+                f"  {section}[{indexes}]{f': {shown}' if shown else ''}"
+            )
+
+        if unused_report:
+            print(
+                f"Midi config '{self.midi_config.config_name}' has buttons "
+                "no scene or function uses:"
+            )
+            print("\n".join(unused_report))
 
     def init_general_funcs_bindings(self) -> None:
         funcs_by_name = {
