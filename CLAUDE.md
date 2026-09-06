@@ -73,9 +73,12 @@ uv run python scripts/fake_midi_monitor.py # Interactively test fake MIDI contro
   first config whose `name` matches a connected MIDI input port, skipping configs that fail to
   load; `--fakemidi` without `--midi` uses the fake controller's own generated mapping instead
 - `name` is matched as a substring against MIDI input port names to find the device
-- `inc_scroll_value` / `dec_scroll_value` are required: the values this device's scrollers send
-  for a step up / down (realop `65`/`63`, Pioneer DDJ-T1 `127`/`1`). Consumed by
-  `IncDecController`, `ScrollerInterface` and `GlobalCtx.adjust_time_offset`
+- Scroller values are read by direction: `0`-`63` decrease, `64`-`127` increase
+- `scroll_mode` is optional, `dir_only` (default) or `accumulate`. Under `dir_only` an event is
+  one step whatever its value; under `accumulate` the value also carries the magnitude, growing
+  with the distance from the outer end of its direction (`127` one step up, `126` two, `0` one
+  step down, `1` two). Decoded by `decode_scroll` in `inputs/midi.py`, reached through
+  `MidiConfig.scroll_step` from `IncDecController` and `GlobalCtx.adjust_time_offset`
 - `knobs` / `scrollers` / `clickables` list controls with `event_type` + `value`
   (control number, note number, or channel for `pitchwheel`); `label` is readability only
 - `channel` is optional: omitted matches any channel, `0`-`15` pins the button to one, and a

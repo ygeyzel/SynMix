@@ -7,11 +7,12 @@ import mido
 from synmix.inputs.buttons import BUTTON_TYPE_BY_SECTION, Button
 from synmix.inputs.midi import (
     MAX_CHANNEL,
-    MIDI_MAX_VALUE,
-    MIDI_MIN_VALUE,
     MIN_CHANNEL,
     MidiEventType,
     MidiGetter,
+    ScrollMode,
+    ScrollStep,
+    decode_scroll,
 )
 from synmix.resource_loader import get_midi_config_dir
 
@@ -30,13 +31,7 @@ class MidiConfig:
     def __init__(self, config_name: str, data: dict) -> None:
         self.config_name = config_name
         self.name = data["name"]
-        self.inc_scroll_value = self._read_scroll_value(data, "inc_scroll_value")
-        self.dec_scroll_value = self._read_scroll_value(data, "dec_scroll_value")
-        if self.inc_scroll_value == self.dec_scroll_value:
-            raise ValueError(
-                f"'inc_scroll_value' and 'dec_scroll_value' of midi config "
-                f"'{config_name}' must differ, both are {self.inc_scroll_value}."
-            )
+        self.scroll_mode = self._read_scroll_mode(data)
         self.buttons: dict[str, list[Button]] = {
             section: [
                 self._generate_button(section, index, button_data)
@@ -55,22 +50,24 @@ class MidiConfig:
         )
         return f"MidiConfig({self.name}: {sections})"
 
-    def _read_scroll_value(self, data: dict, field: str) -> int:
-        """The value a scroller sends for one step, which is device specific"""
+    def _read_scroll_mode(self, data: dict) -> ScrollMode:
+        """How this device's scrollers encode a step, defaulting to direction only."""
+        mode = data.get("scroll_mode")
+        if mode is None:
+            return ScrollMode.DIR_ONLY
+
         try:
-            value = data[field]
-        except KeyError as exc:
+            return ScrollMode(mode)
+        except ValueError as exc:
+            supported = ", ".join(scroll_mode.value for scroll_mode in ScrollMode)
             raise ValueError(
-                f"Midi config '{self.config_name}' is missing '{field}'."
+                f"Unsupported scroll_mode '{mode}' in midi config "
+                f"'{self.config_name}'. Supported modes: {supported}."
             ) from exc
 
-        if not MIDI_MIN_VALUE <= value <= MIDI_MAX_VALUE:
-            raise ValueError(
-                f"'{field}' of midi config '{self.config_name}' is {value}, "
-                f"out of range ({MIDI_MIN_VALUE}-{MIDI_MAX_VALUE})."
-            )
-
-        return value
+    def scroll_step(self, value: int) -> ScrollStep:
+        """Get the direction and step count a scroller value carries on this device."""
+        return decode_scroll(value, self.scroll_mode)
 
     @staticmethod
     def _generate_button(section: str, index: int, data: dict) -> Button:

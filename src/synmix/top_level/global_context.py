@@ -73,13 +73,13 @@ class GlobalCtx:
 
     def adjust_time_offset(self, value: int | None) -> None:
         """Adjust time offset based on MIDI input."""
-        midi_config = self.get_midi_config()
-        if value == midi_config.inc_scroll_value:
-            delta = self.time_offset_step
-        elif value == midi_config.dec_scroll_value:
-            delta = -self.time_offset_step
-        else:
+        if value is None:
             return
+
+        scroll = self.get_midi_config().scroll_step(value)
+        delta = self.time_offset_step * scroll.steps
+        if not scroll.is_increase:
+            delta = -delta
 
         current = self.time_params or DEFAULT_TIME_PARAMS
         print(f"Update time offset to {current.offset + delta}")

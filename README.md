@@ -88,8 +88,7 @@ will do nothing.
 ```json
 {
   "name": "Mixage",
-  "inc_scroll_value": 65,
-  "dec_scroll_value": 63,
+  "scroll_mode": "dir_only",
   "knobs": [
     { "label": "LEFT_HIGH", "event_type": "control_change", "value": 53 },
     { "label": "LEFT_MID", "event_type": "control_change", "value": 54, "channel": 2 }
@@ -112,9 +111,12 @@ will do nothing.
 - **`knobs` / `scrollers` / `clickables`** list the controls of each `ButtonType`. `event_type` is one of
   `control_change`, `note_on` or `pitchwheel`, and `value` is the selector for that event: the control
   number, the note number, or the **channel** for `pitchwheel`.
-- **`inc_scroll_value` / `dec_scroll_value`** are required: the values this device's scrollers send
-  for one step up and one step down. They must differ and sit in `0`-`127`. `realop` sends `65`/`63`,
-  the Pioneer DDJ-T1 sends `127`/`1`.
+- **`scroll_mode`** is optional and says how this device's scrollers encode a step. The direction is
+  fixed for every device - a value of `0`-`63` decreases, `64`-`127` increases - and the mode only
+  decides whether the value carries a magnitude as well:
+  - `dir_only` (the default) treats every event as a single step, whatever its value.
+  - `accumulate` reads the magnitude from the distance to the outer end of the direction, so `127` is
+    one step up, `126` two, `125` three, and `0` is one step down, `1` two, `2` three.
 - **`channel`** is optional. Omitted, the button matches events on **any** channel; set to `0`-`15`,
   it matches only that channel, so two controls may share a control/note number on different channels.
   When both kinds are defined for the same number, the channel-specific one wins for its channel and
@@ -133,7 +135,7 @@ Everything else - scene TOML files and the fake MIDI key map - addresses a butto
 
 The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard inputs to MIDI messages.
 It is a device in its own right: with no `--midi` it generates its own mapping, sized to the key map,
-so it works with no controller plugged in. Its knobs at indices 6 and 7 are `pitchwheel`, mirroring the
+so it works with no controller plugged in. Its knobs at indices 14 and 15 are `pitchwheel`, mirroring the
 real devices, so params declaring `is_pitch` keep their full range, and it generates the same
 `functions` bindings the real configs use:
 
@@ -166,26 +168,26 @@ real devices, so params declaring `is_pitch` keep their full range, and it gener
 |--------|------------|-------------|-------|-------|
 | **LEFT_WHEEL** | `["scrollers", 0]` | Scroller | ↑ UP | ↓ DOWN |
 | **RIGHT_WHEEL** | `["scrollers", 1]` | Scroller | ← LEFT | → RIGHT |
-| **LEFT_PITCH** | `["knobs", 6]` | Knob | PAGE UP | PAGE DOWN |
-| **RIGHT_PITCH** | `["knobs", 7]` | Knob | BACKSPACE | \ (Backslash) |
+| **LEFT_PITCH** | `["knobs", 14]` | Knob | PAGE UP | PAGE DOWN |
+| **RIGHT_PITCH** | `["knobs", 15]` | Knob | BACKSPACE | \ (Backslash) |
 | **LEFT_LENGTH** | `["scrollers", 3]` | Scroller | Q | W |
 | **LEFT_DRY_WET** | `["scrollers", 4]` | Scroller | A | S |
 | **LEFT_GAIN** | `["knobs", 8]` | Knob | E | R |
 | **LEFT_AMOUNT** | `["knobs", 9]` | Knob | D | F |
-| **LEFT_HIGH** | `["knobs", 0]` | Knob | T | Y |
-| **LEFT_MID** | `["knobs", 1]` | Knob | G | H |
-| **LEFT_LOW** | `["knobs", 2]` | Knob | B | N |
-| **RIGHT_HIGH** | `["knobs", 3]` | Knob | U | I |
-| **RIGHT_MID** | `["knobs", 4]` | Knob | J | K |
-| **RIGHT_LOW** | `["knobs", 5]` | Knob | M | , (Comma) |
+| **LEFT_HIGH** | `["knobs", 2]` | Knob | T | Y |
+| **LEFT_MID** | `["knobs", 3]` | Knob | G | H |
+| **LEFT_LOW** | `["knobs", 4]` | Knob | B | N |
+| **RIGHT_HIGH** | `["knobs", 5]` | Knob | U | I |
+| **RIGHT_MID** | `["knobs", 6]` | Knob | J | K |
+| **RIGHT_LOW** | `["knobs", 7]` | Knob | M | , (Comma) |
 | **RIGHT_LENGTH** | `["scrollers", 5]` | Scroller | O | P |
 | **RIGHT_DRY_WET** | `["scrollers", 6]` | Scroller | L | ; (Semicolon) |
 | **RIGHT_GAIN** | `["knobs", 10]` | Knob | [ | ] |
 | **RIGHT_AMOUNT** | `["knobs", 11]` | Knob | . (Period) | / (Slash) |
-| **LEFT_VOLUME** | `["knobs", 12]` | Knob | 9 | 0 |
-| **RIGHT_VOLUME** | `["knobs", 13]` | Knob | - (Minus) | = (Equals) |
-| **CROSSFADER** | `["knobs", 14]` | Knob | C | V |
-| **CUEMIX** | `["knobs", 15]` | Knob | Z | X |
+| **LEFT_VOLUME** | `["knobs", 0]` | Knob | 9 | 0 |
+| **RIGHT_VOLUME** | `["knobs", 1]` | Knob | - (Minus) | = (Equals) |
+| **CROSSFADER** | `["knobs", 12]` | Knob | C | V |
+| **CUEMIX** | `["knobs", 13]` | Knob | Z | X |
 | **LEFT_CUE_1** | `["clickables", 3]` | Clickable | 1 | — |
 | **LEFT_CUE_2** | `["clickables", 4]` | Clickable | 2 | — |
 | **LEFT_CUE_3** | `["clickables", 5]` | Clickable | 3 | — |

@@ -11,6 +11,8 @@ from pyglet.window import key as pyglet_key
 
 from synmix.inputs.buttons import BUTTON_TYPE_BY_SECTION, Button, ButtonType
 from synmix.inputs.midi import (
+    DEC_SCROLL_STEP_VALUE,
+    INC_SCROLL_STEP_VALUE,
     MAX_PITCH,
     MIDI_MAX_VALUE,
     MIDI_MIN_VALUE,
@@ -25,8 +27,6 @@ PITCH_STEP_FACTOR = 64
 FAKE_MIDI_OUTPUT_NAME = "Fake MIDI Controller"
 
 FAKE_MIDI_CHANNEL = 0
-FAKE_INC_SCROLL_VALUE = 65
-FAKE_DEC_SCROLL_VALUE = 63
 # Mirrors the real devices, which put their pitch knobs here, so that params
 # declaring is_pitch keep their full range under the fake controller
 FAKE_PITCH_KNOB_INDICES = (14, 15)
@@ -139,9 +139,7 @@ class ScrollerInterface(ButtonInterface):
     ) -> list[mido.Message]:
         message_dict = self._generate_base_message_dict()
         message_dict[self.value_field] = (
-            self.midi_config.inc_scroll_value
-            if is_inc_dir
-            else self.midi_config.dec_scroll_value
+            INC_SCROLL_STEP_VALUE if is_inc_dir else DEC_SCROLL_STEP_VALUE
         )
         return [mido.Message(**message_dict)] * repeats
 
@@ -267,8 +265,6 @@ def generate_midi_config(key_map_data: dict) -> MidiConfig:
         FAKE_MIDI_OUTPUT_NAME,
         {
             "name": FAKE_MIDI_OUTPUT_NAME,
-            "inc_scroll_value": FAKE_INC_SCROLL_VALUE,
-            "dec_scroll_value": FAKE_DEC_SCROLL_VALUE,
             **sections,
             "functions": functions,
         },
