@@ -1,7 +1,5 @@
 {
   "name": "PIONEER DDJ-T1",
-  "inc_scroll_value": 127,
-  "dec_scroll_value": 1,
   "knobs": [
     {
       "label": "PLACEHOLDER_1",

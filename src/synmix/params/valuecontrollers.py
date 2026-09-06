@@ -145,10 +145,8 @@ class IncDecController(ValueController):
         super().__init__(initial_value=initial_value)
         self.min_value = min_value
         self.max_value = max_value
-        # The step values a scroller sends are device specific
-        midi_config = GlobalCtx().get_midi_config()
-        self.inc_scroll_value = midi_config.inc_scroll_value
-        self.dec_scroll_value = midi_config.dec_scroll_value
+        # How a scroller encodes its steps is device specific
+        self.midi_config = GlobalCtx().get_midi_config()
         self.step = step
 
     @abstractmethod
@@ -160,10 +158,10 @@ class IncDecController(ValueController):
         pass
 
     def control_value(self, in_value: int) -> None:
-        if in_value == self.inc_scroll_value:
-            self.increase()
-        elif in_value == self.dec_scroll_value:
-            self.decrease()
+        scroll = self.midi_config.scroll_step(in_value)
+        apply_step = self.increase if scroll.is_increase else self.decrease
+        for _ in range(scroll.steps):
+            apply_step()
 
 
 @register_controller("RangedController", ButtonType.SCROLLER)
