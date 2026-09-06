@@ -2,7 +2,7 @@ import moderngl_window as mglw
 
 from synmix.fakemidi.fakemidi import FakeMidi
 from synmix.inputs.input_manager import MidiInputManager
-from synmix.inputs.midi_config import DEFAULT_MIDI_CONFIG, MidiConfig
+from synmix.inputs.midi_config import MidiConfig
 from synmix.resource_loader import get_shaders_dir
 from synmix.scenes.scenes_manager import ScenesManager
 from synmix.top_level.global_context import GlobalCtx
@@ -26,10 +26,14 @@ class Screen(mglw.WindowConfig):
         super().__init__(**kwargs)
 
         global_ctx = GlobalCtx()
-        global_ctx.midi_config = MidiConfig.load(self.argv.midi)
+        midi_config = MidiConfig.load(self.argv.midi) if self.argv.midi else None
 
         if self.argv.fakemidi:
-            global_ctx.fake_midi = FakeMidi(global_ctx.midi_config)
+            # Without a device to emulate the fake controller brings its own mapping
+            global_ctx.fake_midi = FakeMidi(midi_config)
+            midi_config = global_ctx.fake_midi.midi_config
+
+        global_ctx.midi_config = midi_config or MidiConfig.detect_connected()
 
         if self.argv.start_scene:
             global_ctx.starting_scene_name = self.argv.start_scene
@@ -84,6 +88,10 @@ class Screen(mglw.WindowConfig):
         parser.add_argument(
             "--midi",
             type=str,
-            default=DEFAULT_MIDI_CONFIG,
-            help="Name of the midi config file in resources/midi_config to load",
+            default=None,
+            help=(
+                "Name of the midi config file in resources/midi_config to load. "
+                "Defaults to the config of the connected device, or to the fake "
+                "controller's own mapping when --fakemidi is used"
+            ),
         )

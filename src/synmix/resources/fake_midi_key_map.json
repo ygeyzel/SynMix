@@ -1,343 +1,60 @@
 {
   "knobs": [
-    {
-      "label": "LEFT_HIGH",
-      "keys": [
-        "T",
-        "Y"
-      ]
-    },
-    {
-      "label": "LEFT_MID",
-      "keys": [
-        "G",
-        "H"
-      ]
-    },
-    {
-      "label": "LEFT_LOW",
-      "keys": [
-        "B",
-        "N"
-      ]
-    },
-    {
-      "label": "RIGHT_HIGH",
-      "keys": [
-        "U",
-        "I"
-      ]
-    },
-    {
-      "label": "RIGHT_MID",
-      "keys": [
-        "J",
-        "K"
-      ]
-    },
-    {
-      "label": "RIGHT_LOW",
-      "keys": [
-        "M",
-        "COMMA"
-      ]
-    },
-    {
-      "label": "LEFT_PITCH",
-      "keys": [
-        "PAGEUP",
-        "PAGEDOWN"
-      ]
-    },
-    {
-      "label": "RIGHT_PITCH",
-      "keys": [
-        "BACKSPACE",
-        "BACKSLASH"
-      ]
-    },
-    {
-      "label": "LEFT_GAIN",
-      "keys": [
-        "E",
-        "R"
-      ]
-    },
-    {
-      "label": "LEFT_AMOUNT",
-      "keys": [
-        "D",
-        "F"
-      ]
-    },
-    {
-      "label": "RIGHT_GAIN",
-      "keys": [
-        "BRACKETLEFT",
-        "BRACKETRIGHT"
-      ]
-    },
-    {
-      "label": "RIGHT_AMOUNT",
-      "keys": [
-        "PERIOD",
-        "SLASH"
-      ]
-    },
-    {
-      "label": "LEFT_VOLUME",
-      "keys": [
-        "_9",
-        "_0"
-      ]
-    },
-    {
-      "label": "RIGHT_VOLUME",
-      "keys": [
-        "MINUS",
-        "EQUAL"
-      ]
-    },
-    {
-      "label": "CROSSFADER",
-      "keys": [
-        "C",
-        "V"
-      ]
-    },
-    {
-      "label": "CUEMIX",
-      "keys": [
-        "Z",
-        "X"
-      ]
-    }
+    ["T", "Y"],
+    ["G", "H"],
+    ["B", "N"],
+    ["U", "I"],
+    ["J", "K"],
+    ["M", "COMMA"],
+    ["PAGEUP", "PAGEDOWN"],
+    ["BACKSPACE", "BACKSLASH"],
+    ["E", "R"],
+    ["D", "F"],
+    ["BRACKETLEFT", "BRACKETRIGHT"],
+    ["PERIOD", "SLASH"],
+    ["_9", "_0"],
+    ["MINUS", "EQUAL"],
+    ["C", "V"],
+    ["Z", "X"]
   ],
   "scrollers": [
-    {
-      "label": "LEFT_WHEEL",
-      "keys": [
-        "UP",
-        "DOWN"
-      ]
-    },
-    {
-      "label": "RIGHT_WHEEL",
-      "keys": [
-        "LEFT",
-        "RIGHT"
-      ]
-    },
-    {
-      "label": "SCROLL",
-      "keys": [
-        "F3",
-        "F4"
-      ]
-    },
-    {
-      "label": "LEFT_LENGTH",
-      "keys": [
-        "Q",
-        "W"
-      ]
-    },
-    {
-      "label": "LEFT_DRY_WET",
-      "keys": [
-        "A",
-        "S"
-      ]
-    },
-    {
-      "label": "RIGHT_LENGTH",
-      "keys": [
-        "O",
-        "P"
-      ]
-    },
-    {
-      "label": "RIGHT_DRY_WET",
-      "keys": [
-        "L",
-        "SEMICOLON"
-      ]
-    }
+    ["UP", "DOWN"],
+    ["LEFT", "RIGHT"],
+    ["F3", "F4"],
+    ["Q", "W"],
+    ["A", "S"],
+    ["O", "P"],
+    ["L", "SEMICOLON"]
   ],
   "clickables": [
-    {
-      "label": "RIGHT_LOAD",
-      "keys": [
-        "F1"
-      ]
-    },
-    {
-      "label": "LEFT_LOAD",
-      "keys": [
-        "F2"
-      ]
-    },
-    {
-      "label": "SCROLL_CLICK",
-      "keys": [
-        "F5"
-      ]
-    },
-    {
-      "label": "LEFT_CUE_1",
-      "keys": [
-        "_1"
-      ]
-    },
-    {
-      "label": "LEFT_CUE_2",
-      "keys": [
-        "_2"
-      ]
-    },
-    {
-      "label": "LEFT_CUE_3",
-      "keys": [
-        "_3"
-      ]
-    },
-    {
-      "label": "LEFT_CUE_4",
-      "keys": [
-        "_4"
-      ]
-    },
-    {
-      "label": "RIGHT_CUE_1",
-      "keys": [
-        "_5"
-      ]
-    },
-    {
-      "label": "RIGHT_CUE_2",
-      "keys": [
-        "_6"
-      ]
-    },
-    {
-      "label": "RIGHT_CUE_3",
-      "keys": [
-        "_7"
-      ]
-    },
-    {
-      "label": "RIGHT_CUE_4",
-      "keys": [
-        "_8"
-      ]
-    },
-    {
-      "label": "LEFT_SYNC",
-      "keys": [
-        "F6"
-      ]
-    },
-    {
-      "label": "LEFT_RECORD",
-      "keys": [
-        "F7"
-      ]
-    },
-    {
-      "label": "RIGHT_SYNC",
-      "keys": [
-        "F8"
-      ]
-    },
-    {
-      "label": "RIGHT_RECORD",
-      "keys": [
-        "F9"
-      ]
-    },
-    {
-      "label": "LEFT_MINUS",
-      "keys": [
-        "F10"
-      ]
-    },
-    {
-      "label": "LEFT_PLUS",
-      "keys": [
-        "F11"
-      ]
-    },
-    {
-      "label": "LEFT_SHIFT",
-      "keys": [
-        "F12"
-      ]
-    },
-    {
-      "label": "RIGHT_MINUS",
-      "keys": [
-        "HOME"
-      ]
-    },
-    {
-      "label": "RIGHT_PLUS",
-      "keys": [
-        "END"
-      ]
-    },
-    {
-      "label": "RIGHT_SHIFT",
-      "keys": [
-        "INSERT"
-      ]
-    },
-    {
-      "label": "LEFT_IN",
-      "keys": [
-        "DELETE"
-      ]
-    },
-    {
-      "label": "LEFT_OUT",
-      "keys": [
-        "ASCIITILDE"
-      ]
-    },
-    {
-      "label": "LEFT_FX_SEL",
-      "keys": [
-        "EXCLAMATION"
-      ]
-    },
-    {
-      "label": "LEFT_FX_ON",
-      "keys": [
-        "AT"
-      ]
-    },
-    {
-      "label": "RIGHT_IN",
-      "keys": [
-        "POUND"
-      ]
-    },
-    {
-      "label": "RIGHT_OUT",
-      "keys": [
-        "DOLLAR"
-      ]
-    },
-    {
-      "label": "RIGHT_FX_SEL",
-      "keys": [
-        "PERCENT"
-      ]
-    },
-    {
-      "label": "RIGHT_FX_ON",
-      "keys": [
-        "ASCIICIRCUM"
-      ]
-    }
+    "F1",
+    "F2",
+    "F5",
+    "_1",
+    "_2",
+    "_3",
+    "_4",
+    "_5",
+    "_6",
+    "_7",
+    "_8",
+    "F6",
+    "F7",
+    "F8",
+    "F9",
+    "F10",
+    "F11",
+    "F12",
+    "HOME",
+    "END",
+    "INSERT",
+    "DELETE",
+    "ASCIITILDE",
+    "EXCLAMATION",
+    "AT",
+    "POUND",
+    "DOLLAR",
+    "PERCENT",
+    "ASCIICIRCUM"
   ]
 }

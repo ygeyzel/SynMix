@@ -6,7 +6,6 @@ import moderngl_window as mglw
 from pyglet.window import key as pyglet_key
 
 from synmix.fakemidi.fakemidi import FakeMidi
-from synmix.inputs.midi_config import DEFAULT_MIDI_CONFIG, MidiConfig
 
 
 class MidiMonitor(threading.Thread):
@@ -61,7 +60,7 @@ class TestWindow(mglw.WindowConfig):
 
         # Create fake controller
         print("Initializing Fake MIDI Controller...")
-        self.fake_controller = FakeMidi(MidiConfig.load(DEFAULT_MIDI_CONFIG))
+        self.fake_controller = FakeMidi()
         print(f"Created virtual MIDI output: '{self.fake_controller.output_name}'")
 
         # Start MIDI monitor in background thread

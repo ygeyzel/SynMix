@@ -1,5 +1,8 @@
 import json
+from collections.abc import Iterator
 from pathlib import Path
+
+import mido
 
 from synmix.inputs.buttons import BUTTON_TYPE_BY_SECTION, Button
 from synmix.inputs.midi import (
@@ -13,7 +16,6 @@ from synmix.inputs.midi import (
 from synmix.resource_loader import get_midi_config_dir
 
 MIDI_CONFIG_DIR = get_midi_config_dir()
-DEFAULT_MIDI_CONFIG = "pioneer-ddj-t1"
 
 
 class MidiConfig:
@@ -136,7 +138,7 @@ class MidiConfig:
         return buttons[index]
 
     @classmethod
-    def load(cls, config_name: str = DEFAULT_MIDI_CONFIG) -> "MidiConfig":
+    def load(cls, config_name: str) -> "MidiConfig":
         config_path = MIDI_CONFIG_DIR / f"{Path(config_name).stem}.json"
         try:
             with config_path.open() as f:
@@ -152,3 +154,30 @@ class MidiConfig:
             ) from exc
 
         return cls(config_name, data)
+
+    @classmethod
+    def iter_configs(cls) -> Iterator["MidiConfig"]:
+        """Yield every config in MIDI_CONFIG_DIR, skipping any that fails to load."""
+        for config_path in sorted(MIDI_CONFIG_DIR.glob("*.json")):
+            try:
+                yield cls.load(config_path.stem)
+            except (ValueError, KeyError, json.JSONDecodeError) as exc:
+                print(f"Warning: skipping midi config {config_path.name}: {exc}")
+
+    @classmethod
+    def detect_connected(cls) -> "MidiConfig":
+        """Get the config of the first connected device, matched on its 'name'."""
+        input_names = mido.get_input_names()
+        for config in cls.iter_configs():
+            if any(config.name in input_name for input_name in input_names):
+                print(f"Detected midi device '{config.name}' ({config.config_name})")
+                return config
+
+        available = ", ".join(
+            sorted(path.stem for path in MIDI_CONFIG_DIR.glob("*.json"))
+        )
+        raise ValueError(
+            "No connected midi device matches any config. "
+            f"Configs: {available}. Midi inputs: {input_names or 'none'}. "
+            "You may want to use --midi or --fakemidi."
+        )
