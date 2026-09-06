@@ -102,22 +102,22 @@
   ],
   "scrollers": [
     {
-      "label": "SCROLL",
-      "event_type": "control_change",
-      "channel": 6,
-      "value": 64
-    },
-    {
       "label": "LEFT_WHEEL",
       "event_type": "control_change",
       "value": 33,
-      "channel": 2
+      "channel": 0
     },
     {
       "label": "RIGHT_WHEEL",
       "event_type": "control_change",
       "value": 33,
       "channel": 1
+    },
+    {
+      "label": "SCROLL",
+      "event_type": "control_change",
+      "channel": 6,
+      "value": 64
     },
     {
       "label": "PLACEHOLDER_19",
@@ -322,28 +322,16 @@
   ],
   "functions": {
     "next_scene": [
-      [
-        "clickables",
-        0
-      ]
+      ["clickables", 0]
     ],
     "previous_scene": [
-      [
-        "clickables",
-        1
-      ]
+      ["clickables", 1]
     ],
     "random_scene": [
-      [
-        "clickables",
-        2
-      ]
+      ["clickables", 2]
     ],
     "time_offset": [
-      [
-        "scrollers",
-        0
-      ]
+      ["scrollers", 2]
     ]
   }
 }

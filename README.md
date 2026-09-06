@@ -72,6 +72,19 @@ Which config is used:
 A config that fails to load is skipped during auto-detection with a warning, so one bad file does not
 block startup; naming it explicitly with `--midi` still raises.
 
+At startup the loaded config is reported against what the scenes actually bind:
+
+```
+Midi config 'pioneer-ddj-t1' has buttons no scene or function uses:
+  scrollers[2]: RIGHT_WHEEL
+  clickables[11, 14-21, 26-27]: PLACEHOLDER_31, PLACEHOLDER_34, ... (+7 more)
+```
+
+Buttons are addressed positionally, so a control mapped at an index nothing uses is silently dead.
+That is expected for buttons with no purpose yet, but a *named* control in the list - `RIGHT_WHEEL`
+above - means the config's controls are ordered differently than the scenes expect, and that button
+will do nothing.
+
 ```json
 {
   "name": "Mixage",
