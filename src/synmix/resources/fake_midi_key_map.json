@@ -1,21 +1,21 @@
 {
   "knobs": [
+    ["_9", "_0"],
+    ["MINUS", "EQUAL"],
     ["T", "Y"],
     ["G", "H"],
     ["B", "N"],
     ["U", "I"],
     ["J", "K"],
     ["M", "COMMA"],
-    ["PAGEUP", "PAGEDOWN"],
-    ["BACKSPACE", "BACKSLASH"],
     ["E", "R"],
     ["D", "F"],
     ["BRACKETLEFT", "BRACKETRIGHT"],
     ["PERIOD", "SLASH"],
-    ["_9", "_0"],
-    ["MINUS", "EQUAL"],
     ["C", "V"],
-    ["Z", "X"]
+    ["Z", "X"],
+    ["PAGEUP", "PAGEDOWN"],
+    ["BACKSPACE", "BACKSLASH"]
   ],
   "scrollers": [
     ["UP", "DOWN"],

@@ -16,19 +16,19 @@ controller.args = { step = 0.1, min_value = -5.0, max_value = 5.0, initial_value
 
 [[params]]
 name = "camPosX"
-button = ["knobs", 14]
+button = ["knobs", 12]
 controller.type = "NormalizedController"
 controller.args = { min_value = -3.0, max_value = 3.0, initial_value = 1.0 }
 
 [[params]]
 name = "camPosY"
-button = ["knobs", 12]
+button = ["knobs", 0]
 controller.type = "NormalizedController"
 controller.args = { min_value = -1.0, max_value = 1.0, initial_value = 0.0 }
 
 [[params]]
 name = "camPosZ"
-button = ["knobs", 13]
+button = ["knobs", 1]
 controller.type = "NormalizedController"
 controller.args = { min_value = -1.0, max_value = 1.0, initial_value = 0.0 }
 
@@ -40,25 +40,25 @@ controller.args = { min_value = -1.0, max_value = 1.0, initial_value = -0.50 }
 
 [[params]]
 name = "fudgeFactor"
-button = ["knobs", 0]
+button = ["knobs", 2]
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.15, max_value = 3.0, initial_value = 0.5 }
 
 [[params]]
 name = "ambient"
-button = ["knobs", 1]
+button = ["knobs", 3]
 controller.type = "NormalizedController"
 controller.args = { min_value = -5.0, max_value = 5.0, initial_value = 0.3 }
 
 [[params]]
 name = "diffuseFactor"
-button = ["knobs", 2]
+button = ["knobs", 4]
 controller.type = "NormalizedController"
 controller.args = { min_value = -5.0, max_value = 5.0, initial_value = 0.5 }
 
 [[params]]
 name = "scale"
-button = ["knobs", 15]
+button = ["knobs", 13]
 controller.type = "LinearSegmentedController"
 controller.args = { segments_points = [[0.0, 1.1], [64.0, 3.0], [127.0, 10.0]], initial_value = 3.0 }
 
@@ -69,12 +69,12 @@ controller.type = "IsPressedController"
 
 [[params]]
 name = "normalDistanceFreq"
-button = ["knobs", 3]
+button = ["knobs", 5]
 controller.type = "NormalizedController"
 controller.args = { min_value = -10.0, max_value = 10.0 }
 
 [[params]]
 name = "normalDistanceAmp"
-button = ["knobs", 4]
+button = ["knobs", 6]
 controller.type = "NormalizedController"
 controller.args = { min_value = -1.0, max_value = 1.0 }
