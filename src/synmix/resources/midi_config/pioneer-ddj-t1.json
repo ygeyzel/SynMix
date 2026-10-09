@@ -1,59 +1,60 @@
 {
   "name": "PIONEER DDJ-T1",
+  "scroll_mode": "accumulate",
   "knobs": [
     {
-      "label": "PLACEHOLDER_1",
+      "label": "VOLUME_0",
       "event_type": "control_change",
-      "value": 0,
-      "channel": 15
+      "value": 23,
+      "channel": 6
     },
     {
-      "label": "PLACEHOLDER_2",
+      "label": "VOLUME_1",
       "event_type": "control_change",
-      "value": 1,
-      "channel": 15
+      "value": 19,
+      "channel": 6
     },
     {
-      "label": "PLACEHOLDER_3",
+      "label": "VOLUME_2",
       "event_type": "control_change",
-      "value": 2,
-      "channel": 15
+      "value": 21,
+      "channel": 6
     },
     {
-      "label": "PLACEHOLDER_4",
+      "label": "VOLUME_3",
       "event_type": "control_change",
-      "value": 3,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_5",
-      "event_type": "control_change",
-      "value": 4,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_6",
-      "event_type": "control_change",
-      "value": 5,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_7",
-      "event_type": "control_change",
-      "value": 6,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_8",
-      "event_type": "control_change",
-      "value": 7,
-      "channel": 15
+      "value": 25,
+      "channel": 6
     },
     {
       "label": "PLACEHOLDER_9",
       "event_type": "control_change",
       "value": 8,
-      "channel": 15
+      "channel": 6
+    },
+    {
+      "label": "GAIN_0",
+      "event_type": "control_change",
+      "value": 5,
+      "channel": 6
+    },
+    {
+      "label": "GAIN_1",
+      "event_type": "control_change",
+      "value": 3,
+      "channel": 6
+    },
+    {
+      "label": "GAIN_2",
+      "event_type": "control_change",
+      "value": 4,
+      "channel": 6
+    },
+    {
+      "label": "GAIN_3",
+      "event_type": "control_change",
+      "value": 6,
+      "channel": 6
     },
     {
       "label": "PLACEHOLDER_10",
@@ -320,16 +321,28 @@
   ],
   "functions": {
     "next_scene": [
-      ["clickables", 0]
+      [
+        "clickables",
+        0
+      ]
     ],
     "previous_scene": [
-      ["clickables", 1]
+      [
+        "clickables",
+        1
+      ]
     ],
     "random_scene": [
-      ["clickables", 2]
+      [
+        "clickables",
+        2
+      ]
     ],
     "time_offset": [
-      ["scrollers", 2]
+      [
+        "scrollers",
+        2
+      ]
     ]
   }
 }
