@@ -122,10 +122,10 @@ The `--fakemidi` flag enables a virtual MIDI controller that maps keyboard input
 - **Scroller**: Press first key to scroll up/right, second key to scroll down/left (modifiers adjust repeat rate)
 - **Clickable**: Press the key to toggle on/off (no modifier support)
 
-A standalone test script is available at `tests/test_fake_midi.py` for testing the fake MIDI controller and viewing MIDI output in real-time.
+A standalone script is available at `scripts/fake_midi_monitor.py` for testing the fake MIDI controller and viewing MIDI output in real-time.
 Run the script with:
 ```bash
-python tests/test_fake_midi.py
+uv run python scripts/fake_midi_monitor.py
 ```
 
 ### Scene Order
@@ -176,6 +176,8 @@ Add custom controllers by decorating with `@register_controller("Name", supporte
 │   └── top_level/                 # Entry-point helpers
 │       ├── global_context.py
 │       └── screen.py
-└── tests/                         # Test scripts
-    └── test_fake_midi.py          # Fake MIDI controller tester
+├── scripts/
+│   └── fake_midi_monitor.py       # Fake MIDI controller tester
+└── tests/                         # pytest suite
+    └── test_shaders.py            # Compiles every shader
 ```
