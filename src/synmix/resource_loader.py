@@ -24,14 +24,13 @@ def get_resources_path() -> Path:
         # For older Python versions or when resources are in a zip
         # We need to extract to a temporary location
         # This is handled automatically by importlib.resources
-        import shutil
         import tempfile
 
         temp_dir = Path(tempfile.mkdtemp())
         # Copy resources to temp location
         # (In practice, this is rarely needed with modern Python)
         return temp_dir
-    except (ImportError, FileNotFoundError, TypeError):
+    except (ImportError, FileNotFoundError, TypeError) as err:
         # Fallback for development: assume we're in src/synmix/
         # and resources is a sibling directory
         module_dir = Path(__file__).parent
@@ -50,7 +49,7 @@ def get_resources_path() -> Path:
             f"  - Package resources\n"
             f"  - {resources_dir}\n"
             f"  - {fallback_resources}"
-        )
+        ) from err
 
 
 # Convenience accessors for common resource paths

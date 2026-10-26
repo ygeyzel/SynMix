@@ -27,7 +27,8 @@ def _normalize_supported_types(
     supported_set = frozenset(supported_button_types)
     if not supported_set:
         raise ValueError(
-            f"Controller '{controller_name}' must declare at least one supported button type."
+            f"Controller '{controller_name}' "
+            "must declare at least one supported button type."
         )
 
     return supported_set

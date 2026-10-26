@@ -83,7 +83,11 @@ class Scene:
         self.res_factor = res_factor
 
     def __repr__(self) -> str:
-        return f"Scene({self.name}: shaders=[{self.fragment_shader_filename},{self.vertex_shader_filename}], params:{list(self.params)})"
+        return (
+            f"Scene({self.name}: "
+            f"shaders=[{self.fragment_shader_filename},{self.vertex_shader_filename}],"
+            f" params:{list(self.params)})"
+        )
 
     def __str__(self) -> str:
         return self.__repr__()
