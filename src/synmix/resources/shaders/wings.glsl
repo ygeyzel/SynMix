@@ -43,17 +43,18 @@ vec3 JuliaFractal(vec2 c, vec2 c2, float animparam, float anim2) {
     float ci = 0.0;
     float mean = 0.0;
 
-    for (int i = 0; i < 64; i++)
-    {
+    for (int i = 0; i < 64; i++) {
         vec2 a = vec2(z.x, abs(z.y));
 
         float b = atan(a.y * (0.99 + animparam * 9.0), a.x + .110765432 + animparam);
 
-        if (b > 0.0) b -= 6.303431307 + (animparam * 3.1513);
+        if (b > 0.0)
+            b -= 6.303431307 + (animparam * 3.1513);
 
         z = vec2(log(length(a * (0.98899 - (animparam * 2.70 * anim2)))), b) + c2;
 
-        if (i > 0) mean += length(z / a * b);
+        if (i > 0)
+            mean += length(z / a * b);
 
         mean += a.x - (b * 77.0 / length(a * b));
 
@@ -71,8 +72,7 @@ vec3 JuliaFractal(vec2 c, vec2 c2, float animparam, float anim2) {
     return hsv2rgb(vec3(hue, sat, val));
 }
 
-void main()
-{
+void main() {
     float animWings = 0.004 * cos(iTime * wingsFactor);
     float animFlap = flap * sin(iTime * 1.0);
     float timeVal = 56.48 - 20.1601;

@@ -78,13 +78,9 @@ vec3 hsl2rgb(in vec3 c) {
 }
 // ===================
 
-float vmin(vec2 v) {
-    return min(v.x, v.y);
-}
+float vmin(vec2 v) { return min(v.x, v.y); }
 
-float vmax(vec2 v) {
-    return max(v.x, v.y);
-}
+float vmax(vec2 v) { return max(v.x, v.y); }
 
 float ellip(vec2 p, vec2 s) {
     float m = vmin(s);
@@ -97,9 +93,7 @@ float halfEllip(vec2 p, vec2 s) {
     return (length(p / s) * m) - m;
 }
 
-float fBox(vec2 p, vec2 b) {
-    return vmax(abs(p) - b);
-}
+float fBox(vec2 p, vec2 b) { return vmax(abs(p) - b); }
 
 float dvd_d(vec2 p) {
     float d = halfEllip(p, vec2(.8, .5));
@@ -146,21 +140,17 @@ float dvd(vec2 p) {
     return d;
 }
 
-float range(float vmin, float vmax, float value) {
-    return (value - vmin) / (vmax - vmin);
-}
+float range(float vmin, float vmax, float value) { return (value - vmin) / (vmax - vmin); }
 
-float rangec(float a, float b, float t) {
-    return clamp(range(a, b, t), 0., 1.);
-}
+float rangec(float a, float b, float t) { return clamp(range(a, b, t), 0., 1.); }
 
 void drawHit(inout vec4 col, vec2 p, vec2 hitPos, float hitDist) {
     float d = length(p - hitPos);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     col = mix(col, vec4(0, 1, 1, 0), step(d, .1));
     return;
-    #endif
+#endif
 
     float wavefront = d - hitDist * 1.5;
     float freq = 2.;
@@ -188,12 +178,12 @@ void flip(inout vec2 pos) {
 }
 
 float stepSign(float a) {
-    //return sign(a);
+    // return sign(a);
     return step(0., a) * 2. - 1.;
 }
 
 vec2 compassDir(vec2 p) {
-    //return sign(p - sign(p) * vmin(abs(p))); // this caused problems on some GPUs
+    // return sign(p - sign(p) * vmin(abs(p))); // this caused problems on some GPUs
     vec2 a = vec2(stepSign(p.x), 0);
     vec2 b = vec2(0, stepSign(p.y));
     float s = stepSign(p.x - p.y) * stepSign(-p.x - p.y);
@@ -209,8 +199,7 @@ vec2 calcHitPos(vec2 move, vec2 dir, vec2 size) {
     return hitPos;
 }
 
-vec4 DVDFragShader(vec2 fragCoord, vec3 iResolution, float iTime)
-{
+vec4 DVDFragShader(vec2 fragCoord, vec3 iResolution, float iTime) {
     vec2 p = (-iResolution.xy + 2.0 * fragCoord) / iResolution.y;
     vec2 screenSize = vec2(iResolution.x / iResolution.y, 1.) * 2.;
 
@@ -285,7 +274,7 @@ void main() {
     if (uFractTime >= 0.0) {
         uv = applyFract(uv, 1.0 + 40 * sin((uFractTime) * 0.15));
     }
-    
+
     if (uFractStatic) {
         uv = applyFract(uv, 10.4);
     }
