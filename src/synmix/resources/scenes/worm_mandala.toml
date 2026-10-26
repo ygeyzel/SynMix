@@ -46,10 +46,10 @@ controller.args = {step = 0.2, min_value = -30.0, max_value = 30.0, initial_valu
 
 [[params]]
 name = "floatFragmentColor"
-button = "LEFT_AMOUNT"
+button = "RIGHT_AMOUNT"
 controller.type = "NormalizedController"
 controller.args = {step = 1, min_value = 0, max_value = 40, initial_value = 20}
-# D F
+# . /
 
 
 [[params]]
