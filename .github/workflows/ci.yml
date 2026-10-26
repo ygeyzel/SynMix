@@ -17,3 +17,9 @@ jobs:
         # importing pyglet.window opens a display
         run: xvfb-run -a uv run synmix --help
       - run: uv run pytest -v
+
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: j178/prek-action@v3.1.0
