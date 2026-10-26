@@ -7,45 +7,44 @@ uniform vec3 iResolution;
 uniform float iTime;
 
 // Controllable parameters for dynamic interaction
-uniform float timeSpeed = 0.3;           // Speed of time progression
-uniform float cameraSpeed = 0.2;         // Speed of camera movement
-uniform float cameraHeight = 0.05;       // Height of camera above ground
-uniform float horizonShift = 0.2;        // Horizon vertical position shift
-uniform float sunSize = 1.0;             // Size of the binary star system
-uniform float sunRotationSpeed = 1.0;    // Rotation speed of binary stars
-uniform float sunOrbit = 0.4;            // Orbital radius of binary stars
-uniform float sunPulse = 1.0;            // Pulse intensity of the stars
-uniform float duneScale = 1.0;           // Scale of the dune formations
-uniform float duneHeight = 0.3;          // Height/amplitude of dunes
-uniform float sphereDensity = 0.025;     // Density of floating spheres
-uniform float fogDensity = 0.05;         // Fog density
-uniform float colorTint = 1.0;           // Overall color tint intensity
-uniform float skyColorR = 0.25;          // Sky color red channel
-uniform float skyColorG = 0.8;           // Sky color green channel
-uniform float skyColorB = 0.8;           // Sky color blue channel
+uniform float timeSpeed = 0.3;        // Speed of time progression
+uniform float cameraSpeed = 0.2;      // Speed of camera movement
+uniform float cameraHeight = 0.05;    // Height of camera above ground
+uniform float horizonShift = 0.2;     // Horizon vertical position shift
+uniform float sunSize = 1.0;          // Size of the binary star system
+uniform float sunRotationSpeed = 1.0; // Rotation speed of binary stars
+uniform float sunOrbit = 0.4;         // Orbital radius of binary stars
+uniform float sunPulse = 1.0;         // Pulse intensity of the stars
+uniform float duneScale = 1.0;        // Scale of the dune formations
+uniform float duneHeight = 0.3;       // Height/amplitude of dunes
+uniform float sphereDensity = 0.025;  // Density of floating spheres
+uniform float fogDensity = 0.05;      // Fog density
+uniform float colorTint = 1.0;        // Overall color tint intensity
+uniform float skyColorR = 0.25;       // Sky color red channel
+uniform float skyColorG = 0.8;        // Sky color green channel
+uniform float skyColorB = 0.8;        // Sky color blue channel
 
 // Noise function by CPU https://www.shadertoy.com/view/4sfGRH
 float pn(vec3 p) {
     vec3 i = floor(p);
     vec4 a = dot(i, vec3(1., 57., 21.)) + vec4(0., 57., 21., 78.);
-    vec3 f = cos((p-i)*3.141592653589793)*(-.5) + .5;
-    a = mix(sin(cos(a)*a), sin(cos(1.+a)*(1.+a)), f.x);
+    vec3 f = cos((p - i) * 3.141592653589793) * (-.5) + .5;
+    a = mix(sin(cos(a) * a), sin(cos(1. + a) * (1. + a)), f.x);
     a.xy = mix(a.xz, a.yw, f.y);
     return mix(a.x, a.y, f.z);
 }
 
 float getNoise(vec2 pos, float pulse) {
-    vec3 q = vec3(pos * 2., pos.x-pos.y + iTime * timeSpeed);
+    vec3 q = vec3(pos * 2., pos.x - pos.y + iTime * timeSpeed);
     float b = (pulse * 1.6) + pn(q * 2.) + 2.8;
-    b +=  .25 * pn(q * 4.);
-    b +=  .25  * pn(q * 8.);
-    b +=  .5  * pn(vec3(pos, pos.x-pos.y + iTime * timeSpeed) * 12.23);
-    b = pow(b,0.5);
+    b += .25 * pn(q * 4.);
+    b += .25 * pn(q * 8.);
+    b += .5 * pn(vec3(pos, pos.x - pos.y + iTime * timeSpeed) * 12.23);
+    b = pow(b, 0.5);
     return b;
 }
 
-vec3 sun(vec2 pos, float size, float pulse)
-{
+vec3 sun(vec2 pos, float size, float pulse) {
     // scale the scene
     pos *= size;
     // make a circle
@@ -60,175 +59,154 @@ vec3 sun(vec2 pos, float size, float pulse)
     b *= f;
     b *= 0.5;
     // draw the sun
-    return vec3(b, 0.67 * b  * (0.7 + sin(iTime * 7.) * 0.01) , 0.0);
+    return vec3(b, 0.67 * b * (0.7 + sin(iTime * 7.) * 0.01), 0.0);
 }
 
-vec3 binaryStar(vec2 uv, float size, float pulse)
-{
+vec3 binaryStar(vec2 uv, float size, float pulse) {
     // scale the scene
     uv *= size;
     // draw the suns
-    return sun(uv + vec2(0.,0.), 1.0, pulse)
-        + sun(uv + vec2(sin(iTime * sunRotationSpeed)*sunOrbit, cos(iTime * sunRotationSpeed)*0.1), 3.0-cos(iTime * sunRotationSpeed) * 1.4, pulse);
+    return sun(uv + vec2(0., 0.), 1.0, pulse) +
+           sun(uv + vec2(sin(iTime * sunRotationSpeed) * sunOrbit, cos(iTime * sunRotationSpeed) * 0.1),
+               3.0 - cos(iTime * sunRotationSpeed) * 1.4, pulse);
 }
 
-vec3 sky(vec3 ro, vec3 rd)
-{
+vec3 sky(vec3 ro, vec3 rd) {
     rd.y -= horizonShift;
-    float c = pow(rd.x,2.0) * 0.2 + pow(rd.y,2.0);
+    float c = pow(rd.x, 2.0) * 0.2 + pow(rd.y, 2.0);
     vec3 col = vec3(c * skyColorR, c * skyColorG, c * skyColorB);
     col += binaryStar(rd.xy, sunSize, sunPulse);
     return col;
 }
 
-float sdPlane( vec3 p )
-{
-    return p.y;
-}
+float sdPlane(vec3 p) { return p.y; }
 
-float sdSphere( vec3 p, float s )
-{
+float sdSphere(vec3 p, float s) {
     p.y = pow(p.y, 13.0);
-    return length(p)-s;
+    return length(p) - s;
 }
 
-vec2 opU( vec2 d1, vec2 d2 )
-{
-    return (d1.x<d2.x) ? d1 : d2;
+vec2 opU(vec2 d1, vec2 d2) { return (d1.x < d2.x) ? d1 : d2; }
+
+float dunes(in vec3 pos) {
+    return duneHeight * sin(pos.z * duneScale + pn(pos * duneScale)) * sin(pos.x * duneScale) * 1.5;
 }
 
-float dunes(in vec3 pos)
-{
-    return duneHeight * sin(pos.z * duneScale + pn(pos * duneScale))* sin(pos.x * duneScale) * 1.5;
-}
-
-vec2 map(in vec3 pos)
-{
-    vec2 res = opU(vec2(sdPlane(pos) + dunes(pos) , 1.0),
-                   vec2(
-                       sdSphere(
-                           pos-vec3( 0.0,dunes(pos)-.6, 0.0 - iTime * timeSpeed + pn(pos)),
-                           sphereDensity ),
-                    46.9 ) );
+vec2 map(in vec3 pos) {
+    vec2 res =
+        opU(vec2(sdPlane(pos) + dunes(pos), 1.0),
+            vec2(sdSphere(pos - vec3(0.0, dunes(pos) - .6, 0.0 - iTime * timeSpeed + pn(pos)), sphereDensity), 46.9));
     return res;
 }
 
-vec2 castRay( in vec3 ro, in vec3 rd, in float maxd )
-{
+vec2 castRay(in vec3 ro, in vec3 rd, in float maxd) {
     float precis = 0.001;
-    float h=precis*2.0;
+    float h = precis * 2.0;
     float t = 0.0;
     float m = -1.0;
-    for( int i=0; i<60; i++ )
-    {
-        if( abs(h)<precis||t>maxd ) break;
+    for (int i = 0; i < 60; i++) {
+        if (abs(h) < precis || t > maxd)
+            break;
         t += h;
-        vec2 res = map( ro+rd*t );
+        vec2 res = map(ro + rd * t);
         h = res.x;
         m = res.y;
     }
 
-    if( t>maxd ) m=-1.0;
-    return vec2( t, m );
+    if (t > maxd)
+        m = -1.0;
+    return vec2(t, m);
 }
 
-float softshadow( in vec3 ro, in vec3 rd, in float mint, in float maxt, in float k )
-{
+float softshadow(in vec3 ro, in vec3 rd, in float mint, in float maxt, in float k) {
     float res = 1.0;
     float t = mint;
-    for( int i=0; i<30; i++ )
-    {
-        if( t<maxt )
-        {
-            float h = map( ro + rd*t ).x;
-            res = min( res, k*h/t );
+    for (int i = 0; i < 30; i++) {
+        if (t < maxt) {
+            float h = map(ro + rd * t).x;
+            res = min(res, k * h / t);
             t += 0.02;
         }
     }
-    return clamp( res, 0.0, 1.0 );
+    return clamp(res, 0.0, 1.0);
 }
 
-vec3 calcNormal( in vec3 pos )
-{
-    vec3 eps = vec3( 0.001, 0.0, 0.0 );
-    vec3 nor = vec3(
-        map(pos+eps.xyy).x - map(pos-eps.xyy).x,
-        map(pos+eps.yxy).x - map(pos-eps.yxy).x,
-        map(pos+eps.yyx).x - map(pos-eps.yyx).x );
+vec3 calcNormal(in vec3 pos) {
+    vec3 eps = vec3(0.001, 0.0, 0.0);
+    vec3 nor = vec3(map(pos + eps.xyy).x - map(pos - eps.xyy).x, map(pos + eps.yxy).x - map(pos - eps.yxy).x,
+                    map(pos + eps.yyx).x - map(pos - eps.yyx).x);
     return normalize(nor);
 }
 
-float calcAO( in vec3 pos, in vec3 nor )
-{
+float calcAO(in vec3 pos, in vec3 nor) {
     float totao = 0.0;
     float sca = 1.0;
-    for( int aoi=0; aoi<5; aoi++ )
-    {
-        float hr = 0.01 + 0.05*float(aoi);
-        vec3 aopos =  nor * hr + pos;
-        float dd = map( aopos ).x;
-        totao += -(dd-hr)*sca;
+    for (int aoi = 0; aoi < 5; aoi++) {
+        float hr = 0.01 + 0.05 * float(aoi);
+        vec3 aopos = nor * hr + pos;
+        float dd = map(aopos).x;
+        totao += -(dd - hr) * sca;
         sca *= 0.75;
     }
-    return clamp( 1.0 - 4.0*totao, 0.0, 1.0 );
+    return clamp(1.0 - 4.0 * totao, 0.0, 1.0);
 }
 
-vec3 render(in vec3 ro, in vec3 rd)
-{
-    vec3 col = sky(ro,rd);
+vec3 render(in vec3 ro, in vec3 rd) {
+    vec3 col = sky(ro, rd);
     vec2 res = castRay(ro, rd, 20.0);
     float t = res.x;
     float m = res.y;
-    if(m>-0.5)
-    {
-        vec3 pos = ro + t*rd;
-        vec3 nor = calcNormal( pos );
+    if (m > -0.5) {
+        vec3 pos = ro + t * rd;
+        vec3 nor = calcNormal(pos);
 
-        vec3 newcol = vec3(0.6) + 0.4*sin( vec3(0.05,0.08,0.10)*(m-1.0) ) + getNoise(pos.xx * 5.2, 1.0) * 0.25;
+        vec3 newcol = vec3(0.6) + 0.4 * sin(vec3(0.05, 0.08, 0.10) * (m - 1.0)) + getNoise(pos.xx * 5.2, 1.0) * 0.25;
         newcol *= colorTint;
 
-        float ao = calcAO( pos, nor );
+        float ao = calcAO(pos, nor);
 
-        vec3 lig = normalize( vec3(-sin(iTime * sunRotationSpeed)*0.8, 0.8, -4.7) );
-        float amb = clamp( 0.5+0.2*nor.y, 0.0, 1.0 );
-        float dif = clamp( dot( nor, lig ), 0.0, 1.0 );
-        float bac = clamp( dot( nor, normalize(vec3(-lig.x,0.0,-lig.z))), 0.0, 1.0 )*clamp( 1.0-pos.y,0.0,1.0);
+        vec3 lig = normalize(vec3(-sin(iTime * sunRotationSpeed) * 0.8, 0.8, -4.7));
+        float amb = clamp(0.5 + 0.2 * nor.y, 0.0, 1.0);
+        float dif = clamp(dot(nor, lig), 0.0, 1.0);
+        float bac = clamp(dot(nor, normalize(vec3(-lig.x, 0.0, -lig.z))), 0.0, 1.0) * clamp(1.0 - pos.y, 0.0, 1.0);
 
         float sh = 1.0;
-        if( dif>0.001 ) { sh = softshadow( pos, lig, 0.02, 10.0, 7.0 ); dif *= sh; }
+        if (dif > 0.001) {
+            sh = softshadow(pos, lig, 0.02, 10.0, 7.0);
+            dif *= sh;
+        }
 
         vec3 brdf = vec3(0.0);
-        brdf += 0.20*amb*vec3(0.10,0.11,0.13)*ao;
-        brdf += 0.20*bac*vec3(0.15,0.15,0.15)*ao;
-        brdf += 1.20*dif*vec3(1.00,0.90,0.70);
+        brdf += 0.20 * amb * vec3(0.10, 0.11, 0.13) * ao;
+        brdf += 0.20 * bac * vec3(0.15, 0.15, 0.15) * ao;
+        brdf += 1.20 * dif * vec3(1.00, 0.90, 0.70);
 
-        float pp = clamp( dot( reflect(rd,nor), lig ), 0.0, 0.2 );
-        float spe = sh*pow(pp,32.0);
-        float fre = ao*pow( clamp(1.0+dot(nor,rd),0.0,1.0), 2.0 );
+        float pp = clamp(dot(reflect(rd, nor), lig), 0.0, 0.2);
+        float spe = sh * pow(pp, 32.0);
+        float fre = ao * pow(clamp(1.0 + dot(nor, rd), 0.0, 1.0), 2.0);
 
-        float fog = exp(-fogDensity * res.x*res.x);
-        newcol = newcol*brdf + vec3(1.0)*newcol*spe + 0.2*fre*(0.5+0.5*newcol) ;
+        float fog = exp(-fogDensity * res.x * res.x);
+        newcol = newcol * brdf + vec3(1.0) * newcol * spe + 0.2 * fre * (0.5 + 0.5 * newcol);
         col = mix(col, newcol, fog);
     }
     return clamp(col, 0.0, 1.0);
 }
 
-void main()
-{
-    vec2 q = fragCoord.xy/iResolution.xy;
-    vec2 p = -1.0+2.0*q;
-    p.x *= iResolution.x/iResolution.y;
-    vec3 ro = vec3( sin(iTime * cameraSpeed)*0.2, cameraHeight, 2.5 - iTime * timeSpeed);
-    vec3 ta = vec3( -0.0, -0.0, 0.0 - iTime * timeSpeed);
-    vec3 cw = normalize( ta-ro );
-    vec3 cp = vec3( 0.0, 1.0, 0.0 );
-    vec3 cu = normalize( cross(cw,cp) );
-    vec3 cv = normalize( cross(cu,cw) );
-    vec3 rd = normalize( p.x*cu + p.y*cv + 2.5*cw );
+void main() {
+    vec2 q = fragCoord.xy / iResolution.xy;
+    vec2 p = -1.0 + 2.0 * q;
+    p.x *= iResolution.x / iResolution.y;
+    vec3 ro = vec3(sin(iTime * cameraSpeed) * 0.2, cameraHeight, 2.5 - iTime * timeSpeed);
+    vec3 ta = vec3(-0.0, -0.0, 0.0 - iTime * timeSpeed);
+    vec3 cw = normalize(ta - ro);
+    vec3 cp = vec3(0.0, 1.0, 0.0);
+    vec3 cu = normalize(cross(cw, cp));
+    vec3 cv = normalize(cross(cu, cw));
+    vec3 rd = normalize(p.x * cu + p.y * cv + 2.5 * cw);
 
-    vec3 col = render( ro, rd );
+    vec3 col = render(ro, rd);
 
-    col = sqrt( col );
+    col = sqrt(col);
 
-    fragColor=vec4( col, 1.0 );
+    fragColor = vec4(col, 1.0);
 }
