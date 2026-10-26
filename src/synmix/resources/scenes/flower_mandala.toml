@@ -89,4 +89,17 @@ controller.args = {min_value = 0.0, max_value = 0.9, initial_value = 0.7}
 # V B
 # requaier CHAR_L to be true (@)
 
+[[params]]
+name = "mouseX"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
+# U I
+# 0 = no mouse
 
+[[params]]
+name = "mouseY"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.5}
+# J K

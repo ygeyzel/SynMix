@@ -37,7 +37,10 @@ uniform float lineWidth;
 // m: mouse
 ////////////////////////////////////////////////////////////////////////////////
 
-vec2 iMouse = vec2 (0,0);
+// Mouse position as a fraction of the screen, set by two knobs; mouseX = 0 means no mouse
+uniform float mouseX;
+uniform float mouseY;
+vec2 iMouse = vec2(mouseX, mouseY) * iResolution.xy;
 
 const float PI = 3.1415927;
 

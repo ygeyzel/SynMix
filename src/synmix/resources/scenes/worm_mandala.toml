@@ -92,3 +92,17 @@ controller.type = "NormalizedController"
 controller.args = {min_value = -6, max_value = 6, initial_value = 0}
 # G H
 
+[[params]]
+name = "mouseX"
+button = "RIGHT_HIGH"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
+# U I
+# 0 = no mouse
+
+[[params]]
+name = "mouseY"
+button = "RIGHT_MID"
+controller.type = "NormalizedController"
+controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.5}
+# J K
