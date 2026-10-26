@@ -31,7 +31,7 @@ python -m synmix --fakemidi
 
 ### Testing
 ```bash
-python tests/test_fake_midi.py             # Test fake MIDI controller functionality
+uv run python scripts/fake_midi_monitor.py # Interactively test fake MIDI controller
 ```
 
 ## Architecture Overview
