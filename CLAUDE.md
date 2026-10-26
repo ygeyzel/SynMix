@@ -31,6 +31,7 @@ python -m synmix --fakemidi
 
 ### Testing
 ```bash
+uv run pytest                              # Run tests (shader compile checks need an OpenGL context)
 uv run python scripts/fake_midi_monitor.py # Interactively test fake MIDI controller
 ```
 

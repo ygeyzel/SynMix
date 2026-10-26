@@ -176,6 +176,8 @@ Add custom controllers by decorating with `@register_controller("Name", supporte
 │   └── top_level/                 # Entry-point helpers
 │       ├── global_context.py
 │       └── screen.py
-└── scripts/
-    └── fake_midi_monitor.py       # Fake MIDI controller tester
+├── scripts/
+│   └── fake_midi_monitor.py       # Fake MIDI controller tester
+└── tests/                         # pytest suite
+    └── test_shaders.py            # Compiles every shader
 ```
