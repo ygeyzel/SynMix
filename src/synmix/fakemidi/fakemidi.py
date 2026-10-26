@@ -182,7 +182,8 @@ def load_key_map(file_path: Path) -> dict[int, Callable]:
     {
         <key1>: (<method to generate message for key1 press>, None),
         <key2>: (<method to generate message for key2 press>, None),
-        <key3>: (<method to generate message for key3 press>, <method to generate message for key3 release>),
+        <key3>: (<method to generate message for key3 press>,
+                 <method to generate message for key3 release>),
         ...
     }.
     """
@@ -195,7 +196,8 @@ def load_key_map(file_path: Path) -> dict[int, Callable]:
         keys_messages_methods = interface.keys_messages_methods()
         if len(keys) != len(keys_messages_methods):
             raise ValueError(
-                f"Number of keys does not match number of message methods for button '{button_name}'"
+                "Number of keys does not match number of message methods "
+                f"for button '{button_name}'"
             )
 
         for key, methods in zip(keys, keys_messages_methods, strict=True):
@@ -232,7 +234,8 @@ class FakeMidi:
                 key_map_file = get_fake_midi_key_map_file()
 
             self.output_name = output_name
-            # Windows doesn't support virtual MIDI ports, so we'll store messages instead
+            # Windows doesn't support virtual MIDI ports,
+            # so we'll store messages instead
             if platform.system() == "Windows":
                 self.output = None
                 self.pending_messages = []

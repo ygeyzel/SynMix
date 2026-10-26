@@ -10,7 +10,10 @@ MIDI_INPUT_SUBNAME = "Mixage"
 
 
 class Screen(mglw.WindowConfig):
-    """Main application window - handles core window management and delegates rendering to scenes."""
+    """Main application window.
+
+    Handles core window management and delegates rendering to scenes.
+    """
 
     # OpenGL configuration
     gl_version = (3, 3)
@@ -68,7 +71,10 @@ class Screen(mglw.WindowConfig):
         parser.add_argument(
             "--fakemidi",
             action="store_true",
-            help="Use fake MIDI controller with keyboard input instead of real MIDI device",
+            help=(
+                "Use fake MIDI controller with keyboard input "
+                "instead of real MIDI device"
+            ),
         )
         parser.add_argument(
             "--start-scene", type=str, default=None, help="Name of the starting scene"

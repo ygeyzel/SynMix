@@ -109,7 +109,7 @@ class ScenesManager:
                     # Load image with PIL
                     if not PIL_AVAILABLE:
                         continue
-                    # Type checker: Image and np are available when PIL_AVAILABLE is True
+                    # Type checker: Image and np are available when PIL_AVAILABLE
                     assert Image is not None and np is not None, (
                         "PIL modules should be available"
                     )  # type: ignore
@@ -162,7 +162,8 @@ class ScenesManager:
         Bind loaded textures to post-processing shader uniforms.
 
         Textures are bound to uniforms that are manually declared in the shader.
-        The method tries to match texture names to uniform names using common conventions:
+        The method tries to match texture names to uniform names
+        using common conventions:
         - uTexture_<texture_name>
         - <texture_name>
         """
@@ -192,8 +193,10 @@ class ScenesManager:
 
             if not bound:
                 print(
-                    f"Warning: Texture '{texture_name}' loaded but no matching uniform found in shader. "
-                    f"Declare a uniform like 'uniform sampler2D uTexture_{clean_name};' in the shader."
+                    f"Warning: Texture '{texture_name}' loaded "
+                    "but no matching uniform found in shader. "
+                    "Declare a uniform like "
+                    f"'uniform sampler2D uTexture_{clean_name};' in the shader."
                 )
 
     @property
@@ -216,7 +219,8 @@ class ScenesManager:
         if abuttom.button_type not in supported_button_types:
             supported_names = ", ".join(bt.name for bt in supported_button_types)
             raise ValueError(
-                f"Controller '{controller_type}' supports button types {{{supported_names}}}, "
+                f"Controller '{controller_type}' "
+                f"supports button types {{{supported_names}}}, "
                 f"but button '{abuttom.name}' is of type {abuttom.button_type.name}."
             )
 
