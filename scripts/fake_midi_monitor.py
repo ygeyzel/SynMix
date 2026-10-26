@@ -36,7 +36,7 @@ class MidiMonitor(threading.Thread):
                     print(msg)
                 time.sleep(0.01)  # Small delay to prevent busy-waiting
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - debug script: report any error and exit
             print(f"✗ Error in MIDI monitor: {e}")
         finally:
             if self.input_port:

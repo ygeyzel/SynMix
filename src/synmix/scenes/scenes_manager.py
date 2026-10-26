@@ -1,6 +1,7 @@
 import random
 import tomllib
 
+import moderngl
 import moderngl_window as mglw
 
 from synmix.inputs.buttons import Button
@@ -126,7 +127,7 @@ class ScenesManager:
                     self.textures[texture_name] = texture
                     print(f"Loaded texture: {texture_name} from {texture_file.name}")
 
-                except Exception as e:
+                except (OSError, ValueError, moderngl.Error) as e:
                     print(f"Error loading texture {texture_file.name}: {e}")
 
     def init_post_processing(self) -> None:
