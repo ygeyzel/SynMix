@@ -15,12 +15,6 @@ controller.type = "CyclicController"
 controller.args = { step = 0.001, min_value = -10.0, max_value = 10.0 }
 
 [[params]]
-name = "colorFactor"
-button = "LEFT_HIGH"
-controller.type = "NormalizedController"
-controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.3 }
-
-[[params]]
 name = "hueShift"
 button = "LEFT_HIGH"
 controller.type = "NormalizedController"
