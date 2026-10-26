@@ -34,7 +34,7 @@ controller.args = {min_value = 0.1, max_value = 3.0, initial_value = 1.0}
 
 [[params]]
 name = "raycastSteps"
-button = "LEFT_LOW"
+button = "LEFT_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 20.0, max_value = 100.0, initial_value = 60.0}
 
