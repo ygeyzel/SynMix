@@ -3,24 +3,24 @@ fragment_shader_filename = "mandelbrot_set.glsl"
 
 [[params]]
 name = "u_offsetY"
-button = "LEFT_WHEEL"
+button = "L_WEEL"
 controller.type = "RangedController"
 controller.args = { step = -0.1, min_value = -500.0, max_value = 500.0 }
 
 [[params]]
 name = "u_offsetX"
-button = "RIGHT_WHEEL"
+button = "R_WEEL"
 controller.type = "RangedController"
 controller.args = { step = 0.1, min_value = -500.0, max_value = 500.0 }
 
 [[params]]
 name = "u_zoom"
-button = "CROSSFADER"
+button = "FADER"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 8.0, initial_value = 0.0 }
 
 [[params]]
 name = "u_rotation"
-button = "RIGHT_DRY_WET"
+button = "R_WEEL_SCRETCH"
 controller.type = "CyclicController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.0, step = 0.01 }
