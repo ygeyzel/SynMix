@@ -3,66 +3,66 @@ fragment_shader_filename = "triskelion.glsl"
 
 [[params]]
 name = "d_factor"
-button = ["scrollers", 0]
+button = "L_WEEL"
 controller.type = "CyclicController"
 controller.args = {min_value = -65.0, max_value = 65.0, initial_value = 5.0, step = 0.1}
 
 [[params]]
 name = "p_factor"
-button = ["scrollers", 1]
+button = "R_WEEL"
 controller.type = "CyclicController"
 controller.args = {min_value = -65.0, max_value = 65.0, initial_value = 5.0, step = 0.1}
 
 [[params]]
 name = "mx"
-button = ["knobs", 0]
+button = "C_GAIN"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 3.0, initial_value = 1.0}
 
 [[params]]
 name = "my"
-button = ["knobs", 1]
+button = "D_GAIN"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 3.0, initial_value = 1.0}
 
 [[params]]
 name = "mw"
-button = ["knobs", 2]
+button = "A_HI"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.5, max_value = 1.5, initial_value = 1.0}
 
 [[params]]
 name = "tx"
-button = ["knobs", 3]
+button = "A_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.5, max_value = 1.5, initial_value = 1.0}
 
 [[params]]
 name = "ty"
-button = ["knobs", 4]
+button = "A_LOW"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.5, max_value = 1.5, initial_value = 1.0}
 
 [[params]]
 name = "dp"
-button = ["knobs", 8]
+button = "A_GAIN"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.75, max_value = 1.25, initial_value = 1.0}
 
 [[params]]
 name = "iMax"
-button = ["knobs", 12]
+button = "FADER"
 controller.type = "NormalizedController"
 controller.args = {min_value = 10.0, max_value = 30.0, initial_value = 24.0}
 
 [[params]]
 name = "t3_factor"
-button = ["knobs", 13]
+button = "HEADPHONES_MIX"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 5.0, initial_value = 0.0}
 
 [[params]]
 name = "t_factor"
-button = ["knobs", 7]
+button = "B_LOW"
 controller.type = "NormalizedController"
 controller.args = {min_value = -10.0, max_value = 10.0, initial_value = 1.0}

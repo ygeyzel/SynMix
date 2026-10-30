@@ -117,6 +117,25 @@ class MidiConfig:
 
         return channel
 
+    def get_buttons_by_label(self, label: str) -> tuple[Button, ...]:
+        """
+        Get every button with this label.
+
+        Several buttons may share a label, e.g. one control mirrored on two
+        channels, and a param bound to the label is driven by all of them.
+        """
+        buttons = tuple(
+            button
+            for section_buttons in self.buttons.values()
+            for button in section_buttons
+            if button.label == label
+        )
+        if not buttons:
+            raise ValueError(
+                f"No button labelled '{label}' in midi config '{self.config_name}'."
+            )
+        return buttons
+
     def get_button(self, section: str, index: int) -> Button:
         try:
             buttons = self.buttons[section]

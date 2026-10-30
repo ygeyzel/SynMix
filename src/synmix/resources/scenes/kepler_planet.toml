@@ -3,69 +3,69 @@ fragment_shader_filename = "kepler.glsl"
 
 [[params]]
 name = "orbitSpeed"
-button = ["scrollers", 0]
+button = "L_WEEL"
 controller.type = "CyclicController"
 controller.args = {step = 0.002, min_value = -1.0, max_value = 1.0, initial_value = 0.125}
 
 [[params]]
 name = "timeScale"
-button = ["scrollers", 1]
+button = "R_WEEL"
 controller.type  = "CyclicController"
 controller.args = {step = 0.002, min_value = -1.0, max_value = 1.0, initial_value = 0.125}
 
 
 [[params]]
 name = "atmosphereIntensity"
-button = ["knobs", 3]
+button = "A_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.25}
 
 
 [[params]]
 name = "cloudDensity"
-button = ["knobs", 4]
+button = "A_LOW"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 8.0, initial_value = 0.05}
 
 
 [[params]]
 name = "landContrast"
-button = ["knobs", 5]
+button = "B_HI"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 1.5, initial_value = 0.75}
 
 
 [[params]]
 name = "starBrightness"
-button = ["knobs", 6]
+button = "B_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 3.0, initial_value = 0.5}
 
 
 [[params]]
 name = "surfaceDetail"
-button = ["knobs", 7]
+button = "B_LOW"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 2.0}
 
 
 [[params]]
 name = "cameraRotX"
-button = ["knobs", 0]
+button = "C_GAIN"
 controller.type = "NormalizedController"
 controller.args = {min_value = -3.14159, max_value = 3.14159, initial_value = 0.0}
 
 
 [[params]]
 name = "cameraRotY"
-button = ["knobs", 1]
+button = "D_GAIN"
 controller.type = "NormalizedController"
 controller.args = {min_value = -1.4708, max_value = 1.4708, initial_value = 0.0}
 
 
 [[params]]
 name = "cameraDistance"
-button = ["knobs", 12]
+button = "FADER"
 controller.type = "NormalizedController"
 controller.args = {min_value = 150.0, max_value = 0.5, initial_value = 25.0}
 

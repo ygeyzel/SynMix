@@ -5,7 +5,7 @@ import moderngl
 import moderngl_window as mglw
 
 from synmix.inputs.input_manager import MidiInputManager
-from synmix.inputs.midi import MIDI_BUTTEN_CLICK
+from synmix.inputs.midi import MIDI_BUTTEN_CLICK, MidiEventType
 from synmix.params.params import Param
 from synmix.params.valuecontrollers import controllers_registry
 from synmix.resource_loader import (
@@ -122,8 +122,9 @@ class ScenesManager:
         of them ever receives the events.
         """
         global_bindings = [
-            (param.button, f"post-processing '{param.name}'")
+            (button, f"post-processing '{param.name}'")
             for param in self.post_params
+            for button in param.buttons
         ] + [
             (button, f"function '{func_name}'")
             for func_name, buttons in self.midi_config.functions.items()
@@ -134,7 +135,11 @@ class ScenesManager:
             (
                 f"scene '{scene.name}'",
                 _shared_midi_conflicts(
-                    [(param.button, f"'{param.name}'") for param in scene.params],
+                    [
+                        (button, f"'{param.name}'")
+                        for param in scene.params
+                        for button in param.buttons
+                    ],
                     global_bindings,
                 ),
             )
@@ -153,16 +158,16 @@ class ScenesManager:
         """
         Report buttons the config defines that nothing ever binds.
 
-        Buttons are addressed positionally, so a control mapped at an index no
-        scene or function uses is silently dead. That is expected for buttons
-        yet to be given a purpose, but it also catches a config whose controls
-        are ordered differently than the scenes expect.
+        Scenes bind buttons by label, so a control whose label no scene or
+        function uses is silently dead. That is expected for buttons yet to be
+        given a purpose, but it also catches a label misspelled in the config.
         """
         params_lists = [scene.params for scene in self.scenes] + [self.post_params]
         used = {
-            (param.button.section, param.button.index)
+            (button.section, button.index)
             for params in params_lists
             for param in params
+            for button in param.buttons
         }
         used |= {
             (button.section, button.index)
@@ -332,7 +337,7 @@ class ScenesManager:
         return self.scenes[self.current_scene_index]
 
     def _generate_param_from_file_data(self, data):
-        abuttom = self.midi_config.get_button(*data["button"])
+        buttons = self.midi_config.get_buttons_by_label(data["button"])
         controller_type = data["controller"]["type"]
         try:
             controller_cls, supported_button_types = controllers_registry[
@@ -343,16 +348,30 @@ class ScenesManager:
                 f"Controller '{controller_type}' is not registered."
             ) from exc
 
-        if abuttom.button_type not in supported_button_types:
-            supported_names = ", ".join(bt.name for bt in supported_button_types)
-            raise ValueError(
-                f"Controller '{controller_type}' "
-                f"supports button types {{{supported_names}}}, "
-                f"but button {abuttom} is of type {abuttom.button_type.name}."
-            )
+        for abutton in buttons:
+            if abutton.button_type not in supported_button_types:
+                supported_names = ", ".join(bt.name for bt in supported_button_types)
+                raise ValueError(
+                    f"Controller '{controller_type}' "
+                    f"supports button types {{{supported_names}}}, "
+                    f"but button {abutton} is of type {abutton.button_type.name}."
+                )
 
-        acontroller = controller_cls(**data["controller"].get("args", {}))
-        return Param(name=data["name"], button=abuttom, controller=acontroller)
+        args = dict(data["controller"].get("args", {}))
+        if "is_pitch" in args:
+            # The input range is the bound buttons': a pitch slot may be an ordinary
+            # 0-127 control on one device and a pitchwheel on another
+            is_pitch = {
+                b.midi_getter.event_type is MidiEventType.PITCH for b in buttons
+            }
+            if len(is_pitch) > 1:
+                raise ValueError(
+                    f"Param '{data['name']}' is bound to '{data['button']}', which "
+                    "mixes pitchwheel and other buttons with different input ranges."
+                )
+            args["is_pitch"] = is_pitch.pop()
+        acontroller = controller_cls(**args)
+        return Param(name=data["name"], buttons=buttons, controller=acontroller)
 
     def _load_scens_from_toml_files(self) -> None:
         for scene_file in SCENES_DIR.iterdir():
@@ -578,11 +597,18 @@ class ScenesManager:
             if param.is_reset_on_scene_change:
                 param.controller.reset()
             self.input_manager.bind_param(param)
-            button_ref = (param.button.section, param.button.index)
-            print(
-                f"{param.name:20} {param.button!r:36}",
-                " ".join(self.global_ctx.fake_midi.key_dict.get(button_ref, []))
-                if self.global_ctx.fake_midi
-                else "",
+            fake_midi = self.global_ctx.fake_midi
+            keys = (
+                [
+                    key
+                    for button in param.buttons
+                    for key in fake_midi.key_dict.get(
+                        (button.section, button.index), []
+                    )
+                ]
+                if fake_midi
+                else []
             )
+            buttons = ", ".join(repr(button) for button in param.buttons)
+            print(f"{param.name:20} {buttons:36}", " ".join(keys))
         print("=" * 80)

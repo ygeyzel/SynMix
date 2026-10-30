@@ -3,42 +3,42 @@ fragment_shader_filename = "julia.glsl"
 
 [[params]]
 name = "x"
-button = ["scrollers", 1]
+button = "R_WEEL"
 controller.type = "CyclicController"
 controller.args = {step = -0.002, min_value = -2.0, max_value = 0.5, initial_value = 0.0}
 
 [[params]]
 name = "y"
-button = ["scrollers", 0]
+button = "L_WEEL"
 controller.type = "CyclicController"
 controller.args = {step = 0.002, min_value = -1.15, max_value = 1.15, initial_value = 0.0}
 
 [[params]]
 name = "n"
-button = ["scrollers", 2]
+button = "MID_WEEL"
 controller.type = "RangedController"
 controller.args = {min_value = 2.0, max_value = 13.0, initial_value = 2.0, step = 0.1}
 
 [[params]]
 name = "zoom_m"
-button = ["scrollers", 5]
+button = "R_MOVE_GRID"
 controller.type = "RangedController"
 controller.args = {min_value = 0.0, max_value = 7.0, initial_value = 0.0, step = 0.1}
 
 [[params]]
 name = "zoom_j"
-button = ["scrollers", 6]
+button = "R_WEEL_SCRETCH"
 controller.type = "RangedController"
 controller.args = {min_value = 0.0, max_value = 7.0, initial_value = 0.0, step = 0.1}
 
 [[params]]
 name = "x_j"
-button = ["scrollers", 3]
+button = "L_MOVE_GRID"
 controller.type = "RangedController"
 controller.args = {min_value = -2.0, max_value = 2.0, initial_value = 0.0, step = 0.1}
 
 [[params]]
 name = "y_j"
-button = ["scrollers", 4]
+button = "L_WEEL_SCRETCH"
 controller.type = "RangedController"
 controller.args = {min_value = -2.0, max_value = 2.0, initial_value = 0.0, step = 0.1}

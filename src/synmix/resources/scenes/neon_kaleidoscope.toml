@@ -3,48 +3,48 @@ fragment_shader_filename = "neon_kaleidoscope.glsl"
 
 [[params]]
 name = "iMax"
-button = ["knobs", 5]
+button = "B_HI"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.01, max_value = 14.0, initial_value = 6.0}
 
 [[params]]
 name = "w_d"
-button = ["knobs", 6]
+button = "B_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 2.0, max_value = 25.0, initial_value = 8.0}
 
 [[params]]
 name = "phase_r"
-button = ["knobs", 2]
+button = "A_HI"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 3.14, initial_value = 0.263}
 
 [[params]]
 name = "phase_g"
-button = ["knobs", 3]
+button = "A_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 3.14, initial_value = 0.416}
 
 [[params]]
 name = "phase_b"
-button = ["knobs", 4]
+button = "A_LOW"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 3.14, initial_value = 0.557}
 
 [[params]]
 name = "time_dilation"
-button = ["scrollers", 6]
+button = "R_WEEL_SCRETCH"
 controller.type = "CyclicController"
 controller.args = {min_value = -5.0, max_value = 5.0, initial_value = 0.0, step = 0.005}
 
 [[params]]
 name = "uv_factor"
-button = ["scrollers", 0]
+button = "L_WEEL"
 controller.type = "CyclicController"
 controller.args = {min_value = -4.5, max_value = 4.5, initial_value = 1.25, step = 0.005}
 
 [[params]]
 name = "uvi_factor"
-button = ["scrollers", 1]
+button = "R_WEEL"
 controller.type = "CyclicController"
 controller.args = {min_value = -6.0, max_value = 6.0, initial_value = 1.25, step = 0.07}

@@ -4,96 +4,96 @@ res_factor = 0.5
 
 [[params]]
 name = "xOffset"
-button = ["scrollers", 0]
+button = "L_WEEL"
 controller.type = 'CyclicController'
 controller.args = { step = -0.001, min_value = -10.0, max_value = 10.0 }
 
 [[params]]
 name = "yOffset"
-button = ["scrollers", 1]
+button = "R_WEEL"
 controller.type = "CyclicController"
 controller.args = { step = 0.001, min_value = -10.0, max_value = 10.0 }
 
 [[params]]
 name = "hueShift"
-button = ["knobs", 2]
+button = "A_HI"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.5 }
 
 [[params]]
 name = "brightness"
-button = ["knobs", 3]
+button = "A_MID"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 0.3 }
 
 [[params]]
 name = "saturation"
-button = ["knobs", 4]
+button = "A_LOW"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 1.0 }
 
 [[params]]
 name = "hueRange"
-button = ["knobs", 5]
+button = "B_HI"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 2.0, initial_value = 1.0 }
 
 [[params]]
 name = "wingsFactor"
-button = ["knobs", 6]
+button = "B_MID"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 0.6, initial_value = 0.03 }
 
 [[params]]
 name = "flap"
-button = ["knobs", 7]
+button = "B_LOW"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 1.0, initial_value = 0.5 }
 
 [[params]]
 name = "rot0"
-button = ["knobs", 0]
+button = "C_GAIN"
 controller.type = "NormalizedController"
 controller.args = { min_value = -6.28, max_value = 6.28, initial_value = -5.0}
 
 [[params]]
 name = "rot1"
-button = ["knobs", 1]
+button = "D_GAIN"
 controller.type = "NormalizedController"
 controller.args = { min_value = -6.28, max_value = 6.28, initial_value = 0.5}
 
 [[params]]
 name = "rotWeight"
-button = ["knobs", 12]
+button = "FADER"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.0, max_value = 3.0, initial_value = 0.5 }
 
 [[params]]
 name = "scaleX0"
-button = ["knobs", 8]
+button = "A_GAIN"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
 
 [[params]]
 name = "scaleX1"
-button = ["knobs", 10]
+button = "B_GAIN"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
 
 [[params]]
 name = "scaleY0"
-button = ["knobs", 9]
+button = "L_FILTER"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
 
 [[params]]
 name = "scaleY1"
-button = ["knobs", 11]
+button = "R_FILTER"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }
 
 [[params]]
 name = "scaleXY"
-button = ["knobs", 13]
+button = "HEADPHONES_MIX"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.2, max_value = 5.0, initial_value = 1.0 }

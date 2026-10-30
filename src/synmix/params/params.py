@@ -3,13 +3,16 @@ from synmix.params.valuecontrollers import ValueController
 
 
 class Param:
-    def __init__(self, name: str, button: Button, controller: ValueController) -> None:
+    def __init__(
+        self, name: str, buttons: tuple[Button, ...], controller: ValueController
+    ) -> None:
+        """buttons all drive the param, e.g. one control mirrored on two channels."""
         self.name = name
-        self.button = button
+        self.buttons = buttons
         self.controller = controller
 
     def __repr__(self) -> str:
-        return f"Param({self.name}, {self.button}, {self.controller})"
+        return f"Param({self.name}, {self.buttons}, {self.controller})"
 
     @property
     def value(self) -> float:
