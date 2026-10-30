@@ -50,6 +50,25 @@ def _format_index_ranges(indices) -> str:
     )
 
 
+def _shared_midi_conflicts(bindings: list, other_bindings: list) -> list[str]:
+    """
+    Describe pairs of distinct buttons with overlapping midi data and different targets.
+
+    Each binding is a (button, target) pair. Pairs within bindings and between
+    bindings and other_bindings are checked, but not pairs within other_bindings.
+    """
+    pairs = [(a, b) for i, a in enumerate(bindings) for b in bindings[i + 1 :]] + [
+        (a, b) for a in bindings for b in other_bindings
+    ]
+    return [
+        f"  {button_a!r} -> {target_a} and {button_b!r} -> {target_b}"
+        for (button_a, target_a), (button_b, target_b) in pairs
+        if button_a != button_b
+        and target_a != target_b
+        and button_a.midi_getter.overlaps(button_b.midi_getter)
+    ]
+
+
 class ScenesManager:
     def __init__(self, screen_ctx, starting_scene_name: str | None = None) -> None:
         self.scenes = []
@@ -90,7 +109,45 @@ class ScenesManager:
             self.current_scene_index
         )  # triggers self.load_new_scene()
         self._report_unused_buttons()
+        self._report_shared_midi_bindings()
         self.start_time = None
+
+    def _report_shared_midi_bindings(self) -> None:
+        """
+        Warn when buttons sharing midi data are bound to different targets.
+
+        Some devices send the same message from two controls, and a config may
+        list it under several labels. Bindings are keyed by the midi data, so
+        when two of those buttons drive different params or functions, only one
+        of them ever receives the events.
+        """
+        global_bindings = [
+            (param.button, f"post-processing '{param.name}'")
+            for param in self.post_params
+        ] + [
+            (button, f"function '{func_name}'")
+            for func_name, buttons in self.midi_config.functions.items()
+            for button in buttons
+        ]
+        reports = [("all scenes", _shared_midi_conflicts(global_bindings, []))]
+        reports += [
+            (
+                f"scene '{scene.name}'",
+                _shared_midi_conflicts(
+                    [(param.button, f"'{param.name}'") for param in scene.params],
+                    global_bindings,
+                ),
+            )
+            for scene in self.scenes
+        ]
+
+        for where, conflicts in reports:
+            if conflicts:
+                print(
+                    f"Warning: in {where}, buttons sharing midi data "
+                    "are bound to different targets, only one will respond:"
+                )
+                print("\n".join(conflicts))
 
     def _report_unused_buttons(self) -> None:
         """

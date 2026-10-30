@@ -85,6 +85,16 @@ That is expected for buttons with no purpose yet, but a *named* control in the l
 above - means the config's controls are ordered differently than the scenes expect, and that button
 will do nothing.
 
+Some devices send the same midi data from two physical controls, and a config may list that data
+under several labels. Bindings are keyed by the midi data, so if a scene binds two such labels to
+different params (or a param and a post-processing param or function), only one of them responds.
+Startup warns about each such pair:
+
+```
+Warning: in scene 'wings_fractal', buttons sharing midi data are bound to different targets, only one will respond:
+  Button(LEFT_HIGH knobs[2]) -> 'hueShift' and Button(LEFT_HIGH_TWIN knobs[3]) -> 'brightness'
+```
+
 ```json
 {
   "name": "Mixage",
