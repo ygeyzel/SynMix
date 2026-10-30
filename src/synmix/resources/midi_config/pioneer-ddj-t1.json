@@ -1,348 +1,791 @@
 {
   "name": "PIONEER DDJ-T1",
-  "scroll_mode": "accumulate",
   "knobs": [
     {
-      "label": "VOLUME_0",
+      "label": "L_TEMPO",
       "event_type": "control_change",
-      "value": 23,
+      "value": 0,
+      "channel": 0
+    },
+    {
+      "label": "R_TEMPO",
+      "event_type": "control_change",
+      "value": 0,
+      "channel": 1
+    },
+    {
+      "label": "FX1_DRY_WET",
+      "event_type": "control_change",
+      "value": 0,
+      "channel": 4
+    },
+    {
+      "label": "FX2_DRY_WET",
+      "event_type": "control_change",
+      "value": 0,
+      "channel": 5
+    },
+    {
+      "label": "FX1_CH1",
+      "event_type": "control_change",
+      "value": 2,
+      "channel": 4
+    },
+    {
+      "label": "FX1_CH2",
+      "event_type": "control_change",
+      "value": 4,
+      "channel": 4
+    },
+    {
+      "label": "FX1_CH3",
+      "event_type": "control_change",
+      "value": 6,
+      "channel": 4
+    },
+    {
+      "label": "FX2_CH1",
+      "event_type": "control_change",
+      "value": 2,
+      "channel": 5
+    },
+    {
+      "label": "FX2_CH2",
+      "event_type": "control_change",
+      "value": 4,
+      "channel": 5
+    },
+    {
+      "label": "FX2_CH3",
+      "event_type": "control_change",
+      "value": 6,
+      "channel": 5
+    },
+    {
+      "label": "L_FILTER",
+      "event_type": "control_change",
+      "value": 4,
+      "channel": 0
+    },
+    {
+      "label": "R_FILTER",
+      "event_type": "control_change",
+      "value": 4,
+      "channel": 1
+    },
+    {
+      "label": "L_NEEDLE_SEARCH",
+      "event_type": "control_change",
+      "value": 3,
+      "channel": 0
+    },
+    {
+      "label": "FADER",
+      "event_type": "control_change",
+      "value": 31,
       "channel": 6
     },
     {
-      "label": "VOLUME_1",
+      "label": "HEADPHONES_VOL",
       "event_type": "control_change",
-      "value": 19,
+      "value": 2,
       "channel": 6
     },
     {
-      "label": "VOLUME_2",
+      "label": "HEADPHONES_MIX",
       "event_type": "control_change",
-      "value": 21,
+      "value": 1,
       "channel": 6
     },
     {
-      "label": "VOLUME_3",
+      "label": "MAIN_VOL",
       "event_type": "control_change",
-      "value": 25,
+      "value": 0,
       "channel": 6
     },
     {
-      "label": "PLACEHOLDER_9",
+      "label": "L_TEMPO",
       "event_type": "control_change",
-      "value": 8,
-      "channel": 6
+      "value": 0,
+      "channel": 2
     },
     {
-      "label": "GAIN_0",
+      "label": "L_FILTER",
       "event_type": "control_change",
-      "value": 5,
-      "channel": 6
+      "value": 4,
+      "channel": 2
     },
     {
-      "label": "GAIN_1",
+      "label": "L_NEEDLE_SEARCH",
+      "event_type": "control_change",
+      "value": 3,
+      "channel": 2
+    },
+    {
+      "label": "A_GAIN",
       "event_type": "control_change",
       "value": 3,
       "channel": 6
     },
     {
-      "label": "GAIN_2",
+      "label": "B_GAIN",
       "event_type": "control_change",
       "value": 4,
       "channel": 6
     },
     {
-      "label": "GAIN_3",
+      "label": "C_GAIN",
+      "event_type": "control_change",
+      "value": 5,
+      "channel": 6
+    },
+    {
+      "label": "D_GAIN",
       "event_type": "control_change",
       "value": 6,
       "channel": 6
     },
     {
-      "label": "PLACEHOLDER_10",
+      "label": "C_LOW",
       "event_type": "control_change",
-      "value": 9,
-      "channel": 15
+      "value": 17,
+      "channel": 6
     },
     {
-      "label": "PLACEHOLDER_11",
-      "event_type": "control_change",
-      "value": 10,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_12",
-      "event_type": "control_change",
-      "value": 11,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_13",
-      "event_type": "control_change",
-      "value": 12,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_14",
+      "label": "C_MID",
       "event_type": "control_change",
       "value": 13,
-      "channel": 15
+      "channel": 6
     },
     {
-      "label": "PLACEHOLDER_15",
+      "label": "C_HI",
       "event_type": "control_change",
-      "value": 14,
-      "channel": 15
+      "value": 9,
+      "channel": 6
     },
     {
-      "label": "PLACEHOLDER_16",
+      "label": "A_LOW",
       "event_type": "control_change",
       "value": 15,
-      "channel": 15
+      "channel": 6
+    },
+    {
+      "label": "A_MID",
+      "event_type": "control_change",
+      "value": 11,
+      "channel": 6
+    },
+    {
+      "label": "A_HI",
+      "event_type": "control_change",
+      "value": 7,
+      "channel": 6
+    },
+    {
+      "label": "B_LOW",
+      "event_type": "control_change",
+      "value": 16,
+      "channel": 6
+    },
+    {
+      "label": "B_MID",
+      "event_type": "control_change",
+      "value": 12,
+      "channel": 6
+    },
+    {
+      "label": "B_HI",
+      "event_type": "control_change",
+      "value": 8,
+      "channel": 6
+    },
+    {
+      "label": "D_LOW",
+      "event_type": "control_change",
+      "value": 18,
+      "channel": 6
+    },
+    {
+      "label": "D_MID",
+      "event_type": "control_change",
+      "value": 14,
+      "channel": 6
+    },
+    {
+      "label": "D_HI",
+      "event_type": "control_change",
+      "value": 10,
+      "channel": 6
     }
   ],
   "scrollers": [
     {
-      "label": "LEFT_WHEEL",
+      "label": "L_MOVE_GRID",
       "event_type": "control_change",
-      "value": 33,
+      "value": 19,
       "channel": 0
     },
     {
-      "label": "RIGHT_WHEEL",
+      "label": "R_MOVE_GRID",
       "event_type": "control_change",
-      "value": 33,
+      "value": 19,
       "channel": 1
     },
     {
-      "label": "SCROLL",
+      "label": "MID_WEEL",
       "event_type": "control_change",
-      "channel": 6,
-      "value": 64
+      "value": 64,
+      "channel": 6
     },
     {
-      "label": "PLACEHOLDER_19",
+      "label": "L_WEEL",
       "event_type": "control_change",
-      "value": 18,
-      "channel": 15
+      "value": 1,
+      "channel": 0
     },
     {
-      "label": "PLACEHOLDER_20",
+      "label": "L_WEEL_SCRETCH",
+      "event_type": "control_change",
+      "value": 34,
+      "channel": 0
+    },
+    {
+      "label": "R_WEEL",
+      "event_type": "control_change",
+      "value": 1,
+      "channel": 1
+    },
+    {
+      "label": "R_WEEL_SCRETCH",
+      "event_type": "control_change",
+      "value": 2,
+      "channel": 1
+    },
+    {
+      "label": "L_MOVE_GRID",
       "event_type": "control_change",
       "value": 19,
-      "channel": 15
+      "channel": 2
     },
     {
-      "label": "PLACEHOLDER_21",
+      "label": "L_WEEL",
       "event_type": "control_change",
-      "value": 20,
-      "channel": 15
+      "value": 1,
+      "channel": 2
     },
     {
-      "label": "PLACEHOLDER_22",
+      "label": "L_WEEL_SCRETCH",
       "event_type": "control_change",
-      "value": 21,
-      "channel": 15
+      "value": 34,
+      "channel": 2
     }
   ],
   "clickables": [
     {
-      "label": "LEFT_LOAD",
+      "label": "R_WEEL_BTN",
+      "event_type": "note_on",
+      "value": 54,
+      "channel": 1
+    },
+    {
+      "label": "R_PLAY",
+      "event_type": "note_on",
+      "value": 11,
+      "channel": 1
+    },
+    {
+      "label": "R_CUE",
+      "event_type": "note_on",
+      "value": 12,
+      "channel": 1
+    },
+    {
+      "label": "L_MOVE_GRID_BTN",
+      "event_type": "note_on",
+      "value": 20,
+      "channel": 0
+    },
+    {
+      "label": "R_MOVE_GRID_BTN",
+      "event_type": "note_on",
+      "value": 20,
+      "channel": 1
+    },
+    {
+      "label": "L_IN_ADJUST",
+      "event_type": "note_on",
+      "value": 16,
+      "channel": 0
+    },
+    {
+      "label": "L_OUT_ADJUST",
+      "event_type": "note_on",
+      "value": 17,
+      "channel": 0
+    },
+    {
+      "label": "R_IN_ADJUST",
+      "event_type": "note_on",
+      "value": 16,
+      "channel": 1
+    },
+    {
+      "label": "R_OUT_ADJUST",
+      "event_type": "note_on",
+      "value": 17,
+      "channel": 1
+    },
+    {
+      "label": "L_ACTIVE",
+      "event_type": "note_on",
+      "value": 18,
+      "channel": 0
+    },
+    {
+      "label": "R_ACTIVE",
+      "event_type": "note_on",
+      "value": 45,
+      "channel": 1
+    },
+    {
+      "label": "L_HOT_CUE",
+      "event_type": "note_on",
+      "value": 42,
+      "channel": 0
+    },
+    {
+      "label": "R_HOT_CUE",
+      "event_type": "note_on",
+      "value": 42,
+      "channel": 1
+    },
+    {
+      "label": "L_DEL",
+      "event_type": "note_on",
+      "value": 45,
+      "channel": 0
+    },
+    {
+      "label": "L_FUNC",
+      "event_type": "note_on",
+      "value": 58,
+      "channel": 0
+    },
+    {
+      "label": "R_FUNC",
+      "event_type": "note_on",
+      "value": 58,
+      "channel": 1
+    },
+    {
+      "label": "L_SIZE_L",
+      "event_type": "note_on",
+      "value": 46,
+      "channel": 0
+    },
+    {
+      "label": "L_SIZE_R",
+      "event_type": "note_on",
+      "value": 47,
+      "channel": 0
+    },
+    {
+      "label": "R_SIZE_R",
+      "event_type": "note_on",
+      "value": 47,
+      "channel": 1
+    },
+    {
+      "label": "L_BWD",
+      "event_type": "note_on",
+      "value": 48,
+      "channel": 0
+    },
+    {
+      "label": "L_FWD",
+      "event_type": "note_on",
+      "value": 49,
+      "channel": 0
+    },
+    {
+      "label": "R_BWD",
+      "event_type": "note_on",
+      "value": 48,
+      "channel": 1
+    },
+    {
+      "label": "R_FWD",
+      "event_type": "note_on",
+      "value": 49,
+      "channel": 1
+    },
+    {
+      "label": "FX1_ADVENCED",
+      "event_type": "note_on",
+      "value": 64,
+      "channel": 4
+    },
+    {
+      "label": "FX2_ADVENCED",
+      "event_type": "note_on",
+      "value": 64,
+      "channel": 5
+    },
+    {
+      "label": "FX1_DRY_WET_BTN",
+      "event_type": "note_on",
+      "value": 67,
+      "channel": 4
+    },
+    {
+      "label": "FX2_DRY_WET_BTN",
+      "event_type": "note_on",
+      "value": 67,
+      "channel": 5
+    },
+    {
+      "label": "FX1_SELECT_1",
+      "event_type": "note_on",
+      "value": 68,
+      "channel": 4
+    },
+    {
+      "label": "FX1_SELECT_3",
       "event_type": "note_on",
       "value": 70,
-      "channel": 6
+      "channel": 4
     },
     {
-      "label": "RIGHT_LOAD",
+      "label": "FX1_SELECT_2",
+      "event_type": "note_on",
+      "value": 69,
+      "channel": 4
+    },
+    {
+      "label": "FX2_SELECT_1",
+      "event_type": "note_on",
+      "value": 68,
+      "channel": 5
+    },
+    {
+      "label": "FX2_SELECT_2",
+      "event_type": "note_on",
+      "value": 69,
+      "channel": 5
+    },
+    {
+      "label": "FX2_SELECT_3",
+      "event_type": "note_on",
+      "value": 70,
+      "channel": 5
+    },
+    {
+      "label": "FX1_CH1_BTN",
       "event_type": "note_on",
       "value": 71,
-      "channel": 6
+      "channel": 4
     },
     {
-      "label": "SCROLL_CLICK",
+      "label": "FX1_CH2_BTN",
+      "event_type": "note_on",
+      "value": 72,
+      "channel": 4
+    },
+    {
+      "label": "FX1_CH3_BTN",
+      "event_type": "note_on",
+      "value": 73,
+      "channel": 4
+    },
+    {
+      "label": "FX2_CH1_BTN",
+      "event_type": "note_on",
+      "value": 71,
+      "channel": 5
+    },
+    {
+      "label": "FX2_CH2_BTN",
+      "event_type": "note_on",
+      "value": 72,
+      "channel": 5
+    },
+    {
+      "label": "FX2_CH3_BTN",
+      "event_type": "note_on",
+      "value": 73,
+      "channel": 5
+    },
+    {
+      "label": "L_FILTER_BTN",
+      "event_type": "note_on",
+      "value": 69,
+      "channel": 0
+    },
+    {
+      "label": "R_FILTER_BTN",
+      "event_type": "note_on",
+      "value": 69,
+      "channel": 1
+    },
+    {
+      "label": "MID_WEEL_BTN",
       "event_type": "note_on",
       "value": 65,
       "channel": 6
     },
     {
-      "label": "PLACEHOLDER_23",
-      "event_type": "note_on",
-      "value": 0,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_24",
-      "event_type": "note_on",
-      "value": 1,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_25",
-      "event_type": "note_on",
-      "value": 2,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_26",
-      "event_type": "note_on",
-      "value": 3,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_27",
-      "event_type": "note_on",
-      "value": 4,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_28",
-      "event_type": "note_on",
-      "value": 5,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_29",
-      "event_type": "note_on",
-      "value": 6,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_30",
-      "event_type": "note_on",
-      "value": 7,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_31",
-      "event_type": "note_on",
-      "value": 8,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_32",
-      "event_type": "note_on",
-      "value": 9,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_33",
-      "event_type": "note_on",
-      "value": 10,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_34",
-      "event_type": "note_on",
-      "value": 11,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_35",
-      "event_type": "note_on",
-      "value": 12,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_36",
-      "event_type": "note_on",
-      "value": 13,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_37",
-      "event_type": "note_on",
-      "value": 14,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_38",
-      "event_type": "note_on",
-      "value": 15,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_39",
-      "event_type": "note_on",
-      "value": 16,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_40",
-      "event_type": "note_on",
-      "value": 17,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_41",
-      "event_type": "note_on",
-      "value": 18,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_42",
-      "event_type": "note_on",
-      "value": 19,
-      "channel": 15
-    },
-    {
-      "label": "PLACEHOLDER_43",
+      "label": "L_MOVE_GRID_BTN",
       "event_type": "note_on",
       "value": 20,
-      "channel": 15
+      "channel": 2
     },
     {
-      "label": "PLACEHOLDER_44",
+      "label": "L_IN_ADJUST",
       "event_type": "note_on",
-      "value": 21,
-      "channel": 15
+      "value": 16,
+      "channel": 2
     },
     {
-      "label": "PLACEHOLDER_45",
+      "label": "L_OUT_ADJUST",
       "event_type": "note_on",
-      "value": 22,
-      "channel": 15
+      "value": 17,
+      "channel": 2
     },
     {
-      "label": "PLACEHOLDER_46",
+      "label": "L_ACTIVE",
       "event_type": "note_on",
-      "value": 23,
-      "channel": 15
+      "value": 18,
+      "channel": 2
     },
     {
-      "label": "PLACEHOLDER_47",
+      "label": "L_HOT_CUE",
       "event_type": "note_on",
-      "value": 24,
-      "channel": 15
+      "value": 42,
+      "channel": 2
     },
     {
-      "label": "PLACEHOLDER_48",
+      "label": "L_DEL",
+      "event_type": "note_on",
+      "value": 45,
+      "channel": 2
+    },
+    {
+      "label": "L_FUNC",
+      "event_type": "note_on",
+      "value": 58,
+      "channel": 2
+    },
+    {
+      "label": "L_SIZE_L",
+      "event_type": "note_on",
+      "value": 46,
+      "channel": 2
+    },
+    {
+      "label": "L_SIZE_R",
+      "event_type": "note_on",
+      "value": 47,
+      "channel": 2
+    },
+    {
+      "label": "L_BWD",
+      "event_type": "note_on",
+      "value": 48,
+      "channel": 2
+    },
+    {
+      "label": "L_FWD",
+      "event_type": "note_on",
+      "value": 49,
+      "channel": 2
+    },
+    {
+      "label": "L_FILTER_BTN",
+      "event_type": "note_on",
+      "value": 69,
+      "channel": 2
+    },
+    {
+      "label": "L_WEEL_BTN",
+      "event_type": "note_on",
+      "value": 54,
+      "channel": 2
+    },
+    {
+      "label": "A_ON_OFF",
+      "event_type": "note_on",
+      "value": 96,
+      "channel": 6
+    },
+    {
+      "label": "B_ON_OFF",
+      "event_type": "note_on",
+      "value": 97,
+      "channel": 6
+    },
+    {
+      "label": "D_ON_OFF",
+      "event_type": "note_on",
+      "value": 99,
+      "channel": 6
+    },
+    {
+      "label": "A_MASTER",
+      "event_type": "note_on",
+      "value": 92,
+      "channel": 6
+    },
+    {
+      "label": "A_SYNC",
+      "event_type": "note_on",
+      "value": 88,
+      "channel": 6
+    },
+    {
+      "label": "B_MASTER",
+      "event_type": "note_on",
+      "value": 93,
+      "channel": 6
+    },
+    {
+      "label": "C_MASTER",
+      "event_type": "note_on",
+      "value": 94,
+      "channel": 6
+    },
+    {
+      "label": "C_SYNC",
+      "event_type": "note_on",
+      "value": 90,
+      "channel": 6
+    },
+    {
+      "label": "D_MASTER",
+      "event_type": "note_on",
+      "value": 95,
+      "channel": 6
+    },
+    {
+      "label": "D_SYNC",
+      "event_type": "note_on",
+      "value": 91,
+      "channel": 6
+    },
+    {
+      "label": "B_CUE",
+      "event_type": "note_on",
+      "value": 85,
+      "channel": 6
+    },
+    {
+      "label": "C_CUE",
+      "event_type": "note_on",
+      "value": 86,
+      "channel": 6
+    },
+    {
+      "label": "A_FX1",
+      "event_type": "note_on",
+      "value": 76,
+      "channel": 6
+    },
+    {
+      "label": "D_FX1",
+      "event_type": "note_on",
+      "value": 79,
+      "channel": 6
+    },
+    {
+      "label": "A_LOAD",
+      "event_type": "note_on",
+      "value": 70,
+      "channel": 6
+    },
+    {
+      "label": "B_LOAD",
+      "event_type": "note_on",
+      "value": 71,
+      "channel": 6
+    },
+    {
+      "label": "C_LOAD",
+      "event_type": "note_on",
+      "value": 72,
+      "channel": 6
+    },
+    {
+      "label": "D_LOAD",
+      "event_type": "note_on",
+      "value": 73,
+      "channel": 6
+    },
+    {
+      "label": "L_KEY_LOCK",
+      "event_type": "note_on",
+      "value": 26,
+      "channel": 2
+    },
+    {
+      "label": "L_TEMPO_RAMGE",
       "event_type": "note_on",
       "value": 25,
-      "channel": 15
+      "channel": 2
+    },
+    {
+      "label": "L_KEY_LOCK",
+      "event_type": "note_on",
+      "value": 26,
+      "channel": 0
+    },
+    {
+      "label": "L_TEMPO_RAMGE",
+      "event_type": "note_on",
+      "value": 25,
+      "channel": 0
+    },
+    {
+      "label": "R_KEY_LOCK",
+      "event_type": "note_on",
+      "value": 26,
+      "channel": 1
+    },
+    {
+      "label": "R_TEMPO_RAMGE",
+      "event_type": "note_on",
+      "value": 25,
+      "channel": 1
     }
   ],
-  "functions": {
-    "next_scene": [
-      [
-        "clickables",
-        0
-      ]
-    ],
-    "previous_scene": [
-      [
-        "clickables",
-        1
-      ]
-    ],
-    "random_scene": [
-      [
-        "clickables",
-        2
-      ]
-    ],
-    "time_offset": [
-      [
-        "scrollers",
-        2
-      ]
-    ]
-  }
+  "noise": [
+    {
+      "event_type": "control_change",
+      "value": 21,
+      "channel": 6
+    },
+    {
+      "event_type": "note_on",
+      "value": 54,
+      "channel": 0
+    },
+    {
+      "event_type": "control_change",
+      "value": 25,
+      "channel": 6
+    },
+    {
+      "event_type": "control_change",
+      "value": 3,
+      "channel": 1
+    },
+    {
+      "event_type": "note_on",
+      "value": 45,
+      "channel": 1
+    },
+    {
+      "event_type": "note_on",
+      "value": 98,
+      "channel": 6
+    }
+  ]
 }
