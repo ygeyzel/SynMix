@@ -70,6 +70,18 @@ class MidiGetter(NamedTuple):
     selector_value: int
     channel: int | None = None  # None matches events on any channel
 
+    def overlaps(self, other: "MidiGetter") -> bool:
+        """Whether some event would match both getters."""
+        return (
+            self.event_type == other.event_type
+            and self.selector_value == other.selector_value
+            and (
+                self.channel is None
+                or other.channel is None
+                or self.channel == other.channel
+            )
+        )
+
 
 MIDI_EVENT_DESCRIPTORS = frozendict(
     {
