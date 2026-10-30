@@ -251,6 +251,84 @@ Scene order and navigation is controlled by `src/synmix/resources/scenes_order.t
 
 The first scene in the list will be loaded at startup by default. You can override this by using the `--start-scene` command-line argument to specify a different starting scene.
 
+## MIDI Utilities
+
+`utils/reading/` holds small command-line tools for reading a MIDI controller and building its
+midi config. It is a separate uv project, so run them from that directory:
+
+```bash
+cd utils/reading
+uv run gen_config.py -g ../../src/synmix/resources/midi_config/pioneer-ddj-t1.json
+```
+
+All three share these arguments:
+
+| Argument | Meaning |
+|---|---|
+| `[mixer_name]` | MIDI input port to read. If omitted, `gen_config.py -r`/`-g` and `label_monitor.py` pick the port matching the config's `name`; otherwise you choose from a list |
+| `-c, --channel 0-15` | only read messages on this channel (repeatable) |
+| `-f, --filter-out 0-15` | ignore messages on this channel (repeatable) |
+
+### `gen_config.py` - build a midi config by playing the device
+
+Move a control (or several), press Enter, and the captured messages are analysed: each control is
+identified, 14-bit MSB/LSB pairs are folded into the MSB, and a section is suggested (a control
+whose values all sit near the ends of the range, as relative encoders send, suggests a scroller). Then answer:
+
+| Prompt | Answers |
+|---|---|
+| section | `k` knobs, `s` scrollers, `c` clickables, `n` noise, `x` skip (Enter takes the suggestion) |
+| `label:` | the label; it is made uppercase with `_` for spaces. Up/down arrows recall earlier labels, left/right edit them |
+| `Already have it as ... Add another label?` | `y` to add a second label for the same midi data (some devices send it from two controls), `m` to mark it as noise, Enter to leave it |
+
+Type `q` and Enter to finish.
+
+| Option | Meaning |
+|---|---|
+| `-o, --output PATH` | file to write, or a directory to write `<device_name>.json` in. Without it and without `-r`/`-g` the JSON is printed |
+| `-r, --resume JSON` | load an existing config and append new controls to it |
+| `-g, --regen JSON` | start that config over from scratch in the same file, keeping its recorded noise. The file is left alone if you quit before adding anything |
+
+- The file is saved after every answer that changes it, so the other tools pick up changes at once.
+- Controls answered as noise go to the config's `noise` list and are silently dropped from every later
+  capture. The app ignores the list.
+- It writes the controls only: add `functions` (and `scroll_mode` if needed) by hand.
+
+### `label_monitor.py` - show what each signal is labelled
+
+Prints every message the device sends next to the labels the config gives it, with their positions,
+e.g. `L_FILTER knobs[9], L_FILTER knobs[28]` for a control mirrored on two channels. Signals the
+config does not know show `-`. The config is reloaded whenever the file changes.
+
+```bash
+uv run label_monitor.py -j ../../src/synmix/resources/midi_config/pioneer-ddj-t1.json
+```
+
+| Option | Meaning |
+|---|---|
+| `-j, --config JSON` | config to read the labels from (required) |
+| `-n, --show-noise` | also print the controls recorded as noise, labelled `NOISE` |
+
+### `main.py` - print the raw messages
+
+Prints every message the device sends, as mido shows it.
+
+```bash
+uv run main.py -s ../../src/synmix/resources/midi_config/pioneer-ddj-t1.json
+```
+
+| Option | Meaning |
+|---|---|
+| `-s, --silence JSON` | hide the controls this config records as noise, reloading the list whenever the file changes |
+
+### Mapping a new device
+
+1. Run `gen_config.py -g <new.json>` in one terminal and map each control, marking the signals that
+   are not controls as noise.
+2. Run `label_monitor.py -j <new.json>` in a second one to check what each control is now called.
+3. Give the controls the labels the scene files use (see the keyboard mapping table above), and add
+   the `functions` section.
+
 ## Value Controllers
 
 Parameters use value controllers defined in `src/synmix/params/valuecontrollers.py`. Each controller declares the `ButtonType`(s) it supports to prevent incompatible bindings when loading scenes:
@@ -296,6 +374,10 @@ Add custom controllers by decorating with `@register_controller("Name", supporte
 │       └── screen.py
 ├── scripts/
 │   └── fake_midi_monitor.py       # Fake MIDI controller tester
+├── utils/reading/                 # MIDI utilities (own uv project, see "MIDI Utilities")
+│   ├── gen_config.py              # Build a midi config by playing the device
+│   ├── label_monitor.py           # Print messages with their config labels
+│   └── main.py                    # Print raw messages; shared helpers
 └── tests/                         # pytest suite
     └── test_shaders.py            # Compiles every shader
 ```
