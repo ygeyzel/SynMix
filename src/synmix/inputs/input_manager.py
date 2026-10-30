@@ -54,10 +54,12 @@ class MidiInputManager:
             self._initialized = True
 
     def bind_param(self, param: Param) -> None:
-        self.param_bindings[param.button.midi_getter] = param
+        for button in param.buttons:
+            self.param_bindings[button.midi_getter] = param
 
     def bind_secondary_param(self, param: Param) -> None:
-        self.secondary_param_bindings[param.button.midi_getter] = param
+        for button in param.buttons:
+            self.secondary_param_bindings[button.midi_getter] = param
 
     def unbind_params(self) -> None:
         self.param_bindings = {}

@@ -5,32 +5,32 @@ fragment_shader_filename = "worm_mandala.glsl"
 
 [[params]]
 name = "CHAR_C"
-button = ["clickables", 23]
+button = "FX1_ADVENCED"
 controller.type = "ToggleController"
 # ! (Exclamation)
 
 [[params]]
 name = "CHAR_L"
-button = ["clickables", 24]
+button = "FX1_DRY_WET_BTN"
 controller.type = "ToggleController"
 # @ (At)
 
 [[params]]
 name = "CHAR_A"
-button = ["clickables", 25]
+button = "R_IN_ADJUST"
 controller.type = "ToggleController"
 # # (Pound)
 
 
 [[params]]
 name = "CHAR_X"
-button = ["clickables", 26]
+button = "R_OUT_ADJUST"
 controller.type = "ToggleController"
 # $ (Dollar)
 
 [[params]]
 name = "time"
-button = ["scrollers", 0]
+button = "L_WEEL"
 controller.type = "RangedController"
 controller.args = {step = 0.1, min_value = 0, max_value = 1000000, initial_value = 0}
 # up down
@@ -38,7 +38,7 @@ controller.args = {step = 0.1, min_value = 0, max_value = 1000000, initial_value
 
 [[params]]
 name = "rController"
-button = ["scrollers", 1]
+button = "R_WEEL"
 controller.type = "CyclicController"
 controller.args = {step = 0.2, min_value = -30.0, max_value = 30.0, initial_value = 10.0}
 # left right
@@ -46,7 +46,7 @@ controller.args = {step = 0.2, min_value = -30.0, max_value = 30.0, initial_valu
 
 [[params]]
 name = "floatFragmentColor"
-button = ["knobs", 11]
+button = "R_FILTER"
 controller.type = "NormalizedController"
 controller.args = {step = 1, min_value = 0, max_value = 40, initial_value = 20}
 # . /
@@ -54,7 +54,7 @@ controller.args = {step = 1, min_value = 0, max_value = 40, initial_value = 20}
 
 [[params]]
 name = "lineWidth"
-button = ["knobs", 4]
+button = "A_LOW"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 0.6, initial_value = 0.01}
 # V B
@@ -64,7 +64,7 @@ controller.args = {min_value = 0.0, max_value = 0.6, initial_value = 0.01}
 
 [[params]]
 name = "lightness"
-button = ["knobs", 8]
+button = "A_GAIN"
 controller.type = "NormalizedController"
 controller.args = {step = 0.1, min_value = -15.0, max_value = 4.0, initial_value = 0.0}
 # E R
@@ -72,14 +72,14 @@ controller.args = {step = 0.1, min_value = -15.0, max_value = 4.0, initial_value
 
 [[params]]
 name = "colerShade"
-button = ["knobs", 9]
+button = "L_FILTER"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.001, max_value = 20, initial_value = 0.4545}
 # D F
 
 [[params]]
 name = "scale"
-button = ["knobs", 2]
+button = "A_HI"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.001, max_value = 20, initial_value = 4.0}
 # T Y
@@ -87,14 +87,14 @@ controller.args = {min_value = 0.001, max_value = 20, initial_value = 4.0}
 
 [[params]]
 name = "floatBrightness"
-button = ["knobs", 3]
+button = "A_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = -6, max_value = 6, initial_value = 0}
 # G H
 
 [[params]]
 name = "mouseX"
-button = ["knobs", 5]
+button = "B_HI"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
 # U I
@@ -102,7 +102,7 @@ controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
 
 [[params]]
 name = "mouseY"
-button = ["knobs", 6]
+button = "B_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.5}
 # J K

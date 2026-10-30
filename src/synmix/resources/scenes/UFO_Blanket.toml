@@ -3,37 +3,37 @@ fragment_shader_filename = "UFO_Blanket.glsl"
 
 [[params]]
 name = "xOffset"
-button = ["scrollers", 0]
+button = "L_WEEL"
 controller.type = 'CyclicController'
 controller.args = { step = 0.01, min_value = -0.8, max_value = 0.8 }
 
 [[params]]
 name = "yOffset"
-button = ["scrollers", 1]
+button = "R_WEEL"
 controller.type = "CyclicController"
 controller.args = { step = 0.01, min_value = -0.8, max_value = 0.8 }
 
 [[params]]
 name = "brightness"
-button = ["knobs", 3]
+button = "A_MID"
 controller.type = "NormalizedController"
 controller.args = { min_value = -1.0, max_value = 0.4, initial_value = -0.3 }
 
 [[params]]
 name = "smoothness"
-button = ["knobs", 6]
+button = "B_MID"
 controller.type = "NormalizedController"
 controller.args = { min_value = 0.7, max_value = 10.5, initial_value = 5.0 }
 
 [[params]]
 name = "zoom0"
-button = ["knobs", 0]
+button = "C_GAIN"
 controller.type = "LinearSegmentedController"
 controller.args = { segments_points = [[0.0, 0.8], [64.0, 3.0], [127.0, 20.0]], initial_value = 3.0 }
 
 [[params]]
 name = "zoom1"
-button = ["knobs", 1]
+button = "D_GAIN"
 controller.type = "LinearSegmentedController"
 controller.args = { segments_points = [[0.0, 0.8], [64.0, 3.0], [127.0, 20.0]], initial_value = 3.0 }
 

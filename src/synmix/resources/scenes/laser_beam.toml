@@ -3,100 +3,100 @@ fragment_shader_filename = "laser_beam.glsl"
 
 [[params]]
 name = "radius_circle_a"
-button = ["scrollers", 0]
+button = "L_WEEL"
 controller.type = "RangedController"
 controller.args = {step = 0.01, min_value = 0, max_value = 0.7, initial_value = 0.2}
 
 [[params]]
 name = "radius_circle_b"
-button = ["scrollers", 1]
+button = "R_WEEL"
 controller.type = "RangedController"
 controller.args = {step = 0.01, min_value = 0, max_value = 0.85, initial_value = 0.2}
 
 [[params]]
 name = "radius_circle_c"
-button = ["knobs", 0]
+button = "C_GAIN"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 0.95, initial_value = 0.5}
 
 
 [[params]]
 name = "len_squer_a"
-button = ["knobs", 1]
+button = "D_GAIN"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0, max_value = 0.37, initial_value = 0.2}
 
 [[params]]
 name = "len_squer_b"
-button = ["knobs", 12]
+button = "FADER"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0, max_value = 1.9, initial_value = 0.2}
 
 
 [[params]]
 name = "width_squer_a"
-button = ["knobs", 13]
+button = "HEADPHONES_MIX"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0, max_value = 1, initial_value = 0.2}
 
 
 [[params]]
 name = "width_squer_b"
-button = ["knobs", 9]
+button = "L_FILTER"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0, max_value = 1, initial_value = 0.2}
 
 
 [[params]]
 name = "objectsOutlineWidth"
-button = ["knobs", 4]
+button = "A_LOW"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.1, max_value = 2.0, initial_value = 0.2}
 
 [[params]]
 name = "psychedelic"
-button = ["clickables", 24]
+button = "FX1_DRY_WET_BTN"
 controller.type = "ToggleController"
 
 
 [[params]]
 name = "objectAreaShade"
-button = ["knobs", 3]
+button = "A_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.5}
 
 
 [[params]]
 name = "dimerControler"
-button = ["clickables", 25]
+button = "R_IN_ADJUST"
 controller.type = "ToggleController"
 
 [[params]]
 name = "ringHue"
-button = ["knobs", 5]
+button = "B_HI"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
 
 [[params]]
 name = "ringSaturation"
-button = ["knobs", 6]
+button = "B_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 1.0}
 
 [[params]]
 name = "ringHueDelta"
-button = ["knobs", 7]
+button = "B_LOW"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 0.1, initial_value = 0.05}
 
 [[params]]
 name = "shapeHue"
-button = ["knobs", 10]
+button = "B_GAIN"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 1.0, initial_value = 0.0}
 
 [[params]]
 name = "shapeHueDelta"
-button = ["knobs", 8]
+button = "A_GAIN"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.0, max_value = 0.2, initial_value = 0.1}

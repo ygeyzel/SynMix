@@ -33,7 +33,7 @@ uv run synmix --start-scene "KeplerPlanet"
 
 **With a specific MIDI controller config** (skips auto-detection):
 ```bash
-uv run synmix --midi realop
+uv run synmix --midi pioneer-ddj-t1
 ```
 
 **Full screen:**
@@ -76,14 +76,13 @@ At startup the loaded config is reported against what the scenes actually bind:
 
 ```
 Midi config 'pioneer-ddj-t1' has buttons no scene or function uses:
-  scrollers[2]: RIGHT_WHEEL
-  clickables[11, 14-21, 26-27]: PLACEHOLDER_31, PLACEHOLDER_34, ... (+7 more)
+  knobs[16-26, 29-35]: FX1_DRY_WET, FX2_DRY_WET, FX1_CH1, FX1_CH2, (+14 more)
+  clickables[11, 14, 17, 20-21, 27, 29-47, 49, 54-77]: L_KEY_LOCK, R_TEMPO_RAMGE, ... (+46 more)
 ```
 
-Buttons are addressed positionally, so a control mapped at an index nothing uses is silently dead.
-That is expected for buttons with no purpose yet, but a *named* control in the list - `RIGHT_WHEEL`
-above - means the config's controls are ordered differently than the scenes expect, and that button
-will do nothing.
+Scenes bind buttons by label, so a control whose label no scene uses is silently dead. That is
+expected for controls with no purpose yet, but a control you meant to use in the list usually means
+its label in the config differs from the one in the scene file.
 
 Some devices send the same midi data from two physical controls, and a config may list that data
 under several labels. Bindings are keyed by the midi data, so if a scene binds two such labels to
@@ -132,14 +131,17 @@ Warning: in scene 'wings_fractal', buttons sharing midi data are bound to differ
   When both kinds are defined for the same number, the channel-specific one wins for its channel and
   the channel-less one catches the rest. `pitchwheel` entries must not set it - their `value` *is* the
   channel, which is how `LEFT_PITCH` and `RIGHT_PITCH` are told apart.
-- **`label`** is optional and exists purely for readability - nothing looks a button up by it.
+- **`label`** is how scenes find a button: a control is only usable from a scene if it has a label
+  the scene files use. Several entries may share one label to drive the same params.
 - **`functions`** binds application actions to buttons. Each action takes a list of `[section, index]`
   references, so an action can be reachable from more than one button. Supported actions:
   `next_scene`, `previous_scene`, `random_scene`, `time_offset`, `decrease_speed`, `increase_speed`.
 
-Everything else - scene TOML files and the fake MIDI key map - addresses a button **positionally**, as
-`[section, index]`. Adding support for a new controller therefore means dropping a new JSON into
-`src/synmix/resources/midi_config/` that lists its controls in a comparable order; no scene file has to change.
+Scene TOML files bind each param to a button by its **label**, e.g. `button = "A_MID"`. When several
+buttons share a label - the same control mirrored on two channels - all of them drive the param. The
+scenes use the labels of `pioneer-ddj-t1.json`, so a controller works with them when its config gives
+its controls those labels; `realop.json` does not, and stops at startup with
+`No button labelled 'L_WEEL' in midi config 'realop'`. The fake MIDI key map is still positional.
 
 ### Fake MIDI Controller
 
@@ -176,58 +178,58 @@ real devices, so params declaring `is_pitch` keep their full range, and it gener
 
 | Button | Config Ref | Button Type | Key 1 | Key 2 |
 |--------|------------|-------------|-------|-------|
-| **LEFT_WHEEL** | `["scrollers", 0]` | Scroller | ↑ UP | ↓ DOWN |
-| **RIGHT_WHEEL** | `["scrollers", 1]` | Scroller | ← LEFT | → RIGHT |
-| **LEFT_PITCH** | `["knobs", 14]` | Knob | PAGE UP | PAGE DOWN |
-| **RIGHT_PITCH** | `["knobs", 15]` | Knob | BACKSPACE | \ (Backslash) |
-| **LEFT_LENGTH** | `["scrollers", 3]` | Scroller | Q | W |
-| **LEFT_DRY_WET** | `["scrollers", 4]` | Scroller | A | S |
-| **LEFT_GAIN** | `["knobs", 8]` | Knob | E | R |
-| **LEFT_AMOUNT** | `["knobs", 9]` | Knob | D | F |
-| **LEFT_HIGH** | `["knobs", 2]` | Knob | T | Y |
-| **LEFT_MID** | `["knobs", 3]` | Knob | G | H |
-| **LEFT_LOW** | `["knobs", 4]` | Knob | B | N |
-| **RIGHT_HIGH** | `["knobs", 5]` | Knob | U | I |
-| **RIGHT_MID** | `["knobs", 6]` | Knob | J | K |
-| **RIGHT_LOW** | `["knobs", 7]` | Knob | M | , (Comma) |
-| **RIGHT_LENGTH** | `["scrollers", 5]` | Scroller | O | P |
-| **RIGHT_DRY_WET** | `["scrollers", 6]` | Scroller | L | ; (Semicolon) |
-| **RIGHT_GAIN** | `["knobs", 10]` | Knob | [ | ] |
-| **RIGHT_AMOUNT** | `["knobs", 11]` | Knob | . (Period) | / (Slash) |
-| **LEFT_VOLUME** | `["knobs", 0]` | Knob | 9 | 0 |
-| **RIGHT_VOLUME** | `["knobs", 1]` | Knob | - (Minus) | = (Equals) |
-| **CROSSFADER** | `["knobs", 12]` | Knob | C | V |
-| **CUEMIX** | `["knobs", 13]` | Knob | Z | X |
-| **LEFT_CUE_1** | `["clickables", 3]` | Clickable | 1 | — |
-| **LEFT_CUE_2** | `["clickables", 4]` | Clickable | 2 | — |
-| **LEFT_CUE_3** | `["clickables", 5]` | Clickable | 3 | — |
-| **LEFT_CUE_4** | `["clickables", 6]` | Clickable | 4 | — |
-| **RIGHT_CUE_1** | `["clickables", 7]` | Clickable | 5 | — |
-| **RIGHT_CUE_2** | `["clickables", 8]` | Clickable | 6 | — |
-| **RIGHT_CUE_3** | `["clickables", 9]` | Clickable | 7 | — |
-| **RIGHT_CUE_4** | `["clickables", 10]` | Clickable | 8 | — |
-| **LEFT_SYNC** | `["clickables", 11]` | Clickable | F6 | — |
-| **LEFT_RECORD** | `["clickables", 12]` | Clickable | F7 | — |
-| **RIGHT_SYNC** | `["clickables", 13]` | Clickable | F8 | — |
-| **RIGHT_RECORD** | `["clickables", 14]` | Clickable | F9 | — |
-| **LEFT_MINUS** | `["clickables", 15]` | Clickable | F10 | — |
-| **LEFT_PLUS** | `["clickables", 16]` | Clickable | F11 | — |
-| **LEFT_SHIFT** | `["clickables", 17]` | Clickable | F12 | — |
-| **RIGHT_MINUS** | `["clickables", 18]` | Clickable | HOME | — |
-| **RIGHT_PLUS** | `["clickables", 19]` | Clickable | END | — |
-| **RIGHT_SHIFT** | `["clickables", 20]` | Clickable | INSERT | — |
-| **LEFT_IN** | `["clickables", 21]` | Clickable | DELETE | — |
-| **LEFT_OUT** | `["clickables", 22]` | Clickable | ~ (Tilde) | — |
-| **LEFT_FX_SEL** | `["clickables", 23]` | Clickable | ! (Exclamation) | — |
-| **LEFT_FX_ON** | `["clickables", 24]` | Clickable | @ (At) | — |
-| **RIGHT_IN** | `["clickables", 25]` | Clickable | # (Pound) | — |
-| **RIGHT_OUT** | `["clickables", 26]` | Clickable | $ (Dollar) | — |
-| **RIGHT_FX_SEL** | `["clickables", 27]` | Clickable | % (Percent) | — |
-| **RIGHT_FX_ON** | `["clickables", 28]` | Clickable | ^ (Caret) | — |
-| **RIGHT_LOAD** | `["clickables", 0]` | Clickable | F1 | — |
-| **LEFT_LOAD** | `["clickables", 1]` | Clickable | F2 | — |
-| **SCROLL** | `["scrollers", 2]` | Scroller | F3 | F4 |
-| **SCROLL_CLICK** | `["clickables", 2]` | Clickable | F5 | — |
+| **L_WEEL** | `["scrollers", 0]` | Scroller | ↑ UP | ↓ DOWN |
+| **R_WEEL** | `["scrollers", 1]` | Scroller | ← LEFT | → RIGHT |
+| **L_TEMPO** | `["knobs", 14]` | Knob | PAGE UP | PAGE DOWN |
+| **R_TEMPO** | `["knobs", 15]` | Knob | BACKSPACE | \ (Backslash) |
+| **L_MOVE_GRID** | `["scrollers", 3]` | Scroller | Q | W |
+| **L_WEEL_SCRETCH** | `["scrollers", 4]` | Scroller | A | S |
+| **A_GAIN** | `["knobs", 8]` | Knob | E | R |
+| **L_FILTER** | `["knobs", 9]` | Knob | D | F |
+| **A_HI** | `["knobs", 2]` | Knob | T | Y |
+| **A_MID** | `["knobs", 3]` | Knob | G | H |
+| **A_LOW** | `["knobs", 4]` | Knob | B | N |
+| **B_HI** | `["knobs", 5]` | Knob | U | I |
+| **B_MID** | `["knobs", 6]` | Knob | J | K |
+| **B_LOW** | `["knobs", 7]` | Knob | M | , (Comma) |
+| **R_MOVE_GRID** | `["scrollers", 5]` | Scroller | O | P |
+| **R_WEEL_SCRETCH** | `["scrollers", 6]` | Scroller | L | ; (Semicolon) |
+| **B_GAIN** | `["knobs", 10]` | Knob | [ | ] |
+| **R_FILTER** | `["knobs", 11]` | Knob | . (Period) | / (Slash) |
+| **C_GAIN** | `["knobs", 0]` | Knob | 9 | 0 |
+| **D_GAIN** | `["knobs", 1]` | Knob | - (Minus) | = (Equals) |
+| **FADER** | `["knobs", 12]` | Knob | C | V |
+| **HEADPHONES_MIX** | `["knobs", 13]` | Knob | Z | X |
+| **L_HOT_CUE** | `["clickables", 3]` | Clickable | 1 | — |
+| **L_ACTIVE** | `["clickables", 4]` | Clickable | 2 | — |
+| **L_DEL** | `["clickables", 5]` | Clickable | 3 | — |
+| **L_MOVE_GRID_BTN** | `["clickables", 6]` | Clickable | 4 | — |
+| **R_HOT_CUE** | `["clickables", 7]` | Clickable | 5 | — |
+| **R_PLAY** | `["clickables", 8]` | Clickable | 6 | — |
+| **R_CUE** | `["clickables", 9]` | Clickable | 7 | — |
+| **R_MOVE_GRID_BTN** | `["clickables", 10]` | Clickable | 8 | — |
+| **L_KEY_LOCK** | `["clickables", 11]` | Clickable | F6 | — |
+| **L_TEMPO_RAMGE** | `["clickables", 12]` | Clickable | F7 | — |
+| **R_KEY_LOCK** | `["clickables", 13]` | Clickable | F8 | — |
+| **R_TEMPO_RAMGE** | `["clickables", 14]` | Clickable | F9 | — |
+| **L_BWD** | `["clickables", 15]` | Clickable | F10 | — |
+| **L_FWD** | `["clickables", 16]` | Clickable | F11 | — |
+| **L_FUNC** | `["clickables", 17]` | Clickable | F12 | — |
+| **R_BWD** | `["clickables", 18]` | Clickable | HOME | — |
+| **R_FWD** | `["clickables", 19]` | Clickable | END | — |
+| **R_FUNC** | `["clickables", 20]` | Clickable | INSERT | — |
+| **L_IN_ADJUST** | `["clickables", 21]` | Clickable | DELETE | — |
+| **L_OUT_ADJUST** | `["clickables", 22]` | Clickable | ~ (Tilde) | — |
+| **FX1_ADVENCED** | `["clickables", 23]` | Clickable | ! (Exclamation) | — |
+| **FX1_DRY_WET_BTN** | `["clickables", 24]` | Clickable | @ (At) | — |
+| **R_IN_ADJUST** | `["clickables", 25]` | Clickable | # (Pound) | — |
+| **R_OUT_ADJUST** | `["clickables", 26]` | Clickable | $ (Dollar) | — |
+| **FX2_ADVENCED** | `["clickables", 27]` | Clickable | % (Percent) | — |
+| **FX2_DRY_WET_BTN** | `["clickables", 28]` | Clickable | ^ (Caret) | — |
+| **B_LOAD** | `["clickables", 0]` | Clickable | F1 | — |
+| **A_LOAD** | `["clickables", 1]` | Clickable | F2 | — |
+| **MID_WEEL** | `["scrollers", 2]` | Scroller | F3 | F4 |
+| **MID_WEEL_BTN** | `["clickables", 2]` | Clickable | F5 | — |
 
 **Button Types:**
 - **Knob**: Press first key to increase, second key to decrease (hold with Shift/Ctrl/Alt to apply modifiers)

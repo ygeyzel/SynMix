@@ -24,8 +24,8 @@ uv.exe add <package>                  # Add new dependency
 uv run synmix                              # Auto-detect the connected MIDI controller
 uv run synmix --fakemidi                   # Run with keyboard input (fake MIDI)
 uv run synmix --start-scene "KeplerPlanet" # Start with specific scene
-uv run synmix --midi realop                # Use a specific MIDI controller config
-uv run synmix --fakemidi --midi realop     # Drive a specific device's mapping from the keyboard
+uv run synmix --midi pioneer-ddj-t1        # Use a specific MIDI controller config
+uv run synmix --fakemidi --midi pioneer-ddj-t1  # Drive a device's mapping from the keyboard
 # Alternative:
 python -m synmix                           # Run as Python module
 python -m synmix --fakemidi
@@ -58,7 +58,9 @@ uv run python scripts/fake_midi_monitor.py # Interactively test fake MIDI contro
 - `valuecontrollers.py` defines controller types with `@register_controller` decorator
 - Controllers enforce compatibility with button types (KNOB, SCROLLER, CLICKABLE)
 - Scene TOML files reference controllers by registered name
-- Scene TOML `button` fields are `[section, index]` pairs resolved against the loaded `MidiConfig`
+- Scene TOML `button` fields are midi config labels (e.g. `"A_MID"`), resolved with
+  `MidiConfig.get_buttons_by_label`; a label shared by several buttons (one control on two
+  channels) binds all of them to the param, so `Param.buttons` is a tuple
 - Type safety prevents incompatible button/controller pairings
 
 **Input Architecture (`src/synmix/inputs/`)**:
@@ -80,28 +82,31 @@ uv run python scripts/fake_midi_monitor.py # Interactively test fake MIDI contro
   step down, `1` two). Decoded by `decode_scroll` in `inputs/midi.py`, reached through
   `MidiConfig.scroll_step` from `IncDecController` and `GlobalCtx.adjust_time_offset`
 - `knobs` / `scrollers` / `clickables` list controls with `event_type` + `value`
-  (control number, note number, or channel for `pitchwheel`); `label` is readability only
+  (control number, note number, or channel for `pitchwheel`); `label` is what scenes bind to
 - `channel` is optional: omitted matches any channel, `0`-`15` pins the button to one, and a
   channel-specific button wins over a channel-less one on the same number. Not allowed on
   `pitchwheel` entries, whose `value` is already the channel
 - `functions` binds actions (`next_scene`, `previous_scene`, `random_scene`, `time_offset`,
   `decrease_speed`, `increase_speed`) to lists of `[section, index]` button references
-- Buttons are addressed positionally everywhere else, so a new controller needs only a new JSON
+- Scenes use the labels of `pioneer-ddj-t1.json`; a config without them (e.g. `realop.json`) fails
+  at startup with "No button labelled ...". The fake MIDI key map stays positional
 - `ScenesManager._report_unused_buttons` prints, at startup, the config's buttons that no scene
-  param, post param or function binds. A named (non-placeholder) button there means the config's
-  controls sit at different indices than the scenes expect and will silently do nothing
+  param, post param or function binds. A control you meant to use there usually has a label
+  that differs from the one in the scene file, and will silently do nothing
 - `ScenesManager._report_shared_midi_bindings` warns when buttons sharing (overlapping) midi data
   are bound to different targets in a scene - bindings are keyed by midi data, so only one responds
 
 ### Scene Structure
 Each scene consists of:
 1. **TOML parameter file** (`src/synmix/resources/scenes/*.toml`) - defines parameters and their controllers.
-   Each param binds to a button positionally, e.g. `button = ["knobs", 1]`
+   Each param binds to a button by its midi config label, e.g. `button = "A_MID"`
 2. **GLSL shader file** (`src/synmix/resources/shaders/*.glsl`) - implements visual effects
 3. **Entry in scenes_order.json** - controls loading sequence
 
 ### Value Controller Types
-- **NormalizedController**: Maps MIDI values to numeric ranges (KNOB buttons)
+- **NormalizedController**: Maps MIDI values to numeric ranges (KNOB buttons). When a param
+  declares `is_pitch`, ScenesManager sets it from the bound button (true only for `pitchwheel`),
+  so a pitch slot also gets the right range on a device whose control there is a plain 0-127 CC
 - **RangedController**: Incremental stepping with bounds (SCROLLER buttons)  
 - **CyclicController**: Wrapping range stepping (SCROLLER buttons)
 - **ToggleController**: Boolean state toggle (CLICKABLE buttons)
@@ -138,12 +143,12 @@ Each scene consists of:
 2. Create TOML parameter file in `src/synmix/resources/scenes/`
 3. Add scene name to `src/synmix/resources/scenes_order.json`
 4. Parameters must reference registered controller names from `valuecontrollers.py`
-5. Each param's `button` is a `[section, index]` pair into the midi config
-   (`src/synmix/resources/midi_config/realop.json` lists the labels for each index)
+5. Each param's `button` is a label from the midi config
+   (`src/synmix/resources/midi_config/pioneer-ddj-t1.json` lists them); pytest checks they exist
 
 ### Adding New MIDI Controllers
-1. Create `src/synmix/resources/midi_config/<Name>.json` with the device's controls, ordered comparably
-   to the existing configs so scene bindings keep their meaning
+1. Create `src/synmix/resources/midi_config/<Name>.json` (e.g. with `utils/reading/gen_config.py`),
+   labelling its controls with the labels the scenes use
 2. Set `name` to a substring of the device's MIDI input port name
 3. Run with `--midi <Name>`
 

@@ -27,6 +27,9 @@ PITCH_STEP_FACTOR = 64
 FAKE_MIDI_OUTPUT_NAME = "Fake MIDI Controller"
 
 FAKE_MIDI_CHANNEL = 0
+# Scenes bind buttons by label, so the fake controller borrows the labels of the
+# device whose scene slots its key map mirrors, position by position
+FAKE_MIDI_LABELS_CONFIG = "pioneer-ddj-t1"
 # Mirrors the real devices, which put their pitch knobs here, so that params
 # declaring is_pitch keep their full range under the fake controller
 FAKE_PITCH_KNOB_INDICES = (14, 15)
@@ -220,11 +223,14 @@ def generate_midi_config(key_map_data: dict) -> MidiConfig:
 
     The fake controller is not tied to any physical device, so it invents
     unused event selectors for each button rather than borrowing a real one.
+    Only the labels are borrowed, from FAKE_MIDI_LABELS_CONFIG.
     """
+    labels_config = MidiConfig.load(FAKE_MIDI_LABELS_CONFIG)
     sections = {}
     control_value = 0
 
     for section in BUTTON_TYPE_BY_SECTION:
+        labels = [button.label for button in labels_config.buttons[section]]
         entries = []
         for index in range(len(key_map_data.get(section, []))):
             if section == "clickables":
@@ -252,6 +258,8 @@ def generate_midi_config(key_map_data: dict) -> MidiConfig:
                     }
                 )
                 control_value += 1
+            if index < len(labels) and labels[index]:
+                entries[-1]["label"] = labels[index]
 
         sections[section] = entries
 
