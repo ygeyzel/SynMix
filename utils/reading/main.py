@@ -112,7 +112,7 @@ def mixers_selector():
     print("Available MIDI input devices:")
     for i, mixer in enumerate(mixers):
         print(f"{i + 1}: {mixer}")
-    
+
     while True:
         try:
             choice = int(input("Select a mixer by number: ")) - 1
@@ -127,13 +127,17 @@ def mixers_selector():
 def channel_number(value):
     channel = int(value)
     if not 0 <= channel <= 15:
-        raise argparse.ArgumentTypeError(f"channel must be between 0 and 15, got {value}")
+        raise argparse.ArgumentTypeError(
+            f"channel must be between 0 and 15, got {value}"
+        )
     return channel
 
 
 def build_parser(description="Print MIDI messages from an input device."):
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument("mixer_name", nargs="?", help="MIDI input device name (prompts if omitted)")
+    parser.add_argument(
+        "mixer_name", nargs="?", help="MIDI input device name (prompts if omitted)"
+    )
     parser.add_argument(
         "-c",
         "--channel",

@@ -4,6 +4,7 @@ The config is reloaded whenever the file changes, so it can be watched while
 gen_config.py fills it in. Controls the config records as noise are hidden unless
 --show-noise is given. A message no config entry identifies is shown with "-".
 """
+
 from main import (
     ConfigFile,
     build_parser,
@@ -45,7 +46,9 @@ def monitor(messages, config_file, show_noise=False):
 
 
 if __name__ == "__main__":
-    parser = build_parser("Print MIDI messages with the labels a midi_config JSON gives them.")
+    parser = build_parser(
+        "Print MIDI messages with the labels a midi_config JSON gives them."
+    )
     parser.add_argument(
         "-j",
         "--config",
@@ -69,6 +72,10 @@ if __name__ == "__main__":
             print(f"Using {args.mixer_name}")
     mixer_name, channels, excluded = resolve_args(args)
     try:
-        monitor(filtered_messages(mixer_name, channels, excluded), config_file, args.show_noise)
+        monitor(
+            filtered_messages(mixer_name, channels, excluded),
+            config_file,
+            args.show_noise,
+        )
     except KeyboardInterrupt:
         pass

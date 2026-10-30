@@ -12,11 +12,13 @@ appended to it, written back to the same file unless -o says otherwise. With
 A control answered as noise is saved in the config's "noise" list and from then on
 silently dropped from every capture.
 """
+
 import json
 import os
 import queue
 import re
 import threading
+from itertools import pairwise
 from pathlib import Path
 
 try:
@@ -48,7 +50,6 @@ MIN_PAIR_MESSAGES = 4
 
 def entry_key(entry):
     return tuple(entry.values())
-
 
 
 def capture_messages(messages):
@@ -86,7 +87,7 @@ def group_controls(msgs):
 
 
 def value_changes(values):
-    return sum(a != b for a, b in zip(values, values[1:]))
+    return sum(a != b for a, b in pairwise(values))
 
 
 def drop_lsb_controls(groups, sequence):
@@ -95,13 +96,17 @@ def drop_lsb_controls(groups, sequence):
     The MSB is the one whose value changes less often. Pairing is read from the data
     rather than assumed from the control numbers.
     """
-    ccs = [key for key, (entry, _) in groups.items() if entry["event_type"] == "control_change"]
+    ccs = [
+        key
+        for key, (entry, _) in groups.items()
+        if entry["event_type"] == "control_change"
+    ]
     dropped = set()
     for i, a in enumerate(ccs):
-        for b in ccs[i + 1:]:
+        for b in ccs[i + 1 :]:
             same_channel = groups[a][0]["channel"] == groups[b][0]["channel"]
             both = [key for key in sequence if key in (a, b)]
-            alternate = all(x != y for x, y in zip(both, both[1:]))
+            alternate = all(x != y for x, y in pairwise(both))
             if same_channel and alternate and len(both) >= MIN_PAIR_MESSAGES * 2:
                 lsb = max((a, b), key=lambda key: value_changes(groups[key][1]))
                 dropped.add(lsb)
@@ -111,8 +116,10 @@ def drop_lsb_controls(groups, sequence):
 def suggest_section(entry, values):
     if entry["event_type"] == "note_on":
         return "clickables"
-    if entry["event_type"] == "control_change" and values and all(
-        v < SCROLLER_MARGIN or v > 127 - SCROLLER_MARGIN for v in values
+    if (
+        entry["event_type"] == "control_change"
+        and values
+        and all(v < SCROLLER_MARGIN or v > 127 - SCROLLER_MARGIN for v in values)
     ):
         return "scrollers"
     return "knobs"
@@ -129,7 +136,9 @@ def ask_section(suggested):
     options = "/".join(f"[{letter}]{name}" for letter, name in SECTIONS.items())
     while True:
         choice = (
-            input(f"  {options} / [{NOISE}] noise / [{SKIP}] skip (Enter = {default}): ")
+            input(
+                f"  {options} / [{NOISE}] noise / [{SKIP}] skip (Enter = {default}): "
+            )
             .strip()
             .lower()
             or default
@@ -236,7 +245,9 @@ def to_json(config):
     """Indented JSON, keeping lists of plain values such as ["clickables", 0] on one line"""
     text = json.dumps(config, indent=2)
     return re.sub(
-        r"\[\s*([^\[\]{}]*?)\s*\]", lambda m: "[" + re.sub(r",\s+", ", ", m.group(1)) + "]", text
+        r"\[\s*([^\[\]{}]*?)\s*\]",
+        lambda m: "[" + re.sub(r",\s+", ", ", m.group(1)) + "]",
+        text,
     )
 
 
@@ -255,7 +266,11 @@ def collect_config(captured, config, on_change=None):
     history = label_history(config)
     drain(captured)
     while True:
-        answer = input("Move a control, then press Enter (q + Enter to finish): ").strip().lower()
+        answer = (
+            input("Move a control, then press Enter (q + Enter to finish): ")
+            .strip()
+            .lower()
+        )
         if answer == "q":
             return
         groups, sequence = drop_noise(*group_controls(drain(captured)), config)
@@ -278,7 +293,9 @@ def collect_config(captured, config, on_change=None):
 
 
 if __name__ == "__main__":
-    parser = build_parser("Generate a midi_config dict by playing with the controls of a device.")
+    parser = build_parser(
+        "Generate a midi_config dict by playing with the controls of a device."
+    )
     parser.add_argument(
         "-o",
         "--output",
