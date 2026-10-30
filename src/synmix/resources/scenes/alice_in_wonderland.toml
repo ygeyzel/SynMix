@@ -3,14 +3,14 @@ fragment_shader_filename = "alice_in_wonderland.glsl"
 
 [[params]]
 name = "ALICE_SPIN_ANGEL"
-button = "LEFT_WHEEL"
+button = "L_WEEL"
 controller.type = "CyclicController"
 controller.args = {min_value = 0, max_value = 360, step = 0.1, initial_value = 180}
 # up down   
 
 [[params]]
 name = "ALICE_SIZE"
-button = "RIGHT_WHEEL"
+button = "R_WEEL"
 controller.type = "RangedController"
 controller.args = {min_value = 0.2, max_value = 9.0, step = 0.05, initial_value = 0.9}
 # left right
@@ -18,21 +18,21 @@ controller.args = {min_value = 0.2, max_value = 9.0, step = 0.05, initial_value 
 
 [[params]]
 name = "BUNNY_SIZE"
-button = "LEFT_DRY_WET"
+button = "L_WEEL_SCRETCH"
 controller.type = "RangedController"
 controller.args = {step = 0.1, min_value = 0.5, max_value = 20.0, initial_value = 1.2}
 # A S
 
 [[params]]
 name = "HAPPY_FLOWER_SIZE"
-button = "RIGHT_DRY_WET"
+button = "R_WEEL_SCRETCH"
 controller.type = "RangedController"
 controller.args = {step = 0.1, min_value = 0.5, max_value = 20.0, initial_value = 1.2}
 # L ;
 
 [[params]]
 name = "MUSHROOM1_SIZE"
-button = "RIGHT_LENGTH"
+button = "R_MOVE_GRID"
 controller.type = "RangedController"
 controller.args = {step = 0.03, min_value = 0.2, max_value = 1.9, initial_value = 0.7}
 # O P
@@ -40,7 +40,7 @@ controller.args = {step = 0.03, min_value = 0.2, max_value = 1.9, initial_value 
 
 [[params]]
 name = "MUSHROOM1_SPOT_DENSITY"
-button = "RIGHT_MID"
+button = "B_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.01, max_value = 0.5, initial_value = 0.1}
 # J K
@@ -48,7 +48,7 @@ controller.args = {min_value = 0.01, max_value = 0.5, initial_value = 0.1}
 
 [[params]]
 name = "MUSHROOM2_SIZE"
-button = "LEFT_LENGTH"
+button = "L_MOVE_GRID"
 controller.type = "RangedController"
 controller.args = {step = 0.03, min_value = 0.2, max_value = 1.9, initial_value = 0.7}
 # Q W
@@ -56,26 +56,26 @@ controller.args = {step = 0.03, min_value = 0.2, max_value = 1.9, initial_value 
 
 [[params]]
 name = "MUSHROOM2_SPOT_DENSITY"
-button = "LEFT_MID"
+button = "A_MID"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.01, max_value = 0.5, initial_value = 0.1}
 # G H
 
 [[params]]
 name = "IS_MUSHROOM1_SPOT_SIZE_MOD"
-button = "RIGHT_IN"
+button = "R_IN_ADJUST"
 controller.type = "ToggleController"
 # #
 
 [[params]]
 name = "IS_MUSHROOM2_SPOT_SIZE_MOD"
-button = "LEFT_IN"
+button = "L_IN_ADJUST"
 controller.type = "ToggleController"
 # DELETE
 
 [[params]]
 name = "FLOWER_BED_SIZE"
-button = "LEFT_PITCH"
+button = "B_HI"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.4, max_value = 1.8, initial_value = 1.0}
 # \ TAB
@@ -83,7 +83,7 @@ controller.args = {min_value = 0.4, max_value = 1.8, initial_value = 1.0}
 
 [[params]]
 name = "BIFROST_LOOPS"
-button = "LEFT_HIGH"
+button = "A_HI"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.14, max_value = 4.8, initial_value = 0.56}
 # T Y
@@ -91,14 +91,14 @@ controller.args = {min_value = 0.14, max_value = 4.8, initial_value = 0.56}
 
 [[params]]
 name = "TREE_SIZE"
-button = "LEFT_AMOUNT"
+button = "L_FILTER"
 controller.type = "NormalizedController"
 controller.args = {min_value = 3.0, max_value = 0.1, initial_value = 1.0}
 # D F
 
 [[params]]
 name = "CLOUD_ROTATION_ANGLE"
-button = "LEFT_LOW"
+button = "A_LOW"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.2, max_value = 9.0, initial_value = 0.96}
 # V B
@@ -106,21 +106,21 @@ controller.args = {min_value = 0.2, max_value = 9.0, initial_value = 0.96}
 
 [[params]]
 name = "BUNNY_EAR_TAIL_BALANCE"
-button = "LEFT_GAIN"
+button = "A_GAIN"
 controller.type = "NormalizedController"
 controller.args = {min_value = 0.3, max_value = 4.0, initial_value = 1.0}
 # E R
 
 [[params]]
 name = "FLOWER_PETAL_ROTATION_MOD"
-button = "RIGHT_SHIFT"
+button = "R_FUNC"
 controller.type = "ToggleController"
 # insert
 
 
 [[params]]
 name = "IS_BUNNY_WAVE"
-button = "RIGHT_PLUS"
+button = "R_FWD"
 controller.type = "ToggleController"
 # end
 
@@ -128,7 +128,7 @@ controller.type = "ToggleController"
 
 # [[params]]
 # name = "FLOWER_BED_SIZE"
-# button = "LEFT_GAIN"
+# button = "A_GAIN"
 # controller.type = "NormalizedController"
 # controller.args = {min_value = 0.4, max_value = 1.8, initial_value = 1.0}
 # # E R
